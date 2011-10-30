@@ -66,7 +66,6 @@ This IDE has a lot of very interesting features:
 	\item Import and update of libraries from SVN
 	\item Version control: you can commit, revert, update, merge your programs
 \end{itemize}
-\\
 
 \subsection{Mbed libraries}
 In addition to the online compiler, almost all drivers have been implemented. Users just have to instanciate an object such as SPI, I2C,... to have access to a great API which abstract all the low-level layer. \\
@@ -151,10 +150,31 @@ Once the Websocket connection is established, data can be exchanged according to
 	\item Send a 0xFF byte
 \end{itemize}
 
-\section{Streaming Data from sensors}
+\section{Real-Time Streaming Data from sensors}
 \section{Remote procedure Call over Websockets}
 	
-\chapter{}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 \chapter{Universal Serial Bus}
 \section{USB overview}
@@ -184,14 +204,12 @@ The physical bus topology defines how USB devices are connected to the host. The
 
 
 \begin{figure}[h!]
-  \begin{minipage}{\textwidth}
 		\centering
-		\includegraphics[width=0.7\textwidth]{./usb_topology.png}
-		\caption{USB physical topology \footnote{reference: http://www.usblyzer.com}}
+		\includegraphics[width=0.5\textwidth]{./usb_topology.png}
+		\caption{USB physical topology \footnotemark}
 		\label{USB physical topology}
-  \end{minipage}
 \end{figure}
-
+\footnotetext{reference: http://www.usblyzer.com}
 \subsection{Endpoints}
 Most devices will have a series of buffers to communicate between the host and the device. Each buffer will belong to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on a NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. In fact, one physical endpoint represents two logical endpoints. Each physical endpoints has a specific direction: either OUT to receive data from the host or IN to send data to the host. There are four types of endpoints: control, interrupt, bulk and isochronous.
 	
@@ -205,7 +223,7 @@ Most devices will have a series of buffers to communicate between the host and t
 \newpage
 
 \subsection{Packets exchanged}
-\subsubsection{Fields in a packet}
+\subsubsection{\underline{Common fields in a packet}}
 
 \begin{table}[h!]
 \begin{tabular}{|c|c|p{9cm}|}
@@ -215,7 +233,7 @@ Field & Length & Meaningful \\ \hline
 \cline{2-2}%
  & high speed: 32bits & \\ \hline
  
-EOP &  & A packet ends with an End of Packet (EOP) field \\ \hline
+EOP & 3bits & A packet ends with an End of Packet (EOP) field \\ \hline
 
 PID & 8bits & Packet ID \\ \hline
 
@@ -229,43 +247,49 @@ PID & 8bits & Packet ID \\ \hline
 \label{Fields in a USB packet}
 \end{table}
 
-\subsubsection{Packets}
+\subsubsection{\underline{Packets}}
 \begin{itemize}
-	\item Token Packet: \\ \\
+	\item Token Packet:
+		\begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
   	\hline
   		SYNC & PID & ADDR & ENDP & CRC5 & EOP \\ \hline
-  		 & 8bits & 7bits & 4bits & 5bits &  \\
+  		8/32bits & 8bits & 7bits & 4bits & 5bits & 3bits \\
   	\hline
   	\end{tabular}
+  	\end{center}
   	
   	There are three types of token packets: 
-  	\begin{itemize}
+  	\begin{itemize} \itemsep 0em
 			\item IN: The host wants to read information.
 			\item OUT: The host wants to send information.
 			\item SETUP: Used to begin control transfers.
   	\end{itemize}
   	
   	
-	\item Data Packet: \\ \\
+	\item Data Packet:
+		\begin{center}
 		\begin{tabular}{|c|c|c|c|c|}
   	\hline
   		SYNC & PID & DATA & CRC16 & EOP \\ \hline
-  		 & 8bits & (0 - 1024) * 8bits & 16bits &   \\
+  		8/32bits & 8bits & (0 - 1024) * 8bits & 16bits & 3bits  \\
   	\hline
   	\end{tabular}
+  	\end{center}
   	
   	
-	\item Handshake Packet: \\ \\
+	\item Handshake Packet:
+		\begin{center}
 		\begin{tabular}{|c|c|c|}
   	\hline
   		SYNC & PID & EOP \\ \hline
-  		 & 8bits &  \\
+  		8/32bits & 8bits & 3bits \\
   	\hline
   	\end{tabular}
+  	\end{center}
   	
   	There are four types of token packets: 
-  	\begin{itemize}
+  	\begin{itemize} \itemsep 0em
 			\item ACK: Packet successfully received.
 			\item NAK: The device temporary cannot send or received data
 			\item STALL: Endpoint is halted, or control pipe request is not supported.
@@ -279,7 +303,7 @@ PID & 8bits & Packet ID \\ \hline
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.7\textwidth]{./data_flow.jpg}
+		\includegraphics[width=1.0\textwidth]{./data_flow.png}
 		\caption{From the host to a device}
 		\label{From the host to a device}
 \end{figure}
@@ -317,7 +341,25 @@ configuration information. The device is now configured and ready to be
 used.
 \end{itemize}
 
+
+\newpage
 \section{USB Device stack}
+A USB device stack has been developped to allow mbed users to design their own USB device or to use their mbed as USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a device’s functionality. This code will be parsed by the USB host stack to load an appropriate device driver. Two widely used USB classes has been implemented: HID (Human Interface Device) and MSD (Mass Storage Device). Users have access to a subset of a third class known as CDC (Communication Device Class). This class is particularly used to design a virtual serial port over USB. The following diagram shows the software architecture of this stack.
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=1.0\textwidth]{./usb_stack.png}
+		\caption{USB device stack architecture}
+		\label{USB device stack architecture}
+\end{figure}
+
+As in all stacks, it is organized by layers:
+\begin{itemize}
+	\item USB\_HAL: The USB hardware layer. All low levels methods are on this class. We found in particular the USB interrupt handler and methods to initialize the USB controller, read or write a certain endpoint. This class defines also virtual methods which are executed each time that there is an interrupt concerning a packet received or the end of a writing. Child classes can use these virtual functions to perform their own treatment when a such event occurs. 	
+	\item USB\_DEVICE: This layer is in charge to abstract the hardware. Methods such as USBDevice\_init, USBDevice\_connect, USBDevice\_disconnect, USBdevice\_addEndpoint, USBDevice\_readEndpoint, USBDevice\_writeEndpoint can be found in this class. It's also in this class that the enumeration step is performed for requests concerning standard descriptors. When a packet is received on the control endpoint (endpoint 0), it is decoded to analyze the request and a response to the host is sent. Descriptors are accessible via virtual functions such as getDeviceDescriptor which returns a pointer on the descriptor. As these functions are virtual, all child classes will be able to use their own descriptors.
+		\item USB\_HID, USB\_CDC and USB\_MSD: As explained before, these classes represent a specific USB class. A part of the enumeration step can be done here if the host requests a class specific descriptor. These three classes are explained in the next section of this document.
+		\item USB\_MOUSE, USB\_KEYBOARD, USB\_MOUSE\_KEYBOARD, USB\_RAW\_HID and \\ USB\_SERIAL: High level libraries to emulate a specific peripheral according to their class. For instance, a keyboard is emulated over the HID class. Methods such as printf, putc are accessible for a keyboard. The USB\_RAW\_HID class is used to send and receive raw data. This can be a good opportunity to design a USB device. USB\_SERIAL is a virtual serial port.
+\end{itemize}
 
 \section{HID class}
 \section{CDC class}

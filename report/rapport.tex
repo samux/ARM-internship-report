@@ -5,6 +5,8 @@
 \usepackage{fmtcount}
 \usepackage{multirow}
 \usepackage[margin=0.8in]{geometry}
+\usepackage{verbatim}
+\usepackage{moreverb}
 
 \renewcommand{\thefootnote}{\arabic{footnote}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -149,6 +151,38 @@ Once the Websocket connection is established, data can be exchanged according to
 	\item Encode the message using UTF-8 and send the resulting byte stream
 	\item Send a 0xFF byte
 \end{itemize}
+
+\subsection{Architecture of a Websocket communication}
+A websocket communication involves several clients connected to the same websocket server. All messages from browsers are sent to the server. The server manages all messages. It can decide to send a message received from a client to another client, to broadcast all messages received to all clients connected,...
+
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\textwidth]{./ws.png}
+		\caption{Example of websocket communication}
+		\label{Example of websocket communication}
+\end{figure}
+
+
+For instance, let's say that there is an existing websocket server: example.com which is listening on port 80. A client can open a connection, receive and send messages to this server with this few lines of javascript:
+
+\begin{center}
+\begin{boxedverbatim}
+var ws = new WebSocket("ws://example.com");
+ws.onopen = function(evt) { 
+   alert("Connection open"); 
+   ws.send("Hello")}; 
+};
+ws.onmessage = function(evt) { 
+   alert( "Message received: " + evt.data); 
+}; 
+ws.onclose = function(evt) { 
+   alert("Connection closed."); 
+};
+\end{boxedverbatim}
+\end{center}
+
+
 
 \section{Real-Time Streaming Data from sensors}
 \section{Remote procedure Call over Websockets}

@@ -7,6 +7,38 @@
 \usepackage[margin=0.8in]{geometry}
 \usepackage{verbatim}
 \usepackage{moreverb}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{caption}
+
+
+\definecolor{listinggray}{gray}{0.9}
+\definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
+\lstset{
+	backgroundcolor=\color{lbcolor},
+	tabsize=4,
+	rulecolor=,
+	language=C++,
+        basicstyle=\scriptsize,
+        upquote=true,
+        aboveskip={1.5\baselineskip},
+        columns=fixed,
+        showstringspaces=false,
+        extendedchars=true,
+        breaklines=true,
+        prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+        frame=single,
+        showtabs=false,
+        showspaces=false,
+        showstringspaces=false,
+        identifierstyle=\ttfamily,
+        keywordstyle=\color[rgb]{0,0,1},
+        commentstyle=\color[rgb]{0.133,0.545,0.133},
+        stringstyle=\color[rgb]{0.627,0.126,0.941},
+}
+
 
 \renewcommand{\thefootnote}{\arabic{footnote}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -158,16 +190,15 @@ A websocket communication involves several clients connected to the same websock
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.7\textwidth]{./ws.png}
+		\includegraphics[width=0.7\textwidth]{./ws.jpg}
 		\caption{Example of websocket communication}
 		\label{Example of websocket communication}
 \end{figure}
 
-
 For instance, let's say that there is an existing websocket server: example.com which is listening on port 80. A client can open a connection, receive and send messages to this server with this few lines of javascript:
 
 \begin{center}
-\begin{boxedverbatim}
+\begin{lstlisting}[label=Device descriptor,caption=Device Descriptor]
 var ws = new WebSocket("ws://example.com");
 ws.onopen = function(evt) { 
    alert("Connection open"); 
@@ -179,9 +210,8 @@ ws.onmessage = function(evt) {
 ws.onclose = function(evt) { 
    alert("Connection closed."); 
 };
-\end{boxedverbatim}
+\end{lstlisting}
 \end{center}
-
 
 
 \section{Real-Time Streaming Data from sensors}
@@ -249,7 +279,7 @@ Most devices will have a series of buffers to communicate between the host and t
 	
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=1.0\textwidth]{./endpoint.png}
+		\includegraphics[width=1.0\textwidth]{./endpoint.jpg}
 		\caption{Different types of endpoints}
 		\label{Different types of endpoints}
 \end{figure}
@@ -337,7 +367,7 @@ PID & 8bits & Packet ID \\ \hline
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=1.0\textwidth]{./data_flow.png}
+		\includegraphics[width=1.0\textwidth]{./data_flow.jpg}
 		\caption{From the host to a device}
 		\label{From the host to a device}
 \end{figure}
@@ -382,7 +412,7 @@ A USB device stack has been developped to allow mbed users to design their own U
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=1.0\textwidth]{./usb_stack.png}
+		\includegraphics[width=1.0\textwidth]{./usb_stack.jpg}
 		\caption{USB device stack architecture}
 		\label{USB device stack architecture}
 \end{figure}
@@ -396,6 +426,111 @@ As in all stacks, it is organized by layers:
 \end{itemize}
 
 \section{HID class}
+\subsection{Introduction}
+HID is one of the most frequently used USB classes. The HID class was primarily defined for devices that are used by humans to control the operation of computer systems. Typical examples of HID class devices include keyboards, mice, trackballs, and joysticks. An HID device may have knobs, switches, buttons, sliders, etc. The HID class is also frequently used for devices that may not require human interaction but provide data in a similar format as HID class devices. Since all operating sysems have a built-in HID driver, it's easy to design a USB HID device which doesn't require any specific driver.
+
+Data exchanged between host and device resides in structure called reports. The report format is flexible and can handle any format of data, but each report has a fixed size. This size is specified in a HID descriptor which is transmitted as part of the configuration descriptor.
+HID devices are required to provide a Report Descriptor which enumerates all data fields of a report the device can send. A HID device can have at most one interrupt IN endpoint and one interrupt OUT endpoint (and the control endpoint to perform the enumeration step).
+
+For each field in the report, the Report Descriptor defines how many bits the field consumes, how often this data is repeated, and which is the type of the data field. Examples of report descriptor are provided in next sections of this document.
+\\
+
+Concerning standard descriptors, they are quite similar for all HID devices:
+\\
+\\
+\begin{lstlisting}[label=Device descriptor,caption=Device Descriptor]
+uint8_t * USBDevice::deviceDesc() {
+    static uint8_t deviceDescriptor[] = {
+        DEVICE_DESCRIPTOR_LENGTH,       // bLength 
+        DEVICE_DESCRIPTOR,              // bDescriptorType 
+        LSB(USB_VERSION_2_0),           // bcdUSB (LSB) 
+        MSB(USB_VERSION_2_0),           // bcdUSB (MSB) 
+        0x00,                           // bDeviceClass 
+        0x00,                           // bDeviceSubClass 
+        0x00,                           // bDeviceprotocol 
+        MAX_PACKET_SIZE_EP0,            // bMaxPacketSize0 
+        LSB(VENDOR_ID),                 // idVendor (LSB) 
+        MSB(VENDOR_ID),                 // idVendor (MSB) 
+        LSB(PRODUCT_ID),                // idProduct (LSB) 
+        MSB(PRODUCT_ID),                // idProduct (MSB) 
+        LSB(PRODUCT_RELEASE),           // bcdDevice (LSB) 
+        MSB(PRODUCT_RELEASE),           // bcdDevice (MSB) 
+        STRING_OFFSET_IMANUFACTURER,    // iManufacturer 
+        STRING_OFFSET_IPRODUCT,         // iProduct 
+        STRING_OFFSET_ISERIAL,          // iSerialNumber 
+        0x01                            // bNumConfigurations 
+    };
+    return deviceDescriptor;
+}
+\end{lstlisting}
+
+The device descriptor describes the device by indicating vendor id, product id and product release. There is also the USB version used, all strings which will describe the device or the maximum length of the control endpoint.
+
+
+\begin{lstlisting}[label=Device descriptor,caption=Device Descriptor]
+uint8_t * USBHID::configurationDesc() {
+    static uint8_t configurationDescriptor[] = {
+        CONFIGURATION_DESCRIPTOR_LENGTH,// bLength
+        CONFIGURATION_DESCRIPTOR,       // bDescriptorType
+        LSB(TOTAL_DESCRIPTOR_LENGTH),   // wTotalLength (LSB)
+        MSB(TOTAL_DESCRIPTOR_LENGTH),   // wTotalLength (MSB)
+        0x01,                           // bNumInterfaces
+        DEFAULT_CONFIGURATION,          // bConfigurationValue
+        0x00,                           // iConfiguration
+        C_RESERVED | C_SELF_POWERED,    // bmAttributes
+        C_POWER(0),                     // bMaxPower
+
+        //Interface descriptor
+        INTERFACE_DESCRIPTOR_LENGTH,    // bLength
+        INTERFACE_DESCRIPTOR,           // bDescriptorType
+        0x00,                           // bInterfaceNumber
+        0x00,                           // bAlternateSetting
+        0x02,                           // bNumEndpoints
+        HID_CLASS,                      // bInterfaceClass
+        HID_SUBCLASS_NONE,              // bInterfaceSubClass
+        HID_PROTOCOL_NONE,              // bInterfaceProtocol
+        0x00,                           // iInterface
+
+        //hid descriptor
+        HID_DESCRIPTOR_LENGTH,          // bLength
+        HID_DESCRIPTOR,                 // bDescriptorType
+        LSB(HID_VERSION_1_11),          // bcdHID (LSB)
+        MSB(HID_VERSION_1_11),          // bcdHID (MSB)
+        0x00,                           // bCountryCode
+        0x01,                           // bNumDescriptors
+        REPORT_DESCRIPTOR,              // bDescriptorType
+        LSB(this->reportDescLength()),  // wDescriptorLength (LSB)
+        MSB(this->reportDescLength()),  // wDescriptorLength (MSB)
+
+        //endpoint descriptor (interrupt IN endpoint)
+        ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
+        ENDPOINT_DESCRIPTOR,            // bDescriptorType
+        PHY_TO_DESC(EPINT_IN),          // bEndpointAddress
+        E_INTERRUPT,                    // bmAttributes
+        LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (LSB)
+        MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (MSB)
+        10,                             // bInterval (milliseconds)
+
+        //endpoint descriptor (interrupt OUT endpoint)
+        ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
+        ENDPOINT_DESCRIPTOR,            // bDescriptorType
+        PHY_TO_DESC(EPINT_OUT),          // bEndpointAddress
+        E_INTERRUPT,                    // bmAttributes
+        LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (LSB)
+        MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (MSB)
+        10,                             // bInterval (milliseconds)
+    };
+    return configurationDescriptor;
+}
+\end{lstlisting}
+
+
+
+
+\subsection{Mouse}
+\subsection{Keyboard}
+\subsection{Generic HID device}
+
 \section{CDC class}
 \section{MSD class}
 

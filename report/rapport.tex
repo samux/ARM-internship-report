@@ -12,6 +12,7 @@
 \usepackage{xcolor}
 \usepackage{textcomp}
 \usepackage{caption}
+\usepackage{array}
 
 
 \definecolor{listinggray}{gray}{0.9}
@@ -244,13 +245,13 @@ ws.onclose = function(evt) {
 \section{USB overview}
 The Universal Serial Bus (USB) is the most widely used bus in today's computer. USB has particularly been designed to standardize connections between the computer and peripherals. For instance, keyboards, printers, scanners, disk drives or cameras can use the same bus to exchange data with a computer. USB has effectively replaced a variety of earlier interfaces, such as serial or parallel ports. The most useful advantage is certainly the plug-and-play nature it has. In other words, you can connect and disconnect devices on your computer without the need to restart it.\\
 
-USB version 1.1 supported two speeds, a full speed mode of 12Mbits/s and a low speed mode of 1.5Mbits/s. USB 2.0, which is the most widely version of USB, can reach 480Mbits/s. The 480Mbits/s is known as High Speed mode. USB version 3.0 specifies a maximum transmission speed of up to 5Gbits/s (known as SuperSpeed), however few products are supporting USB 3.0 at present.
+USB version 1.0 supported two speeds, a full speed mode of 12Mbits/s and a low speed mode of 1.5Mbits/s. USB 2.0, which is the most widely version of USB, can reach 480Mbits/s. The 480Mbits/s is known as High Speed mode. USB version 3.0 specifies a maximum transmission speed of up to 5Gbits/s (known as SuperSpeed), but few products are supporting USB 3.0 at present.
 \\
 \begin{table}[h!]
 \begin{center}
 \begin{tabular}{|l|l|l|}
 \hline
-\multirow{2}{*}{USB 1.1} & low-speed & 1.5Mbits/s \\
+\multirow{2}{*}{USB 1.0} & low-speed & 1.5Mbits/s \\
  & full-speed & 12Mbits/s \\ \hline
 USB 2.0 & high-speed & 480Mbits/s \\ \hline
 USB 3.0 & super-speed & 5Gbits/s \\ \hline
@@ -264,7 +265,7 @@ The Universal Serial Bus is host controlled. However, there can only be one host
 
 \section{How does the USB work?}
 \subsection{Topology}
-The physical bus topology defines how USB devices are connected to the host. The USB network is implemented as a tiered star network with one host (master) and several devices (slaves). The topology looks like a tree. In order to increase the number of devices connected, a hub need to be connected to the root port. This special hub and the root port are the first tier of the network.Furthermore, the USB network can support up to 127 external nodes but the number of tiers does not exceed 7. The following diagram represents a possible connection architecture on a USB bus.
+The physical bus topology defines how USB devices are connected to the host. The USB network is implemented as a tiered star network with one host (master) and several devices (slaves). The topology looks like a tree. In order to increase the number of devices connected, a hub need to be connected to the root port. This special hub and the root port are the first tier of the network. Furthermore, the USB network can support up to 127 external nodes but the number of tiers does not exceed 7. The following diagram represents a possible connection architecture on a USB bus.
 
 
 \begin{figure}[h!]
@@ -275,7 +276,15 @@ The physical bus topology defines how USB devices are connected to the host. The
 \end{figure}
 \footnotetext{reference: http://www.usblyzer.com}
 \subsection{Endpoints}
-Most devices will have a series of buffers to communicate between the host and the device. Each buffer will belong to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on a NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. In fact, one physical endpoint represents two logical endpoints. Each physical endpoints has a specific direction: either OUT to receive data from the host or IN to send data to the host. There are four types of endpoints: control, interrupt, bulk and isochronous.
+Devices have a series of buffers to communicate with the host. Each buffer will belong to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on a NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. One physical endpoint represents two logical endpoints. Each physical endpoints has a specific direction: either OUT to receive data from the host or IN to send data to the host. 
+\\
+There are four types of endpoints: 
+\begin{itemize}
+	\item \textbf{Control endpoint}: All USB devices once connected performed an \textit{enumeration step} wherein the host request all capabilities of the device. Control transfers are used to enumerate a device.
+	\item \textbf{Interrupt endpoints}: Interrupts transfers are used when a device requires responsiveness. Typical applications would include keyboard and mouse. Users don't want a noticeable delay between pressing a key or moving a mouse and seeing the result on the screen. An interrupt transfer only occurs when the host polls the device. There is a guarantee that the host will request a data within a specified time interval
+	\item \textbf{Bulk endpoints}: Bulk transfers are typically used to transfer large amount of data like files to a printer. A bulk transfer use spare un-allocated bandwidth, so time is not critical with bulk transfers. Typical applications include printers and scanners.
+	\item \textbf{Isochronous endpoints}: Isochronous tranfers are used for streaming and real time data. For instance, USB speakers uses isochronous tranfers. Such devices need a guaranteed delivery rate for data but errors can occur.
+\end{itemize}
 	
 \begin{figure}[h!]
 		\centering
@@ -284,20 +293,19 @@ Most devices will have a series of buffers to communicate between the host and t
 		\label{Different types of endpoints}
 \end{figure}
 
-\newpage
-
 \subsection{Packets exchanged}
-\subsubsection{\underline{Common fields in a packet}}
+\subsubsection{\underline{Common fields in a USB packet}}
 
 \begin{table}[h!]
-\begin{tabular}{|c|c|p{9cm}|}
+\centering
+\begin{tabular}{|c|c| >{\centering\arraybackslash}m{9cm} |}
 \hline
-Field & Length & Meaningful \\ \hline
+Field & Length & Meaning \\ \hline
 \multirow{2}{*}{SYNC} & low and full speed: 8bits  & \multirow{2}{10cm}{A packet starts with a SYNC pattern to allow the receiver bit clock to synchronise with the data.} \\
 \cline{2-2}%
  & high speed: 32bits & \\ \hline
  
-EOP & 3bits & A packet ends with an End of Packet (EOP) field \\ \hline
+EOP &  & A packet ends with an End of Packet (EOP) field \\ \hline
 
 PID & 8bits & Packet ID \\ \hline
 
@@ -313,12 +321,12 @@ PID & 8bits & Packet ID \\ \hline
 
 \subsubsection{\underline{Packets}}
 \begin{itemize}
-	\item Token Packet:
+	\item \textbf{Token Packet}: To indicate the type of transaction to follow, USB uses token packets:
 		\begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
   	\hline
   		SYNC & PID & ADDR & ENDP & CRC5 & EOP \\ \hline
-  		8/32bits & 8bits & 7bits & 4bits & 5bits & 3bits \\
+  		8/32bits & 8bits & 7bits & 4bits & 5bits &  \\
   	\hline
   	\end{tabular}
   	\end{center}
@@ -331,34 +339,46 @@ PID & 8bits & Packet ID \\ \hline
   	\end{itemize}
   	
   	
-	\item Data Packet:
+	\item \textbf{Data Packet}: Packets which contain the payload
 		\begin{center}
 		\begin{tabular}{|c|c|c|c|c|}
   	\hline
   		SYNC & PID & DATA & CRC16 & EOP \\ \hline
-  		8/32bits & 8bits & (0 - 1024) * 8bits & 16bits & 3bits  \\
+  		8/32bits & 8bits & (0 - 1024) * 8bits & 16bits &   \\
   	\hline
   	\end{tabular}
   	\end{center}
   	
   	
-	\item Handshake Packet:
+	\item \textbf{Handshake Packet}: After a data stage, handshake packets are used to acknowledge data or to report errors
 		\begin{center}
 		\begin{tabular}{|c|c|c|}
   	\hline
   		SYNC & PID & EOP \\ \hline
-  		8/32bits & 8bits & 3bits \\
+  		8/32bits & 8bits &  \\
   	\hline
   	\end{tabular}
   	\end{center}
   	
-  	There are four types of token packets: 
+  	There are four types of handshake packets:
   	\begin{itemize} \itemsep 0em
 			\item ACK: Packet successfully received.
 			\item NAK: The device temporary cannot send or received data
 			\item STALL: Endpoint is halted, or control pipe request is not supported.
 			\item NYET: No response yet from receiver (high speed only)
   	\end{itemize}
+  	
+  	
+	\item \textbf{Start of Frame Packet}: USB manages time in units called "frames" (USB 2.0 further added "microframes"), and uses frames/microframes to realize the concept of time. Each "frame" represents 1 ms, and each microframe represents 125 microseconds. When performing control, bulk or interrupt transfers with a peripheral device, there is little need to pay attention to the frames/microframes. However, when performing isochronous transfers, frames/microframes may need to be taken into consideration for proper synchronization with the system. For this reason, the host issues SOF (Start Of Frame) packets to the bus to indicate the starting point of each frame/microframe.
+	
+		\begin{center}
+		\begin{tabular}{|c|c|c|c|c|}
+  	\hline
+  		SYNC & PID & Frame number & CRC5 & EOP \\ \hline
+  		8/32bits & 8bits & 11bits & 5bits &   \\
+  	\hline
+  	\end{tabular}
+  	\end{center}
   	
   	
 \end{itemize}
@@ -376,7 +396,9 @@ Say for example, the host sends a packet to device=2, endpoint=1OUT. The functio
 \\
 
 \subsection{Enumeration}
-Once the device plugged into a USB port, the host performs a bus enumeration on the endpoint 0. So, all devices must at least have a control endpoint (endpoint 0) to perform the enumeration step. During this step, the host will assign a unique address to the device. Moreover, descriptors are used to describe a device. A descriptor is just an array containing some information like the device class, the number of endpoints used, the maximum length of these endpoints,... There are several types of descriptors. Standards descriptors are: device descriptor, configuration descriptor, interface descriptor and endpoint descriptor. Besides, for each class, it is possible to have others descriptors like a report descriptor for HID devices.
+The host hub port is able to detect the attachment of the USB device and makes the host controller aware of the same. The host controller then starts communicating with the USB device (which could be a mouse, keyboard, flash drive etc.). This initial communication between the host and the device is termed as “bus enumeration”. Bus enumeration is the process through which the host learns about the capabilities of the device. Since any USB device can be connected to the host hub port at anytime, bus enumeration becomes the essential first step of USB communication. This step is performed on the control endpoint (endpoint 0). So, all devices must at least have a control endpoint (endpoint 0) enabled.
+During this step, the host will assign a unique address to the device.
+All devices capabilities are transmitted in data structures called \textit{descriptors}. Descriptors are arrays containing some information like the device class, the number of endpoints used, the maximum length of these endpoints,... There are several types of descriptors. Standards descriptors are: device descriptor, configuration descriptor, interface descriptor and endpoint descriptor. But, for each USB class, other descriptors can be found such as the HID (Human Interface Device)descriptor and the report descriptor for HID devices.
 \\
 
 \begin{figure}[h!]
@@ -386,17 +408,12 @@ Once the device plugged into a USB port, the host performs a bus enumeration on 
 		\label{Descriptors}
 \end{figure}
 
-Enumeration:
+A typical enumeration follows:
 \begin{itemize}
 	\item GET DEVICE DESCRIPTOR: The host sends a get device descriptor request. The device
-replies with its device descriptor to report its attributes (Device Class, maximum packet size for
-endpoint zero).
-	\item SET ADDRESS: A USB device uses the default address after reset until the host assigns a
-unique address using the set address request. The firmware writes the device address assigned by
-the host.
-	\item GET CONFIGURATION DESCRIPTOR: The host sends a get configuration request. The device replies with its
-configuration descriptor, interface descriptor and endpoint descriptor. The configuration
-descriptor describes the number of interfaces provided by the configuration, the power source
+replies with its device descriptor to report its attributes (Device Class, maximum packet size for endpoint zero).
+	\item SET ADDRESS: A USB device uses the default address (0) after reset until the host assigns a unique address using the set address request. The firmware writes the device address assigned by the host.
+	\item GET CONFIGURATION DESCRIPTOR: The host sends a get configuration request. The device replies with its configuration descriptor, interface descriptor and endpoint descriptor. The configuration descriptor describes the number of interfaces provided by the configuration, the power source
 (Bus or Self powered) and the maximum power consumption of the USB device from the bus.
 The Interface descriptor describes the number of endpoints used by this interface. The Endpoint
 descriptor describes the transfer type supported and the bandwidth requirements.
@@ -408,7 +425,7 @@ used.
 
 \newpage
 \section{USB Device stack}
-A USB device stack has been developped to allow mbed users to design their own USB device or to use their mbed as USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a device’s functionality. This code will be parsed by the USB host stack to load an appropriate device driver. Two widely used USB classes has been implemented: HID (Human Interface Device) and MSD (Mass Storage Device). Users have access to a subset of a third class known as CDC (Communication Device Class). This class is particularly used to design a virtual serial port over USB. The following diagram shows the software architecture of this stack.
+A USB device stack has been developped to allow mbed users to design their own USB device or to use their mbed as USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a device’s functionality. This class code is parsed by the USB host stack to load an appropriate device driver. Two widely used USB classes has been implemented: HID (Human Interface Device) and MSD (Mass Storage Device). Users have access to a subset of a third class known as CDC (Communication Device Class). This class is particularly used to design a virtual serial port over USB. The following diagram shows the software architecture of this stack.
 
 \begin{figure}[h!]
 		\centering
@@ -419,26 +436,67 @@ A USB device stack has been developped to allow mbed users to design their own U
 
 As in all stacks, it is organized by layers:
 \begin{itemize}
-	\item USB\_HAL: The USB hardware layer. All low levels methods are on this class. We found in particular the USB interrupt handler and methods to initialize the USB controller, read or write a certain endpoint. This class defines also virtual methods which are executed each time that there is an interrupt concerning a packet received or the end of a writing. Child classes can use these virtual functions to perform their own treatment when a such event occurs. 	
-	\item USB\_DEVICE: This layer is in charge to abstract the hardware. Methods such as USBDevice\_init, USBDevice\_connect, USBDevice\_disconnect, USBdevice\_addEndpoint, USBDevice\_readEndpoint, USBDevice\_writeEndpoint can be found in this class. It's also in this class that the enumeration step is performed for requests concerning standard descriptors. When a packet is received on the control endpoint (endpoint 0), it is decoded to analyze the request and a response to the host is sent. Descriptors are accessible via virtual functions such as getDeviceDescriptor which returns a pointer on the descriptor. As these functions are virtual, all child classes will be able to use their own descriptors.
-		\item USB\_HID, USB\_CDC and USB\_MSD: As explained before, these classes represent a specific USB class. A part of the enumeration step can be done here if the host requests a class specific descriptor. These three classes are explained in the next section of this document.
+	\item USBHAL: The USB hardware layer. All low levels methods are on this class. We found in particular the USB interrupt handler and methods to initialize the USB controller, read or write a certain endpoint. This class defines also virtual methods which are executed each time that there is an interrupt concerning a packet received or the end of a writing so that a child class can use them to perform their own treatment when a such event occurs.
+	\item USBDEVICE: This layer is in charge to abstract the hardware. Methods such as init, connect, disconnect, addEndpoint, readEndpoint, writeEndpoint can be found in this class. It's also in this class that the enumeration step is performed for requests concerning standard descriptors. When a packet is received on the control endpoint (endpoint 0 OUT), it is decoded to analyze the request and a response to the host is sent. Descriptors are accessible via virtual functions such as getDeviceDescriptor which returns a pointer on the descriptor. As these functions are virtual, all child classes will be able to use their own descriptors.
+		\item USBHID, USBCDC and USBMSD: As explained before, these classes represent a specific USB class. A part of the enumeration step can be done here if the host requests a class specific descriptor. These three classes are explained in the next section of this document.
 		\item USB\_MOUSE, USB\_KEYBOARD, USB\_MOUSE\_KEYBOARD, USB\_RAW\_HID and \\ USB\_SERIAL: High level libraries to emulate a specific peripheral according to their class. For instance, a keyboard is emulated over the HID class. Methods such as printf, putc are accessible for a keyboard. The USB\_RAW\_HID class is used to send and receive raw data. This can be a good opportunity to design a USB device. USB\_SERIAL is a virtual serial port.
 \end{itemize}
 
+
+\subsection{USBHAL}
+
+\begin{center}
+\textbf{Source code of main methods are in Annexe A: USBHAL class}
+\end{center}
+
+
+This section describes the hardware layer implemented for the mbed LPC11U24. This microcontroller has a built-in USB 2.0 device controller. It also has 2kbytes of RAM dedicated for USB operations. An important other feature the double buffering support for generic endpoints.
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=1.0\textwidth]{./usb_endpoints.jpg}
+		\caption{USB endpoints status array}
+		\label{USB endpoints status array}
+\end{figure}
+
+To describe the state of each endpoints available, we need to allocate space in USB RAM as specified in the previous figure. Main fields of endpoints status array are:
+\begin{itemize}
+	\item A: the endpoint is active or not
+	\item NBytes: For OUT endpoints this is the number of bytes that can be received in this buffer. For IN endpoints this is the number of bytes that must be transmitted.
+	\item Address offset: represents the end of the address where will be stored data. The beginning of the address is specified in DATABUFSTART register 
+\end{itemize}
+
+
+
+Main methods for USBHAL class:
+\begin{itemize}
+	\item Memory  allocation for endpoints status list and endpoint 0 buffers. These initializations are done in the constructor of USBHAL::USBHAL.
+	\item To add more endpoints, space allocation has to be done. This is done in the method: USBHAL::realiseEndpoint
+	\item To read a specific endpoint:
+		\begin{itemize}
+			\item Fill the endpoint status list (active bit, address offset and NBytes). After this step, the endpoint is ready to receive data. This is done in USBHAL::endpointRead
+			\item When a data is received on the specific endpoint, an interrupt is raised. Software can read data in the buffer of this OUT endpoint. This is done in USBHAL::endpointReadResult.
+		\end{itemize}
+	\item To write on a specific endpoint:
+		\begin{itemize}
+			\item Fill the endpoint status list (active bit, address offset and NBytes). Copy data in the buffer of the IN endpoint. After this step, the endpoint is ready to send data. This is done in USBHAL::endpointWrite
+			\item Wait until the writing has been effectively done. This is done in USBHAL::endpoint-\\WriteResult.
+		\end{itemize}
+\end{itemize}
+
+
 \section{HID class}
 \subsection{Introduction}
-HID is one of the most frequently used USB classes. The HID class was primarily defined for devices that are used by humans to control the operation of computer systems. Typical examples of HID class devices include keyboards, mice, trackballs, and joysticks. An HID device may have knobs, switches, buttons, sliders, etc. The HID class is also frequently used for devices that may not require human interaction but provide data in a similar format as HID class devices. Since all operating sysems have a built-in HID driver, it's easy to design a USB HID device which doesn't require any specific driver.
+HID is one of the most frequently used USB classes. The HID class was primarily defined for devices that are used by humans to control the operation of computer systems. Typical examples of HID class devices include keyboards, mice, trackballs, and joysticks. An HID device may have knobs, switches, buttons, sliders, etc. The HID class is also frequently used for devices that may not require human interaction but provide data in a similar format as HID class devices. Since all operating systems have a built-in HID driver, it's easy to design a USB HID device which doesn't require any specific driver.
 
 Data exchanged between host and device resides in structure called reports. The report format is flexible and can handle any format of data, but each report has a fixed size. This size is specified in a HID descriptor which is transmitted as part of the configuration descriptor.
-HID devices are required to provide a Report Descriptor which enumerates all data fields of a report the device can send. A HID device can have at most one interrupt IN endpoint and one interrupt OUT endpoint (and the control endpoint to perform the enumeration step).
+HID devices are required to provide a Report Descriptor which enumerates all data fields of a report. A HID device can have at most one interrupt IN endpoint and one interrupt OUT endpoint (and the control endpoint to perform the enumeration step).
 
-For each field in the report, the Report Descriptor defines how many bits the field consumes, how often this data is repeated, and which is the type of the data field. Examples of report descriptor are provided in next sections of this document.
+For each field in the report, the Report Descriptor defines how many bits the field consumes, how often this data is repeated, and which is the type of the data field. Thus, report descriptors are specific to a device. Examples of report descriptor are provided in next sections of this document concerning HID devices such as mice or keyboards.
 \\
 
 Concerning standard descriptors, they are quite similar for all HID devices:
-\\
-\\
-\begin{lstlisting}[label=Device descriptor,caption=Device Descriptor]
+\begin{lstlisting}[label=Device Descriptor,caption=Device Descriptor]
 uint8_t * USBDevice::deviceDesc() {
     static uint8_t deviceDescriptor[] = {
         DEVICE_DESCRIPTOR_LENGTH,       // bLength 
@@ -464,10 +522,7 @@ uint8_t * USBDevice::deviceDesc() {
 }
 \end{lstlisting}
 
-The device descriptor describes the device by indicating vendor id, product id and product release. There is also the USB version used, all strings which will describe the device or the maximum length of the control endpoint.
-
-
-\begin{lstlisting}[label=Device descriptor,caption=Device Descriptor]
+\begin{lstlisting}[label=Configuration Descriptor,caption=Configuration Descriptor]
 uint8_t * USBHID::configurationDesc() {
     static uint8_t configurationDescriptor[] = {
         CONFIGURATION_DESCRIPTOR_LENGTH,// bLength
@@ -514,7 +569,7 @@ uint8_t * USBHID::configurationDesc() {
         //endpoint descriptor (interrupt OUT endpoint)
         ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
         ENDPOINT_DESCRIPTOR,            // bDescriptorType
-        PHY_TO_DESC(EPINT_OUT),          // bEndpointAddress
+        PHY_TO_DESC(EPINT_OUT),         // bEndpointAddress
         E_INTERRUPT,                    // bmAttributes
         LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (LSB)
         MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (MSB)
@@ -524,15 +579,400 @@ uint8_t * USBHID::configurationDesc() {
 }
 \end{lstlisting}
 
+In the device descriptor, the host will find information such as the maximum packets length that can be exchanged over the control endpoint, the device identification (vendor\_id, product\_id and product\_release) and the USB version used.
+
+In the configuration descriptor, we find particularly the interface descriptor which defines the class used by this device (HID\_CLASS) and the number of endpoints that will be used (2). The HID descriptor gives information on the length of the report descriptor. There are finally endpoint descriptors. The communication uses two interrupt descriptors: one IN endpoint to send data to the host and one OUT to receive data from the host. Interrupts endpoint are polled by the host, that is why there is a bInterval field in endpoint descriptors.
+
+Additionnally, this class defines methods to send and receive reports:
+
+\begin{lstlisting}[label=Configuration Descriptor,caption=Configuration Descriptor]
+bool USBHID::send(HID_REPORT *report)
+{
+    return USBDevice::write(EPINT_IN, report->data, report->length, MAX_HID_REPORT_SIZE);
+}
 
 
+bool USBHID::read(HID_REPORT *report)
+{
+    uint16_t bytesRead = 0;
+    bool result;
+    result = USBDevice::read(EPINT_OUT, report->data, &bytesRead, MAX_HID_REPORT_SIZE);
+    if(!readStart(EPINT_OUT, MAX_HID_REPORT_SIZE))
+        return false;
+    report->length = bytesRead;
+    return result;
+}
 
-\subsection{Mouse}
-\subsection{Keyboard}
-\subsection{Generic HID device}
+
+bool USBHID::readNB(HID_REPORT *report)
+{
+    uint16_t bytesRead = 0;
+    bool result;
+    result = USBDevice::readNB(EPINT_OUT, report->data, &bytesRead, MAX_HID_REPORT_SIZE);
+    report->length = bytesRead;
+    if(!readStart(EPINT_OUT, MAX_HID_REPORT_SIZE))
+        return false;
+    return result;
+}
+\end{lstlisting}
+
+If a USBHID is instantiated, the device created is a generic HID device. This means that it is not a specific device such as a mouse or a keyboard but a device which can send and receive raw data. The report descriptor for this kind of device is:
+ 
+\begin{lstlisting}[label=Generic HID Report Descriptor,caption=Generic HID Report Descriptor]
+uint8_t * USBHID::reportDesc() {
+    static uint8_t reportDescriptor[] = {
+        0x06, LSB(0xFFAB), MSB(0xFFAB),
+        0x0A, LSB(0x0200), MSB(0x0200),
+        0xA1, 0x01,         // Collection 0x01
+        
+        //data are sent in packets containing input_length bytes
+        0x75, 0x08,         // report size = 8 bits
+        0x15, 0x00,         // logical minimum = 0
+        0x26, 0xFF, 0x00,   // logical maximum = 255
+        0x95, input_length, // report count
+        0x09, 0x01,         // usage
+        0x81, 0x02,         // Input (array)
+        
+        //data are received in packets containing output_length bytes
+        0x95, output_length,// report count
+        0x09, 0x02,         // usage
+        0x91, 0x02,         // Output (array)
+        
+        0xC0                // end collection
+
+    };
+    return reportDescriptor;
+}
+\end{lstlisting}
+
+There are two main parts:
+\begin{itemize}
+	\item Bytes are sent to the host by packets of length \textit{input\_length}
+	\item Bytes are received by packets of length \textit{output\_length}
+\end{itemize}
+
+\subsection{USBMOUSE}
+USBMOUSE class is a subclass of USBHID. The important descriptor of this class is the report descriptor which defines data structures which will be exchanged.
+
+
+\begin{lstlisting}[label=Mouse Report Descriptor,caption=Mouse Report Descriptor]
+uint8_t * USBMouse::reportDesc() {
+    static uint8_t reportDescriptor[] = {
+        USAGE_PAGE(1),      0x01,       // Generic Desktop
+        USAGE(1),           0x02,       // Mouse
+        COLLECTION(1),      0x01,       // Application
+        USAGE(1),           0x01,       // Pointer
+        COLLECTION(1),      0x00,       // Physical
+
+        // Buttons
+        REPORT_COUNT(1),    0x03,       // 3 buttons
+        REPORT_SIZE(1),     0x01,       // 1 bit for each button
+        USAGE_PAGE(1),      0x09,       // Buttons
+        USAGE_MINIMUM(1),   0x1,    
+        USAGE_MAXIMUM(1),   0x3,
+        LOGICAL_MINIMUM(1), 0x00,       // Button not pressed
+        LOGICAL_MAXIMUM(1), 0x01,       // Button pressed
+        INPUT(1),           0x02,       // Input, absolute data
+        REPORT_COUNT(1),    0x01,       // Padding to fill 1 byte (5 + 3)
+        REPORT_SIZE(1),     0x05,
+        INPUT(1),           0x01,
+        
+        // X, Y and scroll
+        REPORT_COUNT(1),    0x03,       // 3 features: X, Y, scroll
+        REPORT_SIZE(1),     0x08,       // 1 byte for X, 1 byte for Y and 1 byte for scroll
+        USAGE_PAGE(1),      0x01,
+        USAGE(1),           0x30,       // X
+        USAGE(1),           0x31,       // Y
+        USAGE(1),           0x38,       // scroll
+        LOGICAL_MINIMUM(1), 0x81,       // Minimum: -127
+        LOGICAL_MAXIMUM(1), 0x7f,       // Maximum: 127
+        INPUT(1),           0x06,       // Input, Relative data
+
+        END_COLLECTION(0),
+        END_COLLECTION(0),
+    };
+    return reportDescriptor;
+}
+\end{lstlisting}
+
+On this report descriptor, we can distinguish three different parts:
+\begin{itemize}
+	\item At the beginning, there is the indication that a mouse report descriptor will be described.
+	\item Buttons mouse: There are 3 buttons represented by 1 bit. Values for these buttons are 0 or 1 (pressed or not). They are input values which means that the device will send information to the host.
+	\item X, Y and scroll: 3 different features, each represented by 1 byte. Values can vary between -127 and 127. There are also input values.
+\end{itemize}
+
+The main method to send a mouse state to the host is:
+
+\begin{lstlisting}[label=Mouse Report Descriptor,caption=Mouse Report Descriptor]
+bool USBMouse::mouseSend(int8_t x, int8_t y, uint8_t buttons, int8_t z) {
+    HID_REPORT report;
+    report.data[0] = buttons & 0x07;
+    report.data[1] = x;
+    report.data[2] = y;
+    report.data[3] = -z; // >0 to scroll down, <0 to scroll up
+
+    report.length = 4;
+
+    return USBHID::send(&report);
+}
+\end{lstlisting}
+
 
 \section{CDC class}
 \section{MSD class}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\appendix
+\chapter{USBHAL class}
+
+\begin{lstlisting}[label=USBHAL::USBHAL(),caption=USBHAL::USBHAL()]
+USBHAL::USBHAL(void) {
+    NVIC_DisableIRQ(USB_IRQn);
+
+    // nUSB_CONNECT output
+    LPC_IOCON->PIO0_6 = 0x00000001;
+
+    // Enable clocks (USB registers, USB RAM)
+    LPC_SYSCON->SYSAHBCLKCTRL |= CLK_USB | CLK_USBRAM;
+
+    // Ensure device disconnected (DCON not set)
+    LPC_USB->DEVCMDSTAT = 0;
+
+    // to ensure that the USB host sees the device as
+    // disconnected if the target CPU is reset.
+    wait(0.3);
+
+    // Reserve space in USB RAM for endpoint command/status list
+    // Must be 256 byte aligned
+    usbRamPtr = ROUND_UP_TO_MULTIPLE(usbRamPtr, 256);
+    ep = (EP_COMMAND_STATUS *)usbRamPtr;
+    usbRamPtr += (sizeof(EP_COMMAND_STATUS) * NUMBER_OF_LOGICAL_ENDPOINTS);
+    LPC_USB->EPLISTSTART = (uint32_t)(ep) & 0xffffff00;
+
+    // Reserve space in USB RAM for Endpoint 0
+    // Must be 64 byte aligned
+    usbRamPtr = ROUND_UP_TO_MULTIPLE(usbRamPtr, 64);
+    ct = (CONTROL_TRANSFER *)usbRamPtr;
+    usbRamPtr += sizeof(CONTROL_TRANSFER);
+    LPC_USB->DATABUFSTART =(uint32_t)(ct) & 0xffc00000;
+
+    // Setup command/status list for EP0
+    ep[0].out[0] = 0;
+    ep[0].in[0] =  0;
+    ep[0].out[1] = CMDSTS_ADDRESS_OFFSET((uint32_t)ct->setup);
+
+    // Route all interrupts to IRQ, some can be routed to
+    // USB_FIQ if you wish.
+    LPC_USB->INTROUTING = 0;
+
+    // Set device address 0, enable USB device, no remote wakeup
+    devCmdStat = DEV_ADDR(0) | DEV_EN | DSUS;
+    LPC_USB->DEVCMDSTAT = devCmdStat;
+
+    // Enable interrupts for device events and EP0
+    LPC_USB->INTEN = DEV_INT | EP(EP0IN) | EP(EP0OUT);
+    instance = this;
+    
+    //attach IRQ handler and enable interrupts
+    NVIC_SetVector(USB_IRQn, (uint32_t)&_usbisr);
+    NVIC_EnableIRQ(USB_IRQn);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=USBHAL::realiseEndpoint(),caption=USBHAL::realiseEndpoint()]
+bool USBHAL::realiseEndpoint(uint8_t endpoint, uint32_t maxPacket, uint32_t options) {
+    uint32_t tmpEpRamPtr;
+
+    if (endpoint > LAST_PHYSICAL_ENDPOINT) {
+        return false;
+    }
+
+    // Not applicable to the control endpoints
+    if ((endpoint==EP0IN) || (endpoint==EP0OUT)) {
+        return false;
+    }
+
+    // Allocate buffers in USB RAM
+    tmpEpRamPtr = epRamPtr;
+
+    // Must be 64 byte aligned
+    tmpEpRamPtr = ROUND_UP_TO_MULTIPLE(tmpEpRamPtr, 64);
+
+    if ((tmpEpRamPtr + maxPacket) > (USB_RAM_START + USB_RAM_SIZE)) {
+        // Out of memory
+        return false;
+    }
+
+    // Allocate first buffer
+    endpointState[endpoint].buffer[0] = tmpEpRamPtr;
+    tmpEpRamPtr += maxPacket;
+
+    if (!(options & SINGLE_BUFFERED)) {
+        // Must be 64 byte aligned
+        tmpEpRamPtr = ROUND_UP_TO_MULTIPLE(tmpEpRamPtr, 64);
+
+        if ((tmpEpRamPtr + maxPacket) > (USB_RAM_START + USB_RAM_SIZE)) {
+            // Out of memory
+            return false;
+        }
+
+        // Allocate second buffer
+        endpointState[endpoint].buffer[1] = tmpEpRamPtr;
+        tmpEpRamPtr += maxPacket;
+    }
+
+    // Commit to this USB RAM allocation
+    epRamPtr = tmpEpRamPtr;
+
+    // Remaining endpoint state values
+    endpointState[endpoint].maxPacket = maxPacket;
+    endpointState[endpoint].options = options;
+
+    // Enable double buffering if required
+    if (options & SINGLE_BUFFERED) {
+        LPC_USB->EPBUFCFG &= ~EP(endpoint);
+    } else {
+        // Double buffered
+        LPC_USB->EPBUFCFG |= EP(endpoint);
+    }
+
+    // Enable interrupt
+    LPC_USB->INTEN |= EP(endpoint);
+
+    // Enable endpoint
+    unstallEndpoint(endpoint);
+    return true;
+} 
+\end{lstlisting}
+
+\begin{lstlisting}[label=USBHAL::endpointReadResult(),caption=USBHAL::endpointReadResult()]
+EP_STATUS USBHAL::endpointReadResult(uint8_t endpoint, uint8_t *data, uint32_t *bytesRead) {
+
+    uint8_t bf = 0;
+    
+    if (!(epComplete & EP(endpoint)))
+        return EP_PENDING;
+    else {
+        epComplete &= ~EP(endpoint);
+
+        //check which buffer has been filled
+        if (LPC_USB->EPBUFCFG & EP(endpoint)) {
+            // Double buffered (here we read the previous buffer which was used)
+            if (LPC_USB->EPINUSE & EP(endpoint)) {
+                bf = 0;
+            } else {
+                bf = 1;
+            }
+        }
+
+        // Find how many bytes were read
+        *bytesRead = (uint32_t) (endpointState[endpoint].maxPacket - BYTES_REMAINING(ep[PHY_TO_LOG(endpoint)].out[bf]));
+
+        // Copy data
+        USBMemCopy(data, ct->out, *bytesRead);
+        return EP_COMPLETED;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=USBHAL::endpointWrite(),caption=USBHAL::endpointWrite()]
+EP_STATUS USBHAL::endpointWrite(uint8_t endpoint, uint8_t *data, uint32_t size) {
+    uint32_t flags = 0;
+    uint32_t bf;
+
+    // Validate parameters
+    if (data == NULL) {
+        return EP_INVALID;
+    }
+
+    if (endpoint > LAST_PHYSICAL_ENDPOINT) {
+        return EP_INVALID;
+    }
+
+    if ((endpoint==EP0IN) || (endpoint==EP0OUT)) {
+        return EP_INVALID;
+    }
+
+    if (size > endpointState[endpoint].maxPacket) {
+        return EP_INVALID;
+    }
+
+    if (LPC_USB->EPBUFCFG & EP(endpoint)) {
+        // Double buffered
+        if (LPC_USB->EPINUSE & EP(endpoint)) {
+            bf = 1;
+        } else {
+            bf = 0;
+        }
+    } else {
+        // Single buffered
+        bf = 0;
+    }
+
+    // Check if already active
+    if (ep[PHY_TO_LOG(endpoint)].in[bf] & CMDSTS_A) {
+        return EP_INVALID;
+    }
+
+    // Check if stalled
+    if (ep[PHY_TO_LOG(endpoint)].in[bf] & CMDSTS_S) {
+        return EP_STALLED;
+    }
+
+    // Copy data to USB RAM
+    USBMemCopy((uint8_t *)endpointState[endpoint].buffer[bf], data, size);
+
+    // Add options
+    if (endpointState[endpoint].options & RATE_FEEDBACK_MODE) {
+        flags |= CMDSTS_RF;
+    }
+
+    if (endpointState[endpoint].options & ISOCHRONOUS) {
+        flags |= CMDSTS_T;
+    }
+
+    // Add transfer
+    ep[PHY_TO_LOG(endpoint)].in[bf] = CMDSTS_ADDRESS_OFFSET( \
+                                      endpointState[endpoint].buffer[bf]) \
+                                      | CMDSTS_NBYTES(size) | CMDSTS_A | flags;
+
+    return EP_PENDING;
+}
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{References}
 http://www.bbc.co.uk/news/technology-13613536

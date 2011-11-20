@@ -1,4 +1,4 @@
-\documentclass[pdftex,12pt,a4paper]{report}
+\documentclass[pdftex,11pt,a4paper]{report}
 
 \usepackage[pdftex]{graphicx}
 \usepackage{enumitem}
@@ -215,8 +215,197 @@ ws.onclose = function(evt) {
 \end{center}
 
 
-\section{Real-Time Streaming Data from sensors}
+\section{Real-Time Data Streaming from sensors}
+Mbed wanted to demonstrate that it was possible to access sensors data all over the world using an mbed board. For this, two prototypes boards has been developed with different sensors:
+\begin{itemize}
+	\item accelerometer board which a three axis accelerometers
+	\item environmental board:
+		\begin{itemize}
+			\item light sensor
+			\item pressure sensor
+			\item microphone
+		\end{itemize}
+\end {itemize}
+
+\subsection{Architecture: mbed boards, websocket server, browsers}
+We can distinguish three different parts:
+\begin{itemize}
+	\item a websocket server
+	\item mbed boards which are connected to this websocket server
+	\item browsers which are connected to the same server
+\end{itemize}
+
+All mbeds boards send messages to the websocket server containing sensors data. The websocket server will broadcast to all client connected all messages received. So all browsers connected to this server are able to receive data from sensors.
+
+\subsection{Mbed boards}
+\subsubsection{Hardware}
+The hardware is very simple to setup as mbed is especially designed to prototype. The main parts are:
+\begin{itemize}
+	\item one mbed
+	\item a wifi module
+	\item sensors
+\end{itemize}
+
+To connect the mbed to the internet and access the websocket server, a wifi module has been chosen. I wanted a wifi module easy to use and easy to connect to the mbed. I chose a wifi module from roving networks which integrates a full TCP/IP stack. The communication between the mbed and the wifly module is established over a serial port. This module is integrated on a breakout board so that we just need wires to connect with the mbed. 
+
+Concerning sensors, all are also very easy to use and to connect. The 3-axis accelerometer and the pressure sensor are connected to the mbed over SPI. Libraries has been developed by the mbed community to use these two previous sensors. The light sensor is connected over a GPIO as the microphone. 
+
+
+\subsubsection{Software}
+The program running on the mbed has to :
+\begin{itemize}
+	\item connect to a network
+	\item connect to the websocket server
+	\item in a loop:
+		\begin{itemize}
+			\item read data sensors
+			\item send them over websocket to the server
+		\end{itemize}
+\end{itemize}
+
+\textbf{\underline{Wifi module}}
+
+As mentionned before, a wifi module connected over serial to the mbed is used to connect the mbed to the Internet. As there is a library to use serial ports in the mbed SDK, the development of a library in order to use all the capalities of the module has not been difficult. The idea is to write a command to the module and to analyze the response to see if it was successful or not. For instance, the main method of this library is join():
+
+\begin{lstlisting}[label=Join a network,caption=Join a network]
+bool Wifly::join() {
+    char cmd[30];
+
+    if (!adhoc) {
+    
+        //enter in command mode to send a command
+        if (!cmdMode()) {
+            exit();
+            return false;
+        }
+
+        //authorization: set wlan auth 3 (WPA mixed)
+        if (!send("set w a 3\r\n", "AOK")) {
+            exit();
+            return false;
+        }
+
+        //set ip dhcp 0/1
+        sprintf(cmd, "set i d %d\r\n", (dhcp) ? 1 : 0);
+        if (!send(cmd, "AOK")) {
+            exit();
+            return false;
+        }
+
+        //no echo: 
+        if (!send("set u m 1\r\n", "AOK")) {
+            exit();
+            return false;
+        }
+
+        // if no dhcp, set ip and netmask
+        if (!dhcp) {
+            sprintf(cmd, "set i a %s\r\n", ip);
+            if (!send(cmd, "AOK")) {
+                exit();
+                return false;
+            }
+
+            sprintf(cmd, "set i n %s\r\n", netmask);
+            if (!send(cmd, "AOK")) {
+                exit();
+                return false;
+            }
+
+        }
+
+        //set the password
+        if (wpa)
+            sprintf(cmd, "set w p %s\r\n", phrase);
+        else
+            sprintf(cmd, "set w k %s\r\n", phrase);
+
+        if (!send(cmd, "AOK")) {
+            exit();
+            return false;
+        }
+        
+        //join the network
+        sprintf(cmd, "join %s\r\n", ssid);
+
+        if (!send(cmd, "Associated!")) {
+            exit();
+            return false;
+        }
+        
+        //exit command mode
+        exit();
+				
+				//flush the reception buffer
+        flush();
+        return true;
+    } else {
+        return false;
+    }
+}
+\end{lstlisting}
+As expected, this method enters in command mode and then sends several commands like set the ssid, network password, use of dhcp or not. The "send" method uses just the API from the serial port library to send the command, wait the response from the wifi module and try to find in the response the string which is in the second parameter of this function.
+
+
+\textbf{\underline{Websocket client}}
+To connect the mbed to the websocket server, a websocket client has to be implemented. The code of the main function is:
+
+\begin{lstlisting}[label=Open a websocket connection,caption=Open a websocket connection]
+bool Websocket::connect() {
+    char cmd[50];
+        //enter in cmd mode
+        while (!wifi->cmdMode()) {
+            wifi->exit();
+        }
+
+
+        //open the connection with the server on a certain port
+        sprintf(cmd, "open %s %s\r\n", ip_domain.c_str(), port.c_str());
+        if(!wifi->send(cmd, "OPEN")) {
+           wifi->exit();
+           return false;
+        }
+
+        //send websocket HTTP header
+        sprintf(cmd, "GET /%s HTTP/1.1\r\n", path.c_str());
+        wifi->send(cmd);
+
+        sprintf(cmd, "Host: %s:%s\r\n", ip_domain.c_str(), port.c_str());
+        wifi->send(cmd);
+
+        wifi->send("Upgrade: WebSocket\r\n");
+
+        sprintf(cmd, "Origin: http:%s:%s\r\n", ip_domain.c_str(), port.c_str());
+        wifi->send(cmd);
+
+        wifi->send("Connection: Upgrade\r\n");
+        
+        wifi->send("Sec-WebSocket-Key1: 4 @1  46546xW%0l 1 5\r\n");
+        
+        wifi->send("Sec-WebSocket-key2: 12998 5 Y3 1  .P00\r\n\r\n");
+        
+        wifi->flush();
+        
+        if (!wifi->send("^n:ds[4U", "8jKS'y:G*Co,Wxa-"))
+            return false;
+            
+        printf("\r\nip_domain: %s\r\npath: /%s\r\nport: %s\r\n\r\n",this->ip_domain.c_str(), this->path.c_str(), this->port.c_str());
+        return true;
+    }
+\end{lstlisting}
+
+
+\subsection{Websocket server}
+
+\subsection{Browsers}
+
 \section{Remote procedure Call over Websockets}
+
+\subsection{Architecture: mbed boards, websocket server}
+
+\subsection{Mbed boards}
+
+\subsection{Websocket server}
 	
 	
 	

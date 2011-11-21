@@ -22,7 +22,7 @@
 	tabsize=4,
 	rulecolor=,
 	language=C++,
-        basicstyle=\scriptsize,
+        basicstyle=\tiny,
         upquote=true,
         aboveskip={1.5\baselineskip},
         columns=fixed,
@@ -358,7 +358,6 @@ bool Websocket::connect() {
             wifi->exit();
         }
 
-
         //open the connection with the server on a certain port
         sprintf(cmd, "open %s %s\r\n", ip_domain.c_str(), port.c_str());
         if(!wifi->send(cmd, "OPEN")) {
@@ -395,7 +394,58 @@ bool Websocket::connect() {
 \end{lstlisting}
 
 
-\subsection{Websocket server}
+\subsection{Websocket server and protocol}
+The websocket server which has been developed uses Tornado framework. This framework is written in Python. It's a non blocking web server. It uses epoll which permit to handle thousands of connections and so provides real-time feature. Some interesting features are for instance:
+\begin{itemize}
+	\item http server
+	\item template language
+	\item mySQL client wrapper
+	\item websocket server
+\end{itemize}
+
+
+In this section, I will use the Tornado websocket server API.
+
+
+\begin{lstlisting}[label=Open a websocket connection,caption=Open a websocket connection]
+application = tornado.web.Application([
+    (r'/ws/(.*)/(.*)', WSHandler),
+], **settings)
+
+if __name__ == "__main__":
+    http_server = tornado.httpserver.HTTPServer(application)
+    http_server.listen(443)
+    tornado.ioloop.IOLoop.instance().start()
+\end{lstlisting}
+
+These few lines launch a http server associated with a handler (WSHandler) when an event occurs. All requests having a path matching the regular expression /ws/*/* will be redirected to  WSHandler. The first argument of the path represents a channel and the second one the connection mode. This means that to open a connection with this server, a client has to join the server at the address: ws://sockets.mbed.org/ws/<channel>/<mode>
+
+The WebSocket server is divided into channels. All clients can send and receive messages over a same channel according their connection mode.
+There are 3 connection modes:
+
+wo: write-only: the client can write on a certain channel but cannot receive messages
+ro: read-only: the client can read messages on a certain channel but cannot write messages
+rw: read-write: the client can read and write messages over a channel
+
+When the server receives a message from a client in a certain channel who is not in 'ro' mode, it will broadcast the message to all clients connected to this channel who are in 'rw' or 'ro' mode.
+
+\begin{lstlisting}[label=Open a websocket connection,caption=Open a websocket connection]
+class WSHandler(tornado.websocket.WebSocketHandler):
+    def open(self, chan, mode):
+        self.channel = chan
+        self.mode = mode
+        if mode == 'rw' or mode == 'ro' or mode =='ro':
+            if not subscribers.get(self.channel):
+                subscribers[self.channel] = []
+            subscribers[self.channel].append(self)	
+            logging.warning("New Subscribers: chan %s, mode: %s"%(chan, mode))
+
+    def on_message(self, message):
+        for client in subscribers.get(self.channel, []):
+        		if client.mode != 'wo':
+	              client.write_message(message)
+\end{lstlisting}
+
 
 \subsection{Browsers}
 

@@ -1,4 +1,4 @@
-\documentclass[pdftex,11pt,a4paper]{report}
+\documentclass[pdftex,10pt,a4paper]{report}
 
 \usepackage[pdftex]{graphicx}
 \usepackage{enumitem}
@@ -450,8 +450,79 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 \subsection{Browsers}
 
 \section{Remote procedure Call over Websockets}
+After the Internet of Things project which shows the power of HTML5 in embedded systems, mbed wanted to use websockets to design a RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbed are connected to the Internet.  
 
 \subsection{Architecture: mbed boards, websocket server}
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.5\textwidth]{./rpc-1.jpg}
+		\caption{RPC architecture}
+		\label{RPC architecture}
+\end{figure}
+
+As for the Internet of Things project, each mbed will belong to a specific subnetwork and will be identified by a specific name. 
+\\
+On the previous diagram, two main elements can be distinguished:
+\begin{itemize}
+	\item Two different sub-networks. On each sub-networks, all Mbeds can share methods or execute a non-local one.
+	\item A RPC Websocket server which is responsible to manage all sub-networks and all messages exchanged. This server is written in Python and uses Tornado.
+\end{itemize}
+
+Different steps are required to execute a non local method:
+\begin{itemize}
+	\item connect several mbeds to the same subnetwork over a websocket communication
+	\item then all mbeds can register methods: an mbed has to register on the server one or several methods before than others can call them
+	\item an mbed connected over the same subnetwork as the previous mbed can call the registered method
+	\item the distant mbed will execute the method and return the results
+	\item the local mbed has access to the result and the method has been executed
+\end{itemize}
+
+\subsubsection{Protocol}
+The RPC mechanism relies on messages exchanged. On these messages, we need to specify:
+\begin{itemize} \itemsep 0em
+	\item the source of the message
+	\item the destination of the message
+	\item message name:
+		\begin{itemize} \itemsep 0em
+			\item CALL: to call a distant function
+			\item RESULT: this message contains the result of a previous CALL
+			\item REGISTER: used to register a specific method to the websocket server
+			\item INFO\_METHODS: a client can have access to all methods registered from a specific client
+			\item ERROR: an error has been detected
+		\end{itemize}
+	\item message ID
+\end{itemize}
+
+These previous fields are common to all messages exchanged. After for each messages, other fields can be present:
+
+\begin{itemize}
+	\item CALL:
+		\begin{itemize} \itemsep 0em
+			\item method name: distant method which will be called
+			\item params: parameters for this method
+		\end{itemize}
+	\item RESULT:
+		\begin{itemize} \itemsep 0em
+			\item result: result of the function called remotely
+		\end{itemize}
+	\item REGISTER:
+		\begin{itemize} \itemsep 0em
+			\item fn: on the network, a distant method will be identified by this field
+		\end{itemize}
+	\item ERROR:
+		\begin{itemize} \itemsep 0em
+			\item cause: cause of the error:
+			\begin{itemize}
+				\item JSON\_PARSE\_ERROR: error in the json format
+				\item JSON\_RPC\_ERROR: error in the rpc message format
+				\item METHOD\_NOT\_FOUND: the distant method called has not been registered
+				\item CLIENT\_NOT\_CONNECTED: the client which must execute the distant method is not connected
+			\end{itemize}
+		\end{itemize}
+\end{itemize}
+
+
 
 \subsection{Mbed boards}
 

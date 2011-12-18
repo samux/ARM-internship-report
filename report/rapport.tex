@@ -22,7 +22,7 @@
 	tabsize=4,
 	rulecolor=,
 	language=C++,
-        basicstyle=\tiny,
+        basicstyle=\scriptsize,
         upquote=true,
         aboveskip={1.5\baselineskip},
         columns=fixed,
@@ -262,8 +262,9 @@ The program running on the mbed has to :
 			\item send them over websocket to the server
 		\end{itemize}
 \end{itemize}
+\\ \\
 
-\textbf{\underline{Wifi module}}
+\textbf{\underline{Wifi module}} \\
 
 As mentionned before, a wifi module connected over serial to the mbed is used to connect the mbed to the Internet. As there is a library to use serial ports in the mbed SDK, the development of a library in order to use all the capalities of the module has not been difficult. The idea is to write a command to the module and to analyze the response to see if it was successful or not. For instance, the main method of this library is join():
 
@@ -346,8 +347,8 @@ bool Wifly::join() {
 \end{lstlisting}
 As expected, this method enters in command mode and then sends several commands like set the ssid, network password, use of dhcp or not. The "send" method uses just the API from the serial port library to send the command, wait the response from the wifi module and try to find in the response the string which is in the second parameter of this function.
 
-
-\textbf{\underline{Websocket client}}
+\\ \\
+\textbf{\underline{Websocket client}} \\
 To connect the mbed to the websocket server, a websocket client has to be implemented. The code of the main function is:
 
 \begin{lstlisting}[label=Open a websocket connection,caption=Open a websocket connection]
@@ -427,9 +428,14 @@ wo: write-only: the client can write on a certain channel but cannot receive mes
 ro: read-only: the client can read messages on a certain channel but cannot write messages
 rw: read-write: the client can read and write messages over a channel
 
-When the server receives a message from a client in a certain channel who is not in 'ro' mode, it will broadcast the message to all clients connected to this channel who are in 'rw' or 'ro' mode.
+When the server receives a message from a client in a certain channel who is not in 'ro' mode, it will broadcast the message to all clients connected to this channel who are in 'rw' or 'ro' mode. This mechanism is done in WShandler which inherits from tornado.websocket.WebSocketHandler. The websocket protocol is implemented in the base class. You can three different events in WShandler: 
+\begin{itemize}
+	\item a connection has been opened
+	\item a message is received
+	\item a connection has been closed
+\end{itemize}
 
-\begin{lstlisting}[label=Open a websocket connection,caption=Open a websocket connection]
+\begin{lstlisting}[label=Broadcast messages received,caption=Broadcast messages received]
 class WSHandler(tornado.websocket.WebSocketHandler):
     def open(self, chan, mode):
         self.channel = chan
@@ -449,8 +455,12 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 \subsection{Browsers}
 
+
+
+
+
 \section{Remote procedure Call over Websockets}
-After the Internet of Things project which shows the power of HTML5 in embedded systems, mbed wanted to use websockets to design a RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbed are connected to the Internet.  
+After the Internet of Things project which shows the power of HTML5 in embedded systems, mbed wanted to use websockets to design a RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbed are connected to the Internet.
 
 \subsection{Architecture: mbed boards, websocket server}
 
@@ -460,14 +470,23 @@ After the Internet of Things project which shows the power of HTML5 in embedded 
 		\caption{RPC architecture}
 		\label{RPC architecture}
 \end{figure}
-
-As for the Internet of Things project, each mbed will belong to a specific subnetwork and will be identified by a specific name. 
 \\
 On the previous diagram, two main elements can be distinguished:
 \begin{itemize}
 	\item Two different sub-networks. On each sub-networks, all Mbeds can share methods or execute a non-local one.
 	\item A RPC Websocket server which is responsible to manage all sub-networks and all messages exchanged. This server is written in Python and uses Tornado.
 \end{itemize}
+\\
+
+
+As for the Internet of Things project, each mbed will belong to a specific subnetwork and will be identified by a specific name.
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.5\textwidth]{./rpc_ws.jpg}
+		\caption{RPC: mbed identification on a subnetwork}
+		\label{RPC: mbed identification on a subnetwork}
+\end{figure}
 
 Different steps are required to execute a non local method:
 \begin{itemize}
@@ -478,7 +497,7 @@ Different steps are required to execute a non local method:
 	\item the local mbed has access to the result and the method has been executed
 \end{itemize}
 
-\subsubsection{Protocol}
+\subsection{Protocol}
 The RPC mechanism relies on messages exchanged. On these messages, we need to specify:
 \begin{itemize} \itemsep 0em
 	\item the source of the message
@@ -513,7 +532,7 @@ These previous fields are common to all messages exchanged. After for each messa
 	\item ERROR:
 		\begin{itemize} \itemsep 0em
 			\item cause: cause of the error:
-			\begin{itemize}
+			\begin{itemize} \itemsep 0em
 				\item JSON\_PARSE\_ERROR: error in the json format
 				\item JSON\_RPC\_ERROR: error in the rpc message format
 				\item METHOD\_NOT\_FOUND: the distant method called has not been registered
@@ -522,9 +541,248 @@ These previous fields are common to all messages exchanged. After for each messa
 		\end{itemize}
 \end{itemize}
 
+\subsection{Signature of methods handled}
+A user wants to be able to register and then call a function of his choice. So a function can take all kinds of input argument and return whatever type.
+As messages are exchanged in JSON format, I decided to use this signature for all methods handled by the RPC mechanism: \\
+
+\underline{ void fn(MbedJSONValue\& in, MbedJSONValue\& out) \\}
+
+
+A MbedJSONValue object is the object associated to a string in JSON format. This class can handle parameters such as:
+\begin{itemize} \itemsep 0em
+	\item booleans
+	\item integers
+	\item double
+	\item strings
+	\item arrays of MbedJSONValue
+	\item MbedJSONValue object inside another one
+\end{itemize}
+
+This class has been developed in order to simplifies at maximum the creation of such objects:
+
+\begin{lstlisting}[label=MbedJSONValue manipulation,caption=MbedJSONValue manipulation]
+ #include "mbed.h"
+ #include "MbedJSONValue.h"
+ #include <string>
+
+ int main() {     
+    MbedJSONValue demo;
+
+   const  char * json = "{\"my_array\": [\"demo_string\", 10], \"my_boolean\": true}";
+
+   //parse the previous string and fill the object demo
+   parse(demo, json);
+
+   std::string my_str;
+   int my_int;
+   bool my_bool;
+
+   my_str = demo["my_array"][0].get<std::string>();
+   my_int = demo["my_array"][1].get<int>();
+   my_bool = demo["my_boolean"].get<bool>();
+   
+    printf("my_str: %s\r\n", my_str.c_str());
+    printf("my_int: %d\r\n", my_int);
+    printf("my_bool: %s\r\n", my_bool ? "true" : "false");
+ }
+   \end{lstlisting}
+
+\subsection{Core of the RPC mechanism}
+\subsubsection{Register a method}
+
+\begin{lstlisting}[label=Register a method,caption=Register a method]
+    /**
+    * Register a method of an object
+    *
+    * @param public_name the method will be seen and called by this name
+    * @param obj_ptr a pointeur on the object which contains the method to register
+    * @param fn the method to register (this method must have this signature: void fn(MbedJSONValue& val, MbedJSONValue& res)
+    * @return if REGISTER_OK, the method is registered, otherwise, there is an error
+    *
+    */
+    template<typename T> RPC_TYPE registerMethod(const char * public_name, T * obj_ptr, void (T::*fn)(MbedJSONValue& val, MbedJSONValue& res)) {
+        char json[100];
+        RPC_TYPE t;
+        int id = rand() % 100;
+        MbedJSONValue tmp;
+
+        sprintf(json, (const char *)MSG_REGISTER, my_id, id, public_name);
+        webs->send(json);
+        t = waitAnswer(tmp, id, json);
+        if (t != REGISTER_OK)
+            return t;
+        if( index == NB_METH )
+            index = NB_METH - 1;
+        callbacks[index] = new FNPointer(obj_ptr, fn);
+        name[index++] = public_name;
+        return REGISTER_OK;
+    }
+    \end{lstlisting}
+    
+    Firstly, to register a method, the mbed sends to the server the MSG\_REGISTER request and wait for the response to see if the method has been registered on the server or not.
+    Then, the register step fills two arrays. The first one is an array containing names which are identifiers of all methods registered. The second one is an array of function pointers.
+    
+\subsubsection{Call a registered method}
+
+\begin{lstlisting}[label=Register a method,caption=Register a method]
+RPC_TYPE MbedJSONRpc::call(const char * fn, const char * dest, MbedJSONValue& in, MbedJSONValue& out) {
+
+    char json[150];
+    RPC_TYPE t;
+    string str = in.serialize();
+    int id = rand() % 100;
+    MbedJSONValue tmp;
+
+
+    sprintf(json, (const char *)MSG_CALL, my_id, dest, id, fn, str.c_str());
+    webs->send(json);
+    t = waitAnswer(tmp, id, json);
+    if (t != CALL_OK)
+        return t;
+    out = tmp["res"];
+    return CALL_OK;
+}
+\end{lstlisting}
+
+This method serializes the MbedJSONValue in order to be sent over websockets. Then, the mbed send a message to the server containing a MSG\_CALL request, the distant mbed identifier, the distant function identifier and the input argument of the distant method. If CALL\_OK is received from the server, the method fills the out reference which corresponds to the result of the distant method.
+
+
+\subsubsection{Listen for incoming request}
+
+\begin{lstlisting}[label=Register a method,caption=Register a method]
+void MbedJSONRpc::work() {
+    char json_recv[150];
+    MbedJSONValue v, r;
+    int i = -1;
+    while (1) {
+        wait(0.2);
+        if (webs->read(json_recv)) {
+            parse(v, json_recv);
+            if (v.hasMember("method") && v.hasMember("from") && v.hasMember("id_msg") && v.hasMember("params") && v.hasMember("msg") && !strcmp(v["msg"].get<std::string>().c_str(), "CALL")) {
+            
+                string s = v["method"].get<std::string>();
+                
+                if ((i = methodAlreadyRegistered((char *)s.c_str())) != -1) {
+                
+                    obj[i]->execute(v["params"], r);
+                    sprintf(json_recv, (const char *)MSG_RESULT, my_id,
+                            v["from"].get<std::string>().c_str(), v["id_msg"].get<int>(), r.serialize().c_str());
+                    webs->send(json_recv);
+                    
+                } else if ((i = procAlreadyRegistered((char *)s.c_str())) != -1) {
+                
+                    proc[i](v["params"], r);
+                    sprintf(json_recv, (const char *)MSG_RESULT, my_id,
+                            v["from"].get<std::string>().c_str(), v["id_msg"].get<int>(), r.serialize().c_str());
+                    webs->send(json_recv);
+                    
+                }
+            }
+        }
+    }
+}
+\end{lstlisting}
+This method tries to read a websocket message. If a message is available, it converts it in a MbedJSONValue object. If a message concerns an existing registered method and has all fields required to be a valid rpc message, the method is called and output arguments are sent in a MSG\_RESULT message to the mbed which has requested the distant call.
+
 
 
 \subsection{Mbed boards}
+\subsubsection{Hardware}
+The only requirement for the hardware is to have access to the internet. So a wifi module or an ethernet jack is required.
+
+\\TODO: photo
+
+\subsubsection{Software: mbed which registers a method}
+I will present the main program running on an mbed which has an accelerometer connected. The idea is to remotely access these accelerometers values from another mbed.
+
+
+\begin{lstlisting}[label=Register a method,caption=Register a method]
+
+// accelerometer
+ADXL345 accelerometer(p5, p6, p7, p8);
+
+//wifi module
+Wifly wifly(p9, p10, p17, "8cb19na", "vokeralineaplus", true);
+
+//websocket: configuration with sub-network = samux and mbed_id = mbed_acc 
+Websocket webs("ws://sockets.mbed.org/rpc/samux/mbed_acc",&wifly);
+
+//RPC object attached to the websocket server
+MbedJSONRpc rpc(&webs);
+
+
+//Acc class. 
+class Acc {
+public:
+    Acc() {};
+    void getAcc(MbedJSONValue& in, MbedJSONValue& out) {
+        int readings[3] = {0, 0, 0};
+        accelerometer.getOutput(readings);
+        out[0] = readings[0];
+        out[1] = readings[1];
+        out[2] = readings[2];
+    }
+};
+
+//Instance of Acc. The method getAcc of this object will be registered
+Acc acc;
+
+int main() {
+    
+    RPC_TYPE t;
+    
+    //Accelerometers init
+    accelerometer.init();
+    
+    // join the network
+    wifly.join();
+    
+    //connect the websocket server
+    webs.connect();
+
+    //register the acc method and wait for incoming methods
+    if((t = rpc.registerMethod("getAcc", &acc, &Acc::getAcc)) == REGISTER_OK) {
+        printf("getAcc is registered\r\n");
+    		//wait for incoming CALL requests
+    		rpc.work(); 
+    }
+    else {
+        printType(t);
+    }
+    
+}
+\end{lstlisting}
+
+\subsubsection{Software: mbed which calls a distant method}
+
+
+\begin{lstlisting}[label=Register a method,caption=Register a method]
+//websocket over ethernet: configuration with sub-network = samux and mbed_id = mbed_acc
+Websocket webs("ws://sockets.mbed.org/rpc/samux/mbed_client");
+
+//RPC object attached to the websocket server
+MbedJSONRpc rpc(&webs);
+
+int main() {
+    RPC_TYPE t;
+    
+    //in: argument for the distant method (here empty)
+    //out results of the distant method (accelerometers values)
+    MbedJSONValue in, out;
+
+		// connect the websocket server
+    webs.connect();
+
+    //CALL getAcc on mbed_acc
+    if ((t = rpc.call("getAcc", "mbed_acc", in, out)) == CALL_OK) {
+        printf("acc_x: %d\r\n", out[0].get<int>());
+        printf("acc_y: %d\r\n", out[1].get<int>());
+        printf("acc_z: %d\r\n", out[2].get<int>());
+    } else
+        printType(t);
+}
+\end{lstlisting}
+
 
 \subsection{Websocket server}
 	

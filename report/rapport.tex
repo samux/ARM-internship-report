@@ -916,10 +916,16 @@ The main data structure in order to represent the state of the whole network is 
 		\end{packed_item}
 \end{packed_item}
 
-TODO: picture explaining the data structure \\
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.6\textwidth]{./rpc_server_data_struct.png}
+		\caption{Data structure for the RPC websocket server}
+		\label{Data structure for the RPC websocket server}
+\end{figure}
 
 
-The logic implemented in the server follows the following steps:
+The websocket server follows the following logic:
 \begin{packed_item}
 	\item If a new mbed connects a specific subnetwork:
 	\begin{packed_item}

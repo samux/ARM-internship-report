@@ -582,6 +582,17 @@ This first project shows the powerful of the new HTML5 feature: websockets. I am
 After the Internet of Things project, mbed wanted to develop a Remote Procedure Call mechanism between several mbeds over a websocket communication.
 
 
+
+
+
+
+
+
+
+
+
+
+
 \newpage
 
 \section{Remote Procedure Call over Websockets}
@@ -604,7 +615,7 @@ On the previous diagram, two main elements can be distinguished:
 \end{packed_item}
 
 
-As for the Internet of Things project, each mbed will belong to a specific subnetwork and will be identified by a specific name.
+As for the Internet of Things project, each mbed will belong to a specific subnetwork and will be identified by a specific name. This identification is made over the URL used to connect the websocket server:
 
 \begin{figure}[h!]
 		\centering
@@ -613,13 +624,13 @@ As for the Internet of Things project, each mbed will belong to a specific subne
 		\label{RPC: mbed identification on a subnetwork}
 \end{figure}
 
-Different steps are required to execute a non local method:
+Different steps are required to execute a distant method:
 \begin{packed_item}
 	\item connect several mbeds to the same subnetwork over a websocket communication
 	\item then all mbeds can register methods: an mbed has to register on the server one or several methods before than others can call them
 	\item an mbed connected over the same subnetwork as the previous mbed can call the registered method
 	\item the distant mbed will execute the method and return the results
-	\item the local mbed has access to the result and the method has been executed
+	\item the local mbed can then handle the result of the distant method
 \end{packed_item}
 
 \subsection{Protocol}
@@ -638,7 +649,7 @@ The RPC mechanism relies on messages exchanged. On these messages, we need to sp
 	\item message ID
 \end{packed_item}
 
-These previous fields are common to all messages exchanged. After for each messages, other fields can be present:
+These previous fields are common to all messages exchanged. After for each message, other fields can be present:
 
 \begin{packed_item}
 	\item CALL:
@@ -668,16 +679,17 @@ These previous fields are common to all messages exchanged. After for each messa
 
 \subsection{Signature of methods handled}
 A user wants to be able to register and then call a function of his choice. So a function can take all kinds of input argument and return whatever type.
-As messages are exchanged in JSON format, I decided to use this signature for all methods handled by the RPC mechanism: \\
+As messages are exchanged in JSON format, I decided to use this signature for all methods handled by the RPC mechanism:
 
-\underline{ void fn(MbedJSONValue\& in, MbedJSONValue\& out) \\}
-
+\begin{center}
+\textbf{ void fn(MbedJSONValue\& in, MbedJSONValue\& out)}
+\end{center}
 
 A MbedJSONValue object is the object associated to a string in JSON format. This class can handle parameters such as:
 \begin{packed_item}
 	\item booleans
 	\item integers
-	\item double
+	\item doubles
 	\item strings
 	\item arrays of MbedJSONValue
 	\item MbedJSONValue object inside another one
@@ -712,103 +724,81 @@ This class has been developed in order to simplifies at maximum the creation of 
  }
    \end{lstlisting}
 
-\subsection{Core of the RPC mechanism}
+\subsection{Core of the RPC mechanism: MbedJSONRpc}
 \subsubsection{Register a method}
+To register a method, a user has to invoke:
+\begin{lstlisting}[label=MbedJSONValue manipulation,caption=MbedJSONValue manipulation]
+template<typename T> RPC_TYPE registerMethod(const char * public_name, T * obj_ptr, void (T::*fn)(MbedJSONValue& val, MbedJSONValue& res))
+\end{lstlisting}
 
-\begin{lstlisting}[label=Register a method,caption=Register a method]
-    /**
-    * Register a method of an object
-    *
-    * @param public_name the method will be seen and called by this name
-    * @param obj_ptr a pointeur on the object which contains the method to register
-    * @param fn the method to register (this method must have this signature: void fn(MbedJSONValue& val, MbedJSONValue& res)
-    * @return if REGISTER_OK, the method is registered, otherwise, there is an error
-    *
-    */
-    template<typename T> RPC_TYPE registerMethod(const char * public_name, T * obj_ptr, void (T::*fn)(MbedJSONValue& val, MbedJSONValue& res)) {
-        char json[100];
-        RPC_TYPE t;
-        int id = rand() % 100;
-        MbedJSONValue tmp;
 
-        sprintf(json, (const char *)MSG_REGISTER, my_id, id, public_name);
-        webs->send(json);
-        t = waitAnswer(tmp, id, json);
-        if (t != REGISTER_OK)
-            return t;
-        if( index == NB_METH )
-            index = NB_METH - 1;
-        callbacks[index] = new FNPointer(obj_ptr, fn);
-        name[index++] = public_name;
-        return REGISTER_OK;
-    }
-    \end{lstlisting}
-    
-    Firstly, to register a method, the mbed sends to the server the MSG\_REGISTER request and wait for the response to see if the method has been registered on the server or not.
-    Then, the register step fills two arrays. The first one is an array containing names which are identifiers of all methods registered. The second one is an array of function pointers.
+This method is responsible to register on the rpc websocket server the specified method:
+\begin{packed_item}
+	\item Send a websocket message to the server containing a MSG\_REGISTER request:
+	\begin{packed_item}
+		\item from: mbed\_id
+		\item to: gateway
+		\item msg: REGISTER
+		\item fn: public\_name 
+	\end{packed_item}
+	\item Wait a response from the server (if the request is successful: REGISTER\_OK)
+	\item Fill two local arrays:
+	\begin{packed_item}
+		\item callback: contains function pointers of methods registered
+		\item name: contains identifiers of methods registered
+	\end{packed_item}
+\end{packed_item}
+
+
+After this step, a distant mbed will be able to call the method registered identified by "public\_name".
     
 \subsubsection{Call a registered method}
-
-\begin{lstlisting}[label=Register a method,caption=Register a method]
-RPC_TYPE MbedJSONRpc::call(const char * fn, const char * dest, MbedJSONValue& in, MbedJSONValue& out) {
-
-    char json[150];
-    RPC_TYPE t;
-    string str = in.serialize();
-    int id = rand() % 100;
-    MbedJSONValue tmp;
-
-
-    sprintf(json, (const char *)MSG_CALL, my_id, dest, id, fn, str.c_str());
-    webs->send(json);
-    t = waitAnswer(tmp, id, json);
-    if (t != CALL_OK)
-        return t;
-    out = tmp["res"];
-    return CALL_OK;
-}
+To call a distant method, a user has to invoke:
+\begin{lstlisting}[label=MbedJSONValue manipulation,caption=MbedJSONValue manipulation]
+RPC_TYPE MbedJSONRpc::call(const char * fn, const char * dest, MbedJSONValue& in, MbedJSONValue& out)
 \end{lstlisting}
 
-This method serializes the MbedJSONValue in order to be sent over websockets. Then, the mbed send a message to the server containing a MSG\_CALL request, the distant mbed identifier, the distant function identifier and the input argument of the distant method. If CALL\_OK is received from the server, the method fills the out reference which corresponds to the result of the distant method.
+This method, in order to call a distant method, realizes several steps:
+\begin{packed_item}
+	\item Serialize the in MbedJSONValue object in order to be sent over websockets
+	\item Send a websocket message to the server containing a MSG\_CALL request
+	\begin{packed_item}
+		\item from: mbed\_id
+		\item to: dest
+		\item msg: CALL
+		\item fn: fn
+		\item params: "in" serialized
+	\end{packed_item}
+	\item Wait a MSG\_RESULT message from the server containing the result of the distant method
+	\item Fill the "out" reference with the result
+\end{packed_item}
 
+After this step, a user can handle the result of the distant method contained in the "out" reference.
 
 \subsubsection{Listen for incoming request}
-
-\begin{lstlisting}[label=Register a method,caption=Register a method]
-void MbedJSONRpc::work() {
-    char json_recv[150];
-    MbedJSONValue v, r;
-    int i = -1;
-    while (1) {
-        wait(0.2);
-        if (webs->read(json_recv)) {
-            parse(v, json_recv);
-            if (v.hasMember("method") && v.hasMember("from") && v.hasMember("id_msg") && v.hasMember("params") && v.hasMember("msg") && !strcmp(v["msg"].get<std::string>().c_str(), "CALL")) {
-            
-                string s = v["method"].get<std::string>();
-                
-                if ((i = methodAlreadyRegistered((char *)s.c_str())) != -1) {
-                
-                    obj[i]->execute(v["params"], r);
-                    sprintf(json_recv, (const char *)MSG_RESULT, my_id,
-                            v["from"].get<std::string>().c_str(), v["id_msg"].get<int>(), r.serialize().c_str());
-                    webs->send(json_recv);
-                    
-                } else if ((i = procAlreadyRegistered((char *)s.c_str())) != -1) {
-                
-                    proc[i](v["params"], r);
-                    sprintf(json_recv, (const char *)MSG_RESULT, my_id,
-                            v["from"].get<std::string>().c_str(), v["id_msg"].get<int>(), r.serialize().c_str());
-                    webs->send(json_recv);
-                    
-                }
-            }
-        }
-    }
-}
+To listen incoming requests, a user has to invoke:
+\begin{lstlisting}[label=MbedJSONValue manipulation,caption=MbedJSONValue manipulation]
+void MbedJSONRpc::work()
 \end{lstlisting}
-This method tries to read a websocket message. If a message is available, it converts it in a MbedJSONValue object. If a message concerns an existing registered method and has all fields required to be a valid rpc message, the method is called and output arguments are sent in a MSG\_RESULT message to the mbed which has requested the distant call.
 
+This method does the following steps:
+\begin{packed_item}
+	\item Try to read a websocket message
+	\item If a message is available:
+		\begin{packed_item}
+			\item Check the validity of the message
+			\item Convert the "params" field in a MbedJSONValue object
+			\item Execute the registered method with the previous in argument. At the same time, the method will fill the "out" parameter containing the result
+			\item Serialize the result of the method executed
+			\item Send a MSG\_RESULT websocket message to the server;
+			\begin{packed_item}
+				\item from: mbed\_id
+				\item to: msg["from"]
+				\item msg: RESULT
+				\item res: "out" parameter serialized
+			\end{packed_item}
+		\end{packed_item}
+\end{packed_item}
 
 
 \subsection{Mbed boards}
@@ -827,14 +817,13 @@ I will present the main program running on an mbed which has an accelerometer co
 ADXL345 accelerometer(p5, p6, p7, p8);
 
 //wifi module
-Wifly wifly(p9, p10, p17, "8cb19na", "vokeralineaplus", true);
+Wifly wifly(p9, p10, p17, "network", "password", true);
 
-//websocket: configuration with sub-network = samux and mbed_id = mbed_acc 
-Websocket webs("ws://sockets.mbed.org/rpc/samux/mbed_acc",&wifly);
+//websocket: configuration with sub-network = sensor and mbed_id = mbed_acc 
+Websocket webs("ws://sockets.mbed.org/rpc/sensor/mbed_acc",&wifly);
 
 //RPC object attached to the websocket server
 MbedJSONRpc rpc(&webs);
-
 
 //Acc class. 
 class Acc {
@@ -880,10 +869,9 @@ int main() {
 
 \subsubsection{Software: mbed which calls a distant method}
 
-
 \begin{lstlisting}[label=Register a method,caption=Register a method]
 //websocket over ethernet: configuration with sub-network = samux and mbed_id = mbed_acc
-Websocket webs("ws://sockets.mbed.org/rpc/samux/mbed_client");
+Websocket webs("ws://sockets.mbed.org/rpc/sensor/mbed_client");
 
 //RPC object attached to the websocket server
 MbedJSONRpc rpc(&webs);
@@ -908,9 +896,55 @@ int main() {
 }
 \end{lstlisting}
 
+TODO: screenshot of result
 
 \subsection{Websocket server}
+The server uses the same framework used for the realtime streaming data project: Tornado. The server is responsible to manage all subnetworks and messages exchanged over a same subnetwork. \\
+
+
+The main data structure in order to represent the state of the whole network is a dictionnary:
+\begin{packed_item}
+	\item Each key represents a specific subnetwork
+	\item A value associated to a subnetwork is another dictionnary:
+		\begin{packed_item}
+			\item Each key represents one mbed connected
+			\item Each value is a dictionnary containing
+			\begin{packed_item}
+				\item a reference on the mbed
+				\item an array containing methods registered by this mbed
+			\end{packed_item}
+		\end{packed_item}
+\end{packed_item}
+
+TODO: picture explaining the data structure \\
+
+
+The logic implemented in the server follows the following steps:
+\begin{packed_item}
+	\item If a new mbed connects a specific subnetwork:
+	\begin{packed_item}
+		\item Update the dictionnary containing the state of the network by adding an entry on the subnetwork dictionnary
+	\end{packed_item}
 	
+	\item If the server receives a MSG\_REGISTER request:
+	\begin{packed_item}
+		\item Update the dictionnary containing the state of the network by adding the new distant method in the array associated to the mbed
+	\end{packed_item}
+	
+	\item If the server receives a MSG\_CALL request:
+	\begin{packed_item}
+		\item Check that the request comes from an mbed on the same subnetwork as the distant mbed
+		\item Check that the method called is registered in the array associated to the called mbed
+		\item If the two previous steps are sucessful, send a MSG\_CALL message to the distant mbed
+	\end{packed_item}
+	
+	\item If the server receives a MSG\_RESULT message:
+	\begin{packed_item}
+		\item Check that the mbed which will receive the result of the distant method is on the same subnetwork
+		\item Forward the message to the mbed which called the distant method
+	\end{packed_item}
+	
+\end{packed_item}
 	
 	
 	

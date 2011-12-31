@@ -1322,7 +1322,7 @@ One of the purpose of this class is to provide an API in order to handle the USB
 \end{packed_item}
 
 \subsubsection{Setup packet treatment}
-Two data structure has been defined in order to perform the control endpoint treatment. The enumeration step is part of this treatment:
+Two data structures has been defined in order to perform the control endpoint treatment. The enumeration step is part of this treatment:
 \begin{packed_item}
 	\item SETUP\_PACKET: to describe a setup packet
 	\item CONTROL\_TRANSFER: to describe a transfer on the control endpoint
@@ -1373,17 +1373,14 @@ For instance, a GET\_DEVICE\_DESCRIPTOR request is processed following this sche
 	\end{packed_item}
 \end{packed_item}
 
-\subsection{HID class}
-\subsubsection{Introduction}
-HID is one of the most frequently used USB classes. The HID class was primarily defined for devices that are used by humans to control the operation of computer systems. Typical examples of HID class devices include keyboards, mice, trackballs, and joysticks. An HID device may have knobs, switches, buttons, sliders, etc. The HID class is also frequently used for devices that may not require human interaction but provide data in a similar format as HID class devices. Since all operating systems have a built-in HID driver, it's easy to design a USB HID device which doesn't require any specific driver.
 
-Data exchanged between host and device resides in structure called reports. The report format is flexible and can handle any format of data, but each report has a fixed size. This size is specified in a HID descriptor which is transmitted as part of the configuration descriptor.
-HID devices are required to provide a Report Descriptor which enumerates all data fields of a report. A HID device can have at most one interrupt IN endpoint and one interrupt OUT endpoint (and the control endpoint to perform the enumeration step).
+A basic device descriptor is quite common to all USB devices. Importants fields are:
+\begin{packed_item}	
+	\item bcdUSB which is the USB specification release number
+	\item bDeviceClass specifies the device class
+	\item bMaxPacketSize0 specifies the maximum packet size for endpoint 0
+\end{packed_item}
 
-For each field in the report, the Report Descriptor defines how many bits the field consumes, how often this data is repeated, and which is the type of the data field. Thus, report descriptors are specific to a device. Examples of report descriptor are provided in next sections of this document concerning HID devices such as mice or keyboards.
-\\
-
-Concerning standard descriptors, they are quite similar for all HID devices:
 \begin{lstlisting}[label=Device Descriptor,caption=Device Descriptor]
 uint8_t * USBDevice::deviceDesc() {
     static uint8_t deviceDescriptor[] = {
@@ -1410,7 +1407,17 @@ uint8_t * USBDevice::deviceDesc() {
 }
 \end{lstlisting}
 
-\begin{lstlisting}[label=Configuration Descriptor,caption=Configuration Descriptor]
+\subsection{USBHID class}
+\subsubsection{Introduction}
+HID is one of the most frequently used USB classes. The HID class was primarily defined for devices that are used by humans to control the operation of computer systems. Typical examples of HID devices include keyboards, mice, trackballs, and joysticks. HID devices may have knobs, switches, buttons, sliders, etc. The HID class is also frequently used for devices that may not require human interaction but provide data in a similar format as HID class devices. Since all operating systems have a built-in HID driver, it's easy to design a USB HID device which doesn't require any specific driver.
+
+Data exchanged between host and device resides in structure called reports. The report format is flexible and can handle any format of data, but each report has a fixed size. This size is specified in a HID descriptor which is transmitted as part of the configuration descriptor.
+HID devices are required to provide a Report Descriptor which enumerates all data fields of a report. A HID device can have at most one interrupt IN endpoint and one interrupt OUT endpoint (and the control endpoint to perform the enumeration step).
+
+For each field in the report, the Report Descriptor defines how many bits the field consumes, how often this data is repeated, and which is the type of the data field. Thus, report descriptors are specific to a device.
+\\
+
+\begin{lstlisting}[label=HID Configuration Descriptor,caption=HID Configuration Descriptor]
 uint8_t * USBHID::configurationDesc() {
     static uint8_t configurationDescriptor[] = {
         CONFIGURATION_DESCRIPTOR_LENGTH,// bLength
@@ -1442,8 +1449,8 @@ uint8_t * USBHID::configurationDesc() {
         0x00,                           // bCountryCode
         0x01,                           // bNumDescriptors
         REPORT_DESCRIPTOR,              // bDescriptorType
-        LSB(this->reportDescLength()),  // wDescriptorLength (LSB)
-        MSB(this->reportDescLength()),  // wDescriptorLength (MSB)
+        LSB(reportDescLength()),  			// wDescriptorLength (LSB)
+        MSB(reportDescLength()),  			// wDescriptorLength (MSB)
 
         //endpoint descriptor (interrupt IN endpoint)
         ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
@@ -1452,7 +1459,7 @@ uint8_t * USBHID::configurationDesc() {
         E_INTERRUPT,                    // bmAttributes
         LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (LSB)
         MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (MSB)
-        10,                             // bInterval (milliseconds)
+        1,                              // bInterval (milliseconds)
 
         //endpoint descriptor (interrupt OUT endpoint)
         ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
@@ -1461,52 +1468,27 @@ uint8_t * USBHID::configurationDesc() {
         E_INTERRUPT,                    // bmAttributes
         LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (LSB)
         MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (MSB)
-        10,                             // bInterval (milliseconds)
+        1,                              // bInterval (milliseconds)
     };
     return configurationDescriptor;
 }
 \end{lstlisting}
 
-In the device descriptor, the host will find information such as the maximum packets length that can be exchanged over the control endpoint, the device identification (vendor\_id, product\_id and product\_release) and the USB version used.
-
 In the configuration descriptor, we find particularly the interface descriptor which defines the class used by this device (HID\_CLASS) and the number of endpoints that will be used (2). The HID descriptor gives information on the length of the report descriptor. There are finally endpoint descriptors. The communication uses two interrupt endpoints: one IN to send data to the host and one OUT to receive data from the host. Interrupts endpoint are polled by the host, that is why there is a bInterval field in endpoint descriptors.
 \\
 
-Additionnally, this class defines methods to send and receive reports:
 
-\begin{lstlisting}[label=Send and receive HID reports,caption=Send and receive HID reports]
-bool USBHID::send(HID_REPORT *report)
-{
-    return USBDevice::write(EPINT_IN, report->data, report->length, MAX_HID_REPORT_SIZE);
-}
-
-
-bool USBHID::read(HID_REPORT *report)
-{
-    uint16_t bytesRead = 0;
-    bool result;
-    result = USBDevice::read(EPINT_OUT, report->data, &bytesRead, MAX_HID_REPORT_SIZE);
-    if(!readStart(EPINT_OUT, MAX_HID_REPORT_SIZE))
-        return false;
-    report->length = bytesRead;
-    return result;
-}
-
-
-bool USBHID::readNB(HID_REPORT *report)
-{
-    uint16_t bytesRead = 0;
-    bool result;
-    result = USBDevice::readNB(EPINT_OUT, report->data, &bytesRead, MAX_HID_REPORT_SIZE);
-    report->length = bytesRead;
-    if(!readStart(EPINT_OUT, MAX_HID_REPORT_SIZE))
-        return false;
-    return result;
-}
-\end{lstlisting}
+\subsubsection{HID: Class specific requests}
+The HID specification defines several class specific requests. All these requests are processed in the USBCallback\_request() virtual method. The main specific requests are:
+\begin{packed_item}
+	\item GET\_REPORT: allows the host to receive a report via the Control pipe. This request is useful at initialization time for absolute items and for 
+determining the state of feature items.
+	\item SET\_REPORT: allows the host to send a report to the device, possibly setting the state of input, output, or feature controls. 
+	\item GET\_DESCRIPTOR: to request the HID descriptor or the report descriptor
+\end{packed_item}
 
 \subsubsection{Generic HID device}
-If a USBHID is instantiated, the device created is a generic HID device. This means that it is not a specific device such as a mouse or a keyboard but a device which can send and receive raw data. The report descriptor for this kind of device is:
+If a USBHID is instantiated, the device created is a generic HID device. This means that it is not a specific device such as a mouse or a keyboard but a device which can send and receive raw data. The report descriptor for this device is:
  
 \begin{lstlisting}[label=Generic HID Report Descriptor,caption=Generic HID Report Descriptor]
 uint8_t * USBHID::reportDesc() {
@@ -1540,6 +1522,28 @@ There are two main parts:
 	\item Bytes are sent to the host by packets of length \textit{input\_length}
 	\item Bytes are received by packets of length \textit{output\_length}
 \end{packed_item}
+
+
+Additionnally, this class defines methods to send and receive reports:
+
+\begin{lstlisting}[label=Send and receive HID reports,caption=Send and receive HID reports]
+bool USBHID::send(HID_REPORT *report)
+{
+    return USBDevice::writeEP(EPINT_IN, report->data, report->length, MAX_HID_REPORT_SIZE);
+}
+
+
+bool USBHID::read(HID_REPORT *report)
+{
+    uint16_t bytesRead = 0;
+    bool result;
+    result = USBDevice::readEP(EPINT_OUT, report->data, &bytesRead, MAX_HID_REPORT_SIZE);
+    if(!readStart(EPINT_OUT, MAX_HID_REPORT_SIZE))
+        return false;
+    report->length = bytesRead;
+    return result;
+}
+\end{lstlisting}
 
 \subsubsection{USBMOUSE}
 USBMOUSE class is a subclass of USBHID. The important descriptor of this class is the report descriptor which defines data structures which will be exchanged.
@@ -1608,157 +1612,82 @@ bool USBMouse::mouseSend(int8_t x, int8_t y, uint8_t buttons, int8_t z) {
 }
 \end{lstlisting}
 
+Concerning USBKeyboard and USBMouseKeyboard classes, the important part is the definition of the report descriptor which defines the format of data sent to the host. 
 
-\subsection{CDC class}
+
+
+\subsection{CDC class to emulate a virtual serial port}
 \subsubsection{Introduction}
 The Communication Device Class (CDC) is a general-purpose way to enable all
-types of communications on the Universal Serial Bus (USB). This class makes it possible
+types of communications on the Universal Serial Bus. This class makes it possible
 to connect telecommunication devices such as digital telephones or analog
 modems, as well as networking devices like ADSL or Cable modems.
 While a CDC device enables the implementation of quite complex devices, it can also
-be used as a very simple method for communication on the USB. For example, a CDC
+be used as a very simple solution for communication on the USB. For example, a CDC
 device can appear as a virtual COM port, which greatly simplifies application programming
 on the host side. For mbed a subset of the CDC class has been implemented in order to create
 a virtual serial port over USB.
 
 \subsubsection{Descriptors}
-On this class, two interfaces are used:
+Concerning the device descriptor, bDeviceClass has to be 02h to specify a CDC device.\\
+
+
+Two interfaces are used in the configuration descriptor:
 \begin{packed_item}
-	\item \textbf{Communication Class Interface}: used to request and manage the device state. This interface is also used by the host to request capabilities and parameters of the communication. This interface requires the control endpoint for device management. Optionnally, an interrupt IN endpoint can be used yo send event notifications to the host3.
+	\item \textbf{Communication Class Interface}: used to request and manage the device state. This interface is also used by the host to request capabilities and parameters of the communication. To provide information about the communication, four descriptors are used:
+	\begin{packed_item}
+		\item CDCHeaderDescriptor: marks the beginning of the concatenated set of functional descriptors for the interface.
+		\item CDCCallManagementDescriptor: describes the processing of calls for the Communication Class interface
+ 		\item CDCAbstractControlManagementDescriptor: describes the commands supported by the Communication Class interface. This device supports for instance the request GET\_LINE\_CODING which allows the host to know parameters of the communication (number of stop bits, parity, number of data bits)
+		\item CDCUnionDescriptor: describes the relationship between a group of interfaces that can be considered to form
+a functional unit. Here, the master interface is the Communication Class Interface and the slave one is the data Class Interface.
+	\end{packed_item}
 	\item \textbf{Data Class Interface}: this interface is used for data transfers. For the communication, either bulk or interrupt endpoints are required. For a serial port,  reliability
 of the transmission is very important and the data transfers are not time-critical. That is why, two bulk endpoints (one IN and one OUT) are used.
 \end{packed_item}
 
-\begin{lstlisting}[label=USBSerial device descriptor,caption=USBSerial device descriptor]
-uint8_t * USBCDC::deviceDesc() {
-    static uint8_t deviceDescriptor[] = {
-        18,                   // bLength
-        1,                    // bDescriptorType
-        0x10, 0x01,           // bcdUSB
-        2,                    // bDeviceClass (CDC)
-        0,                    // bDeviceSubClass
-        0,                    // bDeviceProtocol
-        MAX_PACKET_SIZE_EP0,  // bMaxPacketSize0
-        LSB(VENDOR_ID), MSB(VENDOR_ID),  // idVendor
-        LSB(PRODUCT_ID), MSB(PRODUCT_ID),// idProduct
-        0x00, 0x01,           // bcdDevice
-        1,                    // iManufacturer
-        2,                    // iProduct
-        3,                    // iSerialNumber
-        1                     // bNumConfigurations
-    };
-    return deviceDescriptor;
-}
-\end{lstlisting}
-This device descriptor is very common. The only change is the bDeviceClass field which contains the CDC class code.
 
-\begin{lstlisting}[label=USBSerial configuration descriptor,caption=USBSerial configuration descriptor]
-uint8_t * USBCDC::configurationDesc() {
-    static uint8_t configDescriptor[] = {
-        9,                      // bLength;
-        2,                      // bDescriptorType;
-        LSB(CONFIG1_DESC_SIZE), // wTotalLength
-        MSB(CONFIG1_DESC_SIZE),
-        2,                      // bNumInterfaces
-        1,                      // bConfigurationValue
-        0,                      // iConfiguration
-        0x80,                   // bmAttributes
-        50,                     // bMaxPower
-
-
-        // interface descriptor: Communication Class Interface
-        9,                      // bLength
-        4,                      // bDescriptorType
-        0,                      // bInterfaceNumber
-        0,                      // bAlternateSetting
-        1,                      // bNumEndpoints
-        0x02,                   // bInterfaceClass
-        0x02,                   // bInterfaceSubClass
-        0x01,                   // bInterfaceProtocol
-        0,                      // iInterface
-
-        // CDC Header Functional Descriptor, CDC Spec 5.2.3.1, Table 26
-        5,                      // bFunctionLength
-        0x24,                   // bDescriptorType
-        0x00,                   // bDescriptorSubtype
-        0x10, 0x01,             // bcdCDC
-
-        // Call Management Functional Descriptor, CDC Spec 5.2.3.2, Table 27
-        5,                      // bFunctionLength
-        0x24,                   // bDescriptorType
-        0x01,                   // bDescriptorSubtype
-        0x03,                   // bmCapabilities
-        1,                      // bDataInterface
-
-        // Abstract Control Management Functional Descriptor, CDC Spec 5.2.3.3, Table 28
-        4,                      // bFunctionLength
-        0x24,                   // bDescriptorType
-        0x02,                   // bDescriptorSubtype
-        0x06,                   // bmCapabilities
-
-        // Union Functional Descriptor, CDC Spec 5.2.3.8, Table 33
-        5,                      // bFunctionLength
-        0x24,                   // bDescriptorType
-        0x06,                   // bDescriptorSubtype
-        0,                      // bMasterInterface
-        1,                      // bSlaveInterface0
-
-        // endpoint descriptor
-        ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
-        ENDPOINT_DESCRIPTOR,            // bDescriptorType
-        PHY_TO_DESC(EPINT_IN),          // bEndpointAddress
-        E_INTERRUPT,                    // bmAttributes (0x03=intr)
-        LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (LSB)
-        MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize (MSB)
-        16,                             // bInterval
-
-
-
-
-        // interface descriptor: Data Class Interface
-        9,          // bLength
-        4,          // bDescriptorType
-        1,          // bInterfaceNumber
-        0,          // bAlternateSetting
-        2,          // bNumEndpoints
-        0x0A,       // bInterfaceClass
-        0x00,       // bInterfaceSubClass
-        0x00,       // bInterfaceProtocol
-        0,          // iInterface
-
-        // endpoint descriptor
-        7,                      // bLength
-        5,                      // bDescriptorType
-        PHY_TO_DESC(EPBULK_IN), // bEndpointAddress
-        0x02,                   // bmAttributes (0x02=bulk)
-        LSB(MAX_PACKET_SIZE_EPBULK),    // wMaxPacketSize (LSB)
-        MSB(MAX_PACKET_SIZE_EPBULK),    // wMaxPacketSize (MSB)
-        0,                      // bInterval
-
-        // endpoint descriptor
-        7,                      // bLength
-        5,                      // bDescriptorType
-        PHY_TO_DESC(EPBULK_OUT),// bEndpointAddress
-        0x02,                   // bmAttributes (0x02=bulk)
-        LSB(MAX_PACKET_SIZE_EPBULK),    // wMaxPacketSize (LSB)
-        MSB(MAX_PACKET_SIZE_EPBULK),     // wMaxPacketSize (MSB)
-        0                       // bInterval
-    };
-    return configDescriptor;
-}
-\end{lstlisting}
-Four CDC specific descriptors are used in this configuration descriptor:
-
+\subsubsection{CDC: Class specific requests}
+The CDC specification defines several class specific requests. All these requests are processed in the USBCallback\_request() virtual method. The main specific requests are:
 \begin{packed_item}
-	\item CDCHeaderDescriptor: marks the beginning of the concatenated set of functional descriptors for the interface.
-	\item CDCCallManagementDescriptor: describes the processing of calls for the Communication Class interface
- 	\item CDCAbstractControlManagementDescriptor: describes the commands supported by the Communication Class interface. This device supports for instance the request GET\_LINE\_CODING which allows the host to know parameters of the communication (number of stop bits, parity, number of data bits)
-	\item CDCUnionDescriptor: describes the relationship between a group of interfaces that can be considered to form
-a functional unit. Here, the master interface is the Communication Class Interface and the slave one is the data Class Interface.
+	\item GET\_LINE\_CODING: allows the host to know parameters of the communication (number of stop bits, parity, number of data bits)
+	\item SET\_LINE\_CODING: allows the host to specify typical line-character formatting properties
 \end{packed_item}
 
-Otherwise, this descriptor contains the 2 interfaces, as expected. The first one uses one IN endpoint and the second one two bulk endpoints. 
+\subsubsection{USBSerial class}
+Once the device enumerated, data can be exchanged over the two bulk endpoints. To send a character, we just write the character on the bulk IN endpoint. Characters received are pushed on a circular buffer called buf. This step is done in the EPx\_OUT\_callback() virtual function called when a packet is received. We can then define two methods to send and receive data:
 
+\begin{lstlisting}[label=USBSerial: putc and getc,caption=USBSerial: putc and getc]
+int USBSerial::_putc(int c) {
+		writeEP(EPBULK_IN, uint8_t *)&c, 1, MAX_CDC_REPORT_SIZE)
+    return 1;
+}
+
+int USBSerial::_getc() {
+    uint8_t c;
+    while (buf.isEmpty());
+    buf.dequeue(&c);
+    return c;
+}
+
+bool USBSerial::EP2_OUT_callback() {
+    uint8_t c[65];
+    uint16_t size = 0;
+
+    //we read the packet received and put it on the circular buffer
+    readEP(EPBULK_OUT, c, size, MAX_CDC_REPORT_SIZE)
+    for (int i = 0; i < size; i++) {
+        buf.queue(c[i]);
+    }
+
+    //call a potential handler
+    rx.call();
+
+    // We reactivate the endpoint to receive next characters
+    readStart(EPBULK_OUT, MAX_PACKET_SIZE_EPBULK);
+    return true;
+}
+\end{lstlisting}
 
 
 

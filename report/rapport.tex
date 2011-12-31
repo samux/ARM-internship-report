@@ -14,6 +14,7 @@
 \usepackage{caption}
 \usepackage{array}
 \usepackage{subfigure}
+\usepackage{comment}
 
 \newenvironment{packed_enum}{
 \begin{enumerate}
@@ -77,7 +78,7 @@ Nowadays, ARM processors are widely used in mobile phones, tablets, personal dig
 \section{Mbed}
 In wish to pursue new areas of expertise, ARM founded Mbed in 2009. Mbeds core area is development of prototyping boards (called mbed) based on ARM processors (Cortex M0 and Cortex M3). The purpose is to make available a simple and easy to set-up prototyping solution using 32-bits processors. Mbeds boards have been designed for quick experimentation. Users can try something and see if it is doable in a very easily and quickly manner.
 
-\subsection{Mbed boards}
+\subsection{Mbed boards: LPC1768 and LPC11U24}
 For the moment, two boards have been developped. The first one is based on the LPC1768 microcontroller from NXP which uses a Cortex m3. More recently, a new board based on a LPC11U24 (Cortex m0) was born. This last mbed has been particularly designed to prototype USB devices or battery powered applications. 
 
 \begin{figure}[h!]
@@ -978,7 +979,7 @@ The websocket server follows the following logic:
 
 \section{Inside the USB bus}
 \subsection{USB overview}
-The Universal Serial Bus (USB) is the most widely used bus in today's computer. USB has particularly been designed to standardize connections between the computer and peripherals. For instance, keyboards, printers, scanners, disk drives or cameras can use the same bus to exchange data with a computer. USB has effectively replaced a variety of earlier interfaces, such as serial or parallel ports. The most useful advantage is certainly the plug-and-play nature it has. In other words, you can connect and disconnect devices on your computer without the need to restart it.\\
+The Universal Serial Bus (USB) is the most widely used bus in today's computer. USB has particularly been designed to standardize connections between the computer and peripherals. For instance, keyboards, printers, scanners, disk drives or cameras can use the same bus to exchange data with a computer. USB has effectively replaced a variety of earlier interfaces, such as serial or parallel ports. The USB bus provides several benefits such as the same interface for many device, the hot pluggable capability which allows a user to connect and disconnect  a USB device whenever he wants or the automatic configuration which is the capacity of the operating system to load a specific driver according to the device connected. Another useful benefit is that the USB interface provides power supply (5V) that can be used by a device if it doesn't require more than 500 mA.\\
 
 USB version 1.0 supported two speeds, a full speed mode of 12Mbits/s and a low speed mode of 1.5Mbits/s. USB 2.0, which is the most widely version of USB, can reach 480Mbits/s. The 480Mbits/s is known as High Speed mode. USB version 3.0 specifies a maximum transmission speed of up to 5Gbits/s (known as SuperSpeed), but few products are supporting USB 3.0 at present.
 \\
@@ -1004,28 +1005,29 @@ The physical bus topology defines how USB devices are connected to the host. The
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./usb_topology.png}
+		\includegraphics[width=0.4\textwidth]{./usb_topology.png}
 		\caption{USB physical topology \footnotemark}
 		\label{USB physical topology}
 \end{figure}
 \footnotetext{reference: http://www.usblyzer.com}
-\subsection{Endpoints}
-Devices have a series of buffers to communicate with the host. Each buffer will belong to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on a NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. One physical endpoint represents two logical endpoints. Each physical endpoints has a specific direction: either OUT to receive data from the host or IN to send data to the host. 
-\\
-There are four types of endpoints: 
-\begin{packed_item}
-	\item \textbf{Control endpoint}: All USB devices once connected performed an \textit{enumeration step} wherein the host request all capabilities of the device. Control transfers are used to enumerate a device.
-	\item \textbf{Interrupt endpoints}: Interrupts transfers are used when a device requires responsiveness. Typical applications would include keyboard and mouse. Users don't want a noticeable delay between pressing a key or moving a mouse and seeing the result on the screen. An interrupt transfer only occurs when the host polls the device. There is a guarantee that the host will request a data within a specified time interval
-	\item \textbf{Bulk endpoints}: Bulk transfers are typically used to transfer large amount of data like files to a printer. A bulk transfer use spare un-allocated bandwidth, so time is not critical with bulk transfers. Typical applications include printers and scanners.
-	\item \textbf{Isochronous endpoints}: Isochronous tranfers are used for streaming and real time data. For instance, USB speakers uses isochronous tranfers. Such devices need a guaranteed delivery rate for data but errors can occur.
-\end{packed_item}
-	
+\subsection{Endpoints and type of transfers}
+Devices have a series of buffers to communicate with the host. Each buffer will belong to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on a NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. One logical endpoint represents two physical endpoints. Each physical endpoints has a specific direction: either OUT to receive data from the host or IN to send data to the host. 
+
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=1.0\textwidth]{./endpoint.jpg}
+		\includegraphics[width=0.8\textwidth]{./endpoint.jpg}
 		\caption{Different types of endpoints}
 		\label{Different types of endpoints}
 \end{figure}
+
+There are four types of endpoints which corresponds to different requirements according to the device: 
+\begin{packed_item}
+	\item \textbf{Control endpoint}: All USB devices once connected performed an \textit{enumeration step} wherein the host requests all capabilities of the device. Control transfers are used to enumerate a device.
+	\item \textbf{Interrupt endpoints}: Interrupts transfers are used when a device requires responsiveness. Typical applications would include keyboard and mouse. Users don't want a noticeable delay between pressing a key or moving a mouse and seeing the result on the screen. An interrupt transfer only occurs when the host polls the device. There is a guarantee that the host will request a data within a specified time interval
+	\item \textbf{Bulk endpoints}: Bulk transfers are typically used to transfer large amount of data like files to a printer. A bulk transfer use spare un-allocated bandwidth, so time is not critical with bulk transfers. Typical applications include printers, scanners or mass storage devices.
+	\item \textbf{Isochronous endpoints}: Isochronous tranfers are used for streaming and realtime data. For instance, streaming audio and video devices use isochronous transfers. Such devices need a guaranteed delivery rate for data but if an error occurs, the data is not re-transmitted.
+\end{packed_item}
+	
 
 \subsection{Packets exchanged}
 \subsubsection{\underline{Common fields in a USB packet}}
@@ -1035,7 +1037,7 @@ There are four types of endpoints:
 \begin{tabular}{|c|c| >{\centering\arraybackslash}m{9cm} |}
 \hline
 Field & Length & Meaning \\ \hline
-\multirow{2}{*}{SYNC} & low and full speed: 8bits  & \multirow{2}{10cm}{A packet starts with a SYNC pattern to allow the receiver bit clock to synchronise with the data.} \\
+\multirow{2}{*}{SYNC} & low and full speed: 8bits  & \multirow{2}{9cm}{A packet starts with a SYNC pattern to allow the receiver bit clock to synchronise with the data.} \\
 \cline{2-2}%
  & high speed: 32bits & \\ \hline
  
@@ -1045,7 +1047,7 @@ PID & 8bits & Packet ID \\ \hline
 
 \multirow{2}{*}{ADDR} & \multirow{2}{*}{7bits} & The address field specifies which device the packet is designated for\\ \hline
 
-\multirow{2}{*}{ENDP} & \multirow{2}{*}{8bits} & The endpoint number which the packet is designed for \\ \hline
+ENDP & 4bits & The endpoint number which the packet is designed for \\ \hline
 
 \multirow{2}{*}{CRC} & \multirow{2}{*}{5 or 16bits} & Cyclic Redundancy Checks are performed on the data within the packet payload \\ \hline
 \end{tabular}
@@ -1116,23 +1118,11 @@ PID & 8bits & Packet ID \\ \hline
   	
 \end{packed_item}
 
-\subsection{USB data flow}
-
-\begin{figure}[h!]
-		\centering
-		\includegraphics[width=1.0\textwidth]{./data_flow.jpg}
-		\caption{From the host to a device}
-		\label{From the host to a device}
-\end{figure}
-
-Say for example, the host sends a packet to device=2, endpoint=1OUT. The function hardware will read the request and determine from the address field whether the packet is for itself, and if so will copy the payload of the following data packet to the appropriate endpoint buffer. It will then send a handshake packet to acknowledge the reception of the byte and generate an internal interrupt within the microcontroller for the appropriate endpoint signifying it has received a packet. This is typically all done in hardware.
-\\
 
 \subsection{Enumeration}
-The host hub port is able to detect the attachment of the USB device and makes the host controller aware of the same. The host controller then starts communicating with the USB device (which could be a mouse, keyboard, flash drive etc.). This initial communication between the host and the device is termed as “bus enumeration”. Bus enumeration is the process through which the host learns about the capabilities of the device. Since any USB device can be connected to the host hub port at anytime, bus enumeration becomes the essential first step of USB communication. This step is performed on the control endpoint (endpoint 0). So, all devices must at least have a control endpoint (endpoint 0) enabled.
+The host hub port is able to detect the attachment of the USB device and makes the host controller aware of the same. The host controller then starts communicating with the USB device (which could be a mouse, keyboard, flash drive etc.). This initial communication between the host and the device is termed as “bus enumeration”. Bus enumeration is the process through which the host learns about the capabilities of the device. Since any USB device can be connected to the host hub port at anytime, bus enumeration becomes the essential first step of USB communication. This step is performed on the control endpoint (endpoint 0). So, all devices must at least have the control endpoint enabled.
 During this step, the host will assign a unique address to the device.
-All devices capabilities are transmitted in data structures called \textit{descriptors}. Descriptors are arrays containing some information like the device class, the number of endpoints used, the maximum length of these endpoints,... There are several types of descriptors. Standards descriptors are: device descriptor, configuration descriptor, interface descriptor and endpoint descriptor. But, for each USB class, other descriptors can be found such as the HID (Human Interface Device)descriptor and the report descriptor for HID devices.
-\\
+All devices capabilities are transmitted in data structures called \textbf{descriptors}. Descriptors are arrays containing some information like the device class, the number of endpoints used, the maximum length of these endpoints,... There are several types of descriptors. Standards descriptors are: device descriptor, configuration descriptor, interface descriptor and endpoint descriptor. But, for each USB class, other descriptors can be found such as the HID (Human Interface Device) descriptor and the report descriptor for HID devices.
 
 \begin{figure}[h!]
 		\centering
@@ -1156,44 +1146,130 @@ used.
 \end{packed_item}
 
 
+\subsection{USB 2.0 transactions}
+A transfer consists of 1 or more transactions. Each transaction contains a token packet and may contain a data and/or handshake packet.
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.4\textwidth]{./transfer.png}
+		\caption{USB 2.0 transaction}
+		\label{USB 2.0 transaction}
+\end{figure}
+
+I will illustrate a whole transfer with a control read transfer. This type of transfer is used by the host to request descriptors to a device on the control endpoint:
+\begin{packed_item}
+	\item Setup transaction:
+	\begin{packed_item}
+		\item SETUP token packet sent by the host
+		\item Data packet: the host sends a request concerning specific descriptor
+		\item Handshake packet: the device returns ACK
+	\end{packed_item}
+	
+	\item One or more data transaction(s):
+	\begin{packed_item}
+		\item IN token packet sent by the host
+		\item Data packet: the device sends the descriptor requested
+		\item Handshake packet sent by the host
+	\end{packed_item}
+	
+	
+	\item Status transaction:
+	\begin{packed_item}
+		\item OUT token packet sent by the host
+		\item Data packet: 0 length data
+		\item Handshake packet: the device returns the status
+	\end{packed_item}
+	
+\end{packed_item}
 
 
+Concerning bulk or interrupts endpoints, a whole OUT transfer can be:
+\begin{packed_item}
+	\item OUT transaction:
+	\begin{packed_item}
+		\item OUT token packet sent by the host
+		\item Data packet: the host sends data
+		\item Handshake packet: the device returns the status (ACK, NAK or STALL)
+	\end{packed_item}
+\end{packed_item}
+
+Isochronous transfers are the same as bulk or interrupt transfers without the handshake packet. Occasional errors must be acceptable on isochronous transfers.
 
 
 
 \newpage
 \section{USB Device stack}
-A USB device stack has been developped to allow mbed users to design their own USB device or to use their mbed as USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a device’s functionality. This class code is parsed by the USB host stack to load an appropriate device driver. Two widely used USB classes has been implemented: HID (Human Interface Device) and MSD (Mass Storage Device). Users have access to a subset of a third class known as CDC (Communication Device Class). This class is particularly used to design a virtual serial port over USB. The following diagram shows the software architecture of this stack.
+A USB device stack has been developped to allow mbed users to design their own USB device or to use their mbed as USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a device’s functionality. This class code is parsed by the USB host stack to load an appropriate device driver. Several classes has been implemented:
+\begin{packed_item}
+	\item HID (Human Interface Device)
+	\item MSD (Mass Storage Device)
+	\item Audio
+	\item MIDI
+	\item a subset of CDC (Communication Device Class) to provide a virtual serial port
+\end{packed_item}
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=1.0\textwidth]{./usb_stack.jpg}
+		\includegraphics[width=0.7\textwidth]{./usb_capa1.png}
+		\caption{USB device stack capabilities}
+		\label{USB device stack capabilities}
+\end{figure}
+
+
+\subsection{USB Device stack architecture}
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\textwidth]{./usb_arch3.png}
 		\caption{USB device stack architecture}
 		\label{USB device stack architecture}
 \end{figure}
 
-As in all stacks, it is organized by layers:
 \begin{packed_item}
-	\item USBHAL: The USB hardware layer. All low levels methods are on this class. We found in particular the USB interrupt handler and methods to initialize the USB controller, read or write a certain endpoint. This class defines also virtual methods which are executed each time that there is an interrupt concerning a packet received or the end of a writing so that a child class can use them to perform their own treatment when a such event occurs.
-	\item USBDEVICE: This layer is in charge to abstract the hardware. Methods such as init, connect, disconnect, addEndpoint, readEndpoint, writeEndpoint can be found in this class. It's also in this class that the enumeration step is performed for requests concerning standard descriptors. When a packet is received on the control endpoint (endpoint 0 OUT), it is decoded to analyze the request and a response to the host is sent. Descriptors are accessible via virtual functions such as getDeviceDescriptor which returns a pointer on the descriptor. As these functions are virtual, all child classes will be able to use their own descriptors.
+
+	\item USBHAL: The USB hardware layer for the LPC11U24 and for the LPC1768. In this class, all low level methods are defined. There are USBHAL\_LPC11U24.cpp and USBHAL\_LPC1768.cpp which define functions defined in USBHAL.h. The right .cpp file is chosen according to a macro defined by the compiler: if a user is compiling a program for the LPC1768, the macro TARGET\_LPC1768 is defined. If a user wants to compile a program for the LPC11U24, the macro TARGET\_LPC11U24 is defined. Virtual functions are called on specific events to be treated by subclasses.
+	
+	\item USBDevice: This layer is in charge to abstract the hardware. At this level, no differences are made between the LPC11U24 and the LPC1768 concerning the target. USBDevice is in charge to perform the setup packet treatment (enumeration step is performed in this class) and provide an abstraction to handle the USB interface.
+	
+	\item USB class layer:
+		\begin{packed_item}
+			\item USBHID: implements standard requests of the HID class specification. When a USBHID object is instanciated, the mbed is enumerated as a generic HID device so that raw data can be sent and receive to and from a custom program running on the host side.
+			\item USBCDC: implements a subset of the CDC class specification to allow the mbed to be recognized as a virtual serial port
+			\item USBMIDI: enables the mbed to send and receive MIDI message to and from a computer
+			\item USBAudio: implements standard requests of the USB Audio class. The mbed is enumerated as a microphone and a speaker on the same device.
+			\item USBMSD: implements the mass storage specification. This class is generic: a subclass has to implement some pure virtual functions defined in USBMSD to access a storage chip.
+		\end{packed_item}
+		
+	\item USB device layer:
+		\begin{packed_item}
+			\item USBMouse: used to emulate a mouse
+			\item USBKeyboard: used to emulate a keyboard.
+			\item USBMouseKeyboard: used to emulate a mouse and a keyboard at the same time
+			\item USBSerial: used to emulate a virtual serial port. 
+			\item USBMSD\_??: All users can implement their own class which inherits from USBMSD in order to access their storage chip.
+		\end{packed_item}
+	
+	\begin{comment}
+	Methods such as init, connect, disconnect, addEndpoint, readEndpoint, writeEndpoint can be found in this class. It's also in this class that the enumeration step is performed for requests concerning standard descriptors. When a packet is received on the control endpoint (endpoint 0 OUT), it is decoded to analyze the request and a response to the host is sent. Descriptors are accessible via virtual functions such as getDeviceDescriptor which returns a pointer on the descriptor. As these functions are virtual, all child classes will be able to use their own descriptors.
+	
 		\item USBHID, USBCDC and USBMSD: As explained before, these classes represent a specific USB class. A part of the enumeration step can be done here if the host requests a class specific descriptor. These three classes are explained in the next section of this document.
 		\item USB\_MOUSE, USB\_KEYBOARD, USB\_MOUSE\_KEYBOARD, USB\_RAW\_HID and \\ USB\_SERIAL: High level libraries to emulate a specific peripheral according to their class. For instance, a keyboard is emulated over the HID class. Methods such as printf, putc are accessible for a keyboard. The USB\_RAW\_HID class is used to send and receive raw data. This can be a good opportunity to design a USB device. USB\_SERIAL is a virtual serial port.
+		
+		\end{comment}
 \end{packed_item}
 
 
-\subsection{USB Device stack architecture}
-\subsubsection{USBHAL}
+\subsection{USBHAL: USB Hardware abstraction layer for the LPC11U24}
 
 \begin{center}
 \textbf{Source code of main methods are in Annexe A: USBHAL class}
 \end{center}
 
 
-This section describes the hardware layer implemented for the mbed LPC11U24. This microcontroller has a built-in USB 2.0 device controller. It also has 2kbytes of RAM dedicated for USB operations. An important other feature the double buffering support for generic endpoints.
+This section describes the hardware layer implemented for the mbed LPC11U24. This microcontroller has a built-in USB 2.0 device controller. It also has 2kbytes of RAM dedicated for USB operations.
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=1.0\textwidth]{./usb_endpoints.jpg}
+		\includegraphics[width=0.9\textwidth]{./usb_endpoints.jpg}
 		\caption{USB endpoints status array}
 		\label{USB endpoints status array}
 \end{figure}
@@ -1223,6 +1299,79 @@ Main methods for USBHAL class:
 		\end{packed_item}
 \end{packed_item}
 
+
+When a specific event occurs, USBHAL calls virtual functions which can be overrided in a subclass to perform a custom treatment. Main callback functions are:
+\begin{packed_item}
+	\item SOF(int frameNumber): called on each start of frame event (each 1ms)
+	\item EP0setupCallback(): called when a setup packet is received
+	\item EPx\_OUT\_callback(): called a data has been received on a specific endpoint
+	\item EPx\_IN\_callback(): called when a data has been sent on a specific endpoint
+\end{packed_item}
+
+
+\subsection{USBDevice: target abstraction and setup packet treatment}
+\subsubsection{Target abstraction}
+One of the purpose of this class is to provide an API in order to handle the USB interface very easily:
+\begin{packed_item}
+	\item init() to initialize the USB controller
+	\item connect() to connect a device
+	\item disconnect() to disconnect a device
+	\item addEndpoint(int endpoint) to add a specific endpoint
+	\item readEP(int endpoint) to read a specific endpoint
+	\item writeEP(int endpoint) to write a specific endpoint 
+\end{packed_item}
+
+\subsubsection{Setup packet treatment}
+Two data structure has been defined in order to perform the control endpoint treatment. The enumeration step is part of this treatment:
+\begin{packed_item}
+	\item SETUP\_PACKET: to describe a setup packet
+	\item CONTROL\_TRANSFER: to describe a transfer on the control endpoint
+\end{packed_item}
+
+
+\begin{lstlisting}[label=Data structures for control endpoint treatment,caption=Data structures for control endpoint treatment]
+typedef struct {
+    struct {
+        uint8_t dataTransferDirection;
+        uint8_t Type;
+        uint8_t Recipient;
+    } bmRequestType;
+    uint8_t  bRequest;
+    uint16_t wValue;
+    uint16_t wIndex;
+    uint16_t wLength;
+} SETUP_PACKET;
+
+typedef struct {
+    SETUP_PACKET setup;
+    uint8_t * ptr;      // pointer on a buffer to be sent
+    uint32_t remaining; // remaining bytes on the transfer
+    uint8_t direction;  // direction: host > device or device > host
+    bool zlp;           // zero length packet
+    bool notify;
+} CONTROL_TRANSFER;
+\end{lstlisting}
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\textwidth]{./setup_packets.png}
+		\caption{Setup packets treatment}
+		\label{Setup packets treatment}
+\end{figure}
+
+For instance, a GET\_DEVICE\_DESCRIPTOR request is processed following this scheme:
+\begin{packed_item}
+	\item Reception of a setup packet
+	\item Decoding the setup in the SETUP\_PACKET structure
+	\item This is not a class specific request so the treatment is done in USBDevice class
+	\item The request is GET\_DEVICE\_DESCRIPTOR:
+	\begin{packed_item}
+		\item Fill the CONTROL\_TRANSFER structure containing in particular a pointer to the device descriptor
+		\item This request needs DATA IN stages (the device needs to send the descriptor)
+		\item Send data until CONTROL\_TRANSFER.remaining == 0
+		\item Read the control endpoint for the status transaction
+	\end{packed_item}
+\end{packed_item}
 
 \subsection{HID class}
 \subsubsection{Introduction}
@@ -2031,6 +2180,7 @@ EP_STATUS USBHAL::endpointWrite(uint8_t endpoint, uint8_t *data, uint32_t size) 
 }
 \end{lstlisting}
 
+\begin{comment}
 \chapter*{USBMSD class}
 
 \begin{lstlisting}[label=USBMSD::memoryWrite(),caption=USBMSD::memoryWrite()]
@@ -2176,7 +2326,7 @@ void USBMSD::CBWDecode(uint8_t * buf, uint16_t size) {
     }
 }
 \end{lstlisting}
-
+\end{comment}
 
 
 

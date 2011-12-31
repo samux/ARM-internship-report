@@ -1698,16 +1698,17 @@ The Mass Storage Device (MSD) class is an extension to the USB specification tha
 how mass storage devices, such as a hard-disk, SD card, flash chip should operate on the USB.
 Many devices use the MSD class to symplify data transfer. More common devices which use this class are hard-drives, USB-stick, MP3 or video player.
 
-\subsubsection{How the USB MSD class works ?}
+\subsubsection{MSD descriptors}
+The MSD configuration descriptor defines one interface with bInterfaceClass = 08h specifying the mass storage class. Two bulk endpoints are then defined to transfer data. Bulk endpoints are used because big amount of data can be transferred.
 
-\subsubsection{\underline{Endpoints used}}
-This class uses three endpoints:
+\subsubsection{MSD class specific requests}
+The MSD specification defines several class specific requests. All these requests are processed in the USBCallback\_request() virtual method. The main specific requests are:
 \begin{packed_item}
-	\item Control endpoint: used for the enumeration step and to unhalt others endpoints when an error occured. The MSD protocol indeed specifies that the device must halt endpoints which are used to transfer data when an error occurs. So the endpoint 0 is also used to return in a functionnal state.
-	\item The other two endpoints are bulk endpoints as big amount of data is exchanged between host and device. They are used for transferring commands and data over the bus.
+	\item RESET: used to reset the device by the host
+	\item GET\_MAX\_LUN: allows the host to determine the maximum Logical Unit Number (LUN) supported by the device. This is not equivalent to the number of logical unit on the device, since units are numbered starting from 0. In the mbed library, only 1 logical unit is supported.
 \end{packed_item}
 
-\subsubsection{\underline{MSD transaction}}
+\subsubsection{MSD transaction}
 The communication between the device and the host is divided into three steps:
 \begin{packed_item}
 	\item Command stage
@@ -1715,7 +1716,7 @@ The communication between the device and the host is divided into three steps:
 	\item Status stage
 \end{packed_item}
 
-The \textbf{command stage} is used by the host to transmit instructions to be performed by the device. These instructions are contained in a Command Block Wrapper (CBW) isent by the host. The CBW describes several parameters of the transaction:
+The \textbf{command stage} is used by the host to transmit instructions to be performed by the device. These instructions are contained in a Command Block Wrapper (CBW) sent by the host. The CBW describes several parameters of the transaction:
 
 \begin{table}[h!]
 \centering
@@ -1758,105 +1759,30 @@ Offset & Field & Length (bytes) & Meaning \\ \hline
 \label{Command Status Wrapper (CSW)}
 \end{table}
 
-\subsubsection{\underline{State machine}}
+\subsubsection{MSD State machine}
 To implement the three previous step of a transaction, a state machine is used.
 This state machine contains 5 states:
 \begin{packed_item}
-	\item WAIT\_CBW: waiting for CBW reception
-	\item PROCESS\_CBW: decode and execute command from the CBW
-	\item SEND\_CSW: a CSW will be send
+	\item WAIT\_CBW: waiting for the reception of a valid CBW. If a non valid CBW is received, send a CSW reporting an error.
+	\item PROCESS\_CBW: decode and execute command from the CBW. If there is a processing error, go into the ERROR state
+	\item SEND\_CSW: a CSW is sent
 	\item WAIT\_CSW: waiting for CSW reception by the host
-	\item ERROR: to report an error
+	\item ERROR: to report an error.
 \end{packed_item}
 
-TODO: put diagram of state machine
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.3\textwidth]{./msd_state_machine.png}
+		\caption{MSD state machine}
+		\label{MSD state machine}
+\end{figure}
 
-\subsubsection{Implementation of the USBMSD class}
 
-\begin{center}
-\textbf{Source code of main methods are in Annexe B: USBMSD class}
-\end{center}
-\subsubsection{\underline{Evolution of the state machine}}
-Thanks to virtual functions called from USBHAL when an interrupt occurs, we are able to evolve our state machine. 
+\subsubsection{SCSI commands}
+All commands sent by the host contained in the CBW are part of the SCSI command architecture. In the SCSI protocol, the initiator sends a SCSI command to the target which then responds. SCSI commands are sent in a block, which consists of a one byte operation code followed by five or more bytes containing command-specific parameters. Upon receiving and processing the CBW the target will return a status code byte.\\
 
-\begin{lstlisting}[label=State machine,caption=State machine]
-// Called in ISR context when a data are received
-bool USBMSD::EP2_OUT_callback() {
-    uint16_t size = 0;
-    uint8_t buf[MAX_PACKET_SIZE_EPBULK];
-    read(EPBULK_OUT, buf, &size, MAX_PACKET_SIZE_EPBULK);
-    switch (stage) {
-        // the device has to decode the CBW received
-        case READ_CBW:
-            CBWDecode(buf, size);
-            break;
-        
-        // the device has to receive data from the host
-        case PROCESS_CBW:
-            switch (cbw.CB[0]) {
-                case WRITE10:
-                case WRITE12:
-                    memoryWrite(buf, size);
-                    break;
-                case VERIFY10:
-                    memoryVerify(buf, size);
-                    break;
-            }
-            break;
-        
-        // an error has occured: stall endpoint and send CSW
-        default:
-            stallEndpoint(EPBULK_OUT);
-            csw.Status = CSW_ERROR;
-            sendCSW();
-            break;
-    }
 
-    //reactivate readings on the OUT bulk endpoint
-    readStart(EPBULK_OUT, MAX_PACKET_SIZE_EPBULK);
-    return true;
-}
-
-// Called in ISR context when data has been transferred
-bool USBMSD::EP2_IN_callback() {
-    switch (stage) {
-    
-        // the device has to send data to the host
-        case PROCESS_CBW:
-            switch (cbw.CB[0]) {
-                case READ10:
-                case READ12:
-                    memoryRead();
-                    break;
-            }
-            break;
-            
-        //the device has to send a CSW
-        case SEND_CSW:
-            sendCSW();
-            break;
-            
-        // an error has occured
-        case ERROR:
-            stallEndpoint(EPBULK_IN);
-            sendCSW();
-            break;
-            
-        // the host has received the CSW -> we wait a CBW
-        case WAIT_CSW:
-            stage = READ_CBW;
-            break;
-    }
-    return true;
-}
-\end{lstlisting}
-
-According to the state, the device will decode a CBW, send a CSW, write or read to and from the momory.
-
-\subsubsection{\underline{Differents commands in the CBW}}
-All commands sent by the host is aprt of the SCSI command architecture. In SCSI protocol, the initiator sends a SCSI command to the target which then responds. SCSI commands are sent in a block, which consists of a one byte operation code followed by five or more bytes containing command-specific parameters. Upon receiving and processing the CDB the target will return a status code byte.
-The method in annexe B which requires more information is decodeCBW().
-Main command that can be processed by the device are:
+Main commands that have to be processed by the device are:
 \begin{packed_item}
 	\item SCSI\_INQUIRY: The host usually issues an Inquiry command right after the enumeration phase to get more
 information about the device.
@@ -1872,6 +1798,101 @@ Request Sense to get more information about the problem.
 	\item SCSI\_TEST\_UNIT\_READY: This command provides a way to check if a logical unit is ready. If the logical unit is not ready, the device reports an error in the CSW. Then the host sends a SCSI\_REQUEST\_SENSE to have more information about the error
 \end{packed_item}
 
+The main method to decode a CBW and a SCSI command is:
+\begin{lstlisting}[label=MSD CBW decoding,caption=MSD CBW decoding]
+void USBMSD::CBWDecode(uint8_t * buf, uint16_t size) {
+    if (size == sizeof(cbw)) {
+        memcpy((uint8_t *)&cbw, buf, size);
+        if (cbw.Signature == CBW_Signature) {
+            csw.Tag = cbw.Tag;
+            csw.DataResidue = cbw.DataLength;
+            if ((cbw.CBLength <  1) || (cbw.CBLength > 16) ) {
+                fail();
+            } else {
+                switch (cbw.CB[0]) {
+                    case TEST_UNIT_READY:
+                        testUnitReady();
+                        break;
+                    case REQUEST_SENSE:
+                        requestSense();
+                        break;
+                    case INQUIRY:
+                        inquiryRequest();
+                        break;
+                    case MODE_SENSE6:
+                        modeSense6();
+                        break;
+                    case READ_FORMAT_CAPACITIES:
+                        readFormatCapacity();
+                        break;
+                    case READ_CAPACITY:
+                        readCapacity();
+                        break;
+                    case READ10:
+                    case READ12:
+                        if (infoTransfer()) {
+                            if ((cbw.Flags & 0x80)) {
+                                stage = PROCESS_CBW;
+                                memoryRead();
+                            } else {
+                                stallEndpoint(EPBULK_OUT);
+                                csw.Status = CSW_ERROR;
+                                sendCSW();
+                            }
+                        }
+                        break;
+                    case WRITE10:
+                    case WRITE12:
+                        if (infoTransfer()) {
+                            if (!(cbw.Flags & 0x80)) {
+                                stage = PROCESS_CBW;
+                            } else {
+                                stallEndpoint(EPBULK_IN);
+                                csw.Status = CSW_ERROR;
+                                sendCSW();
+                            }
+                        }
+                        break;
+                    case VERIFY10:
+                        if (!(cbw.CB[1] & 0x02)) {
+                            csw.Status = CSW_PASSED;
+                            sendCSW();
+                            break;
+                        }
+                        if (infoTransfer()) {
+                            if (!(cbw.Flags & 0x80)) {
+                                stage = PROCESS_CBW;
+                                memOK = true;
+                            } else {
+                                stallEndpoint(EPBULK_IN);
+                                csw.Status = CSW_ERROR;
+                                sendCSW();
+                            }
+                        }
+                        break;
+                    default:
+                        fail();
+                        break;
+                }
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Use of USBMSD with a specific storage chip}
+The USBMSD class implements the MSD protocol as defined previously. But this class doesn't work standalone, a subclass is needed to define pure virtual functions called in USBMSD in order to access a specific storage chip.\\
+
+
+Six pure virtual functions have to be defined:
+\begin{packed_item}
+	\item virtual int disk\_read(char * data, int block): function to read a block
+	\item virtual int disk\_write(const char * data, int block): function to write a block
+	\item virtual int disk\_initialize(): function to initialize the memory
+	\item virtual int disk\_sectors(): return the number of blocks
+	\item virtual int disk\_size(): return the memory size
+	\item virtual int disk\_status(): return the status of the storage chip (0: OK, 1: not initialized, 2: no medium in the drive, 4: write protection)
+\end{packed_item}
 
 
 \subsection{Audio class}
@@ -2108,155 +2129,6 @@ EP_STATUS USBHAL::endpointWrite(uint8_t endpoint, uint8_t *data, uint32_t size) 
     return EP_PENDING;
 }
 \end{lstlisting}
-
-\begin{comment}
-\chapter*{USBMSD class}
-
-\begin{lstlisting}[label=USBMSD::memoryWrite(),caption=USBMSD::memoryWrite()]
-void USBMSD::memoryWrite (uint8_t * buf, uint16_t size) {
-
-    if ((addr + size) > MemorySize) {
-        size = MemorySize - addr;
-        stage = ERROR;
-        stallEndpoint(EPBULK_OUT);
-    }
-
-    // we fill an array in RAM of 1 block before writing it in memory
-    for (int i = 0; i < size; i++)
-        page[addr%BlockSize + i] = buf[i];
-
-    // if the array is filled, write it in memory
-    if (!((addr + size)%BlockSize))
-        blockWrite(page, addr/BlockSize);
-
-    addr += size;
-    length -= size;
-    csw.DataResidue -= size;
-
-    if ((!length) || (stage != PROCESS_CBW)) {
-        csw.Status = (stage == ERROR) ? CSW_FAILED : CSW_PASSED;
-        sendCSW();
-    }
-}
-\end{lstlisting}
-
-
-\begin{lstlisting}[label=USBMSD::memoryVerify(),caption=USBMSD::memoryVerify()]
-void USBMSD::memoryVerify (uint8_t * buf, uint16_t size) {
-    uint32_t n;
-
-    if ((addr + size) > MemorySize) {
-        size = MemorySize - addr;
-        stage = ERROR;
-        stallEndpoint(EPBULK_OUT);
-    }
-
-    // beginning of a new block -> load a whole block in RAM
-    if (!(addr%BlockSize))
-        blockRead(page, addr/BlockSize);
-
-    // info are in RAM -> no need to re-read memory
-    for (n = 0; n < size; n++) {
-        if (page[addr%BlockSize + n] != buf[n]) {
-            memOK = false;
-            break;
-        }
-    }
-
-    addr += size;
-    length -= size;
-    csw.DataResidue -= size;
-
-    if ( !length || (stage != PROCESS_CBW)) {
-        csw.Status = (memOK && (stage == PROCESS_CBW)) ? CSW_PASSED : CSW_FAILED;
-        sendCSW();
-    }
-}
-\end{lstlisting}
-
-
-\begin{lstlisting}[label=USBMSD::CBWDecode(),caption=USBMSD::CBWDecode()]
-void USBMSD::CBWDecode(uint8_t * buf, uint16_t size) {
-    if (size == sizeof(cbw)) {
-        memcpy((uint8_t *)&cbw, buf, size);
-        if (cbw.Signature == CBW_Signature) {
-            csw.Tag = cbw.Tag;
-            csw.DataResidue = cbw.DataLength;
-            if ((cbw.CBLength <  1) || (cbw.CBLength > 16) ) {
-                fail();
-            } else {
-                switch (cbw.CB[0]) {
-                    case TEST_UNIT_READY:
-                        testUnitReady();
-                        break;
-                    case REQUEST_SENSE:
-                        requestSense();
-                        break;
-                    case INQUIRY:
-                        inquiryRequest();
-                        break;
-                    case MODE_SENSE6:
-                        modeSense6();
-                        break;
-                    case READ_FORMAT_CAPACITIES:
-                        readFormatCapacity();
-                        break;
-                    case READ_CAPACITY:
-                        readCapacity();
-                        break;
-                    case READ10:
-                    case READ12:
-                        if (infoTransfer()) {
-                            if ((cbw.Flags & 0x80)) {
-                                stage = PROCESS_CBW;
-                                memoryRead();
-                            } else {
-                                stallEndpoint(EPBULK_OUT);
-                                csw.Status = CSW_ERROR;
-                                sendCSW();
-                            }
-                        }
-                        break;
-                    case WRITE10:
-                    case WRITE12:
-                        if (infoTransfer()) {
-                            if (!(cbw.Flags & 0x80)) {
-                                stage = PROCESS_CBW;
-                            } else {
-                                stallEndpoint(EPBULK_IN);
-                                csw.Status = CSW_ERROR;
-                                sendCSW();
-                            }
-                        }
-                        break;
-                    case VERIFY10:
-                        if (!(cbw.CB[1] & 0x02)) {
-                            csw.Status = CSW_PASSED;
-                            sendCSW();
-                            break;
-                        }
-                        if (infoTransfer()) {
-                            if (!(cbw.Flags & 0x80)) {
-                                stage = PROCESS_CBW;
-                                memOK = true;
-                            } else {
-                                stallEndpoint(EPBULK_IN);
-                                csw.Status = CSW_ERROR;
-                                sendCSW();
-                            }
-                        }
-                        break;
-                    default:
-                        fail();
-                        break;
-                }
-            }
-        }
-    }
-}
-\end{lstlisting}
-\end{comment}
-
 
 
 

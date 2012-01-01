@@ -1896,10 +1896,95 @@ Six pure virtual functions have to be defined:
 
 
 \subsection{Audio class}
-TODO
+\subsubsection{Introduction}
+The audio class enables a USB device to send and receive encoded voice or music for instance. In the mbed library, a USB audio device has been developed in order to provide a speaker and a microphone in the same device. Devices in the audio class use isochronous transfers for audio streams. The general idea for the device developed is to receive an audio packet each Start of Frame (SOF) generated each 1ms. This device is synchronous. Asynchronous audio devices can be developed using an external clock for instance.
+
+\subsubsection{Descriptors}
+Three interfaces are defined in the configuration descriptor:
+\begin{packed_item}
+	\item Audio Control Interface: describe the functionnal behavior of the device including input terminal, output terminal or features unit. 
+	\begin{packed_item}
+		\item An Input Terminal is used to interface between outside the device and other Units inside the device. 
+		\item An Output Terminal is used to interface between Units inside the audio function and outside the device. 
+		\item A feature Unit provides audio control concerning volume or mute for instance.
+	\end{packed_item}
+	
+	\item Audio Streaming Interface: used to interchange digital audio data streams between the Host and the audio device. In our case, two audio streaming interfaces are defined:
+	\begin{packed_item}
+		\item to receive an audio stream over an isochronous OUT endpoint
+		\item to send a stream over an isochronous IN endpoint
+	\end{packed_item}
+	This interface specifies the type of data exchanged, the number of channels used, the number of bits used to encode a sample or the frequency. In the mbed library, a PCM representation on 16 bits is used to send and receive audio packets. Other parameters can be chosen by a user.
+\end{packed_item}
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.8\textwidth]{./audio_archi.png}
+		\caption{Audio device interfaces}
+		\label{Audio device interfaces}
+\end{figure}
+
+\subsubsection{Audio class specific requests}
+The Audio specification defines several class specific requests. All these requests are processed in the USBCallback\_request() virtual method. Specific requests have been implemented:
+\begin{packed_item}
+	\item GET\_CUR: allows the host to know the current volume or the mute state
+	\item SET\_CUR: allows the host to set the current volume or the mute state
+	\item GET\_MIN: allows the host to know the minimum volume level
+	\item GET\_MAX: allows the host to know the maximum volume level
+	\item GET\_RES: allows the host to know the resolution attribute between two volume levels
+\end{packed_item}
+
+\subsubsection{Reception and sending audio packets}
+As explained before, one audio packet is sent or receive on a Start Of Frame event (each ms). So let's say that a frequency of 48 kHz has been chosen with 2 channels (stereo). Knowing that each sample of a packet is 16 bits long, 48 * 2 bytes will be received or sent each millisecond for one channel. In total, for 2 channels, 48 * 2 * 2 bytes will be received. The audio length packet received or sent each millisecond can be compute:
+\begin{center}
+	AUDIO\_LENGTH\_PACKET = (FREQ / 500) * nb\_channel
+\end{center}
+
+According to the number of channels, audio packets have to be interpreted differently:
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\textwidth]{./pcm.png}
+		\caption{PCM packet: mono}
+		\label{PCM packet: mono}
+\end{figure}
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\textwidth]{./pcm_stereo.png}
+		\caption{PCM packet: stereo}
+		\label{PCM packet: stereo}
+\end{figure}
 
 
+The main part of sending and reception of audio packets is in the virtual function called in USBHAL on each start of frame events:
+\begin{lstlisting}[label=Manage audio packets in SOF events,caption=Manage audio packets in SOF events]
+// Called in ISR context on each start of frame
+void USBAudio::SOF(int frameNumber) {
 
+    uint16_t size = 0;
+    
+    // read the isochronous endpoint if the user has provided a buffer
+    if (buf_stream_in != NULL) {
+       if (USBDevice::readEP_NB(EP3OUT, (uint8_t *)buf_stream_in, &size, PACKET_SIZE_ISO_IN)) {
+           // if an audio packet is available, notify
+           if (size) {
+               available = true;
+               readStart(EP3OUT, PACKET_SIZE_ISO_IN);
+               buf_stream_in = NULL;
+           }
+       }
+    }
+    
+    // write if needed
+    if (buf_stream_out != NULL) {
+       USBDevice::writeNB(EP3IN, (uint8_t *)buf_stream_out, PACKET_SIZE_ISO_OUT, PACKET_SIZE_ISO_OUT);
+       buf_stream_out = NULL;
+    }
+
+    SOF_handler = true;
+}
+\end{lstlisting}
 
 
 

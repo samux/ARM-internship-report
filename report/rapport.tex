@@ -65,6 +65,7 @@
 \tableofcontents
 \chapter{ARM and Mbed}
 \section{ARM}
+\subsection{History}
 ARM Holdings plc is a British multinational semiconductor and software company. The headquarter is based in Cambridge. This company is well-known in the processor field, although it also designs, licenses and sells software development tools under the RealView and KEIL brands, systems and platforms, system-on-a-chip infrastructure and software. 
 \\
 
@@ -73,35 +74,85 @@ Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It is the
 
 Nowadays, ARM processors are widely used in mobile phones, tablets, personal digital assistants, GPS, digital cameras and digital televions. The main reason of this success is their low electric power consumption; making them suitable for embedded systems. Even if ARM products are widely used, the company doesn't manufacture its own CPUs. The company licenses its technology as Intellectual Property (IP). Companies like Intel, Texas Intrument or Nvidia are making processors based on ARM's IP.
 
+\subsection{ARM Processors}
+The ARM architecture is described as a Reduced Instruction Set Computer (RISC) architecture. Main RISC features are:
+\begin{packed_item}
+	\item Load/store architecture: data-processing operates only on register contents
+	\item Uniform and fixed-length instruction fields, to simplify instruction decode and pipelining
+	\item A large register file
+\end{packed_item}
 
+Over time the ARM architecture has evolved in order to improve performance, provide new functionalities or meet the demand for new needs.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.5\textwidth]{./arm_arch.jpg}
+\caption{ARM Processor Architecture Versionning}
+\label{ARM Processor Architecture Versionning}
+\end{figure}
+
+\begin{packed_item}
+	\item \textbf{ARMv5}: support for digital signal processing (DSP) algorithms and the Jazelle® Java byte code engine to enable hardware execution of Java bytecodes, thus improving performance of applications written in Java.
+	\item \textbf{ARMv6}: introduction of the SIMD (Single Instruction Multiple Data) technology. This extension is particularly used in audio and video processing. In addition a security extension has been introduced known as TrustZone. The Thumb-2 mode has also been introduced to achieve code density and performance.
+	\item \textbf{ARMv7}: this architecture delivers a set of profiles customized to target applications. All Cortex processors implement the ARMv7 architecture, (except Cortex-M0 and Cortex-M1 series which implement ARMv6M):
+	\begin{packed_item}
+		\item \textbf{Cortex A}: Application profile implementing a virtual memory system architecture based on an MMU (memory management unit). An optional NEON processing unit for multimedia applications and advanced hardware Floating Point unit can be added.
+		\item \textbf{Cortex R}: Realtime profile implementing a protected memory system architecture based on an MPU (memory protection unit).
+		\item \textbf{Cortex M}: Microcontroller profile designed for fast interrupt processing and ideal for cost-sensitive devices requiring highly deterministic behaviour.
+	\end{packed_item}
+	\item \textbf{ARMv8}: ARMv8 will introduce a 64-bit architecture support. There will also an instruction level support for cryptography. This new architecture is in development.
+\end{packed_item}
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.5\textwidth]{./arm_proc.jpg}
+\caption{ARM processors}
+\label{ARM processors}
+\end{figure}
+
+\newpage
 
 \section{Mbed}
-In wish to pursue new areas of expertise, ARM founded Mbed in 2009. Mbeds core area is development of prototyping boards (called mbed) based on ARM processors (Cortex M0 and Cortex M3). The purpose is to make available a simple and easy to set-up prototyping solution using 32-bits processors. Mbeds boards have been designed for quick experimentation. Users can try something and see if it is doable in a very easily and quickly manner.
+In wish to pursue new areas of expertise, ARM founded Mbed in 2009. Mbeds core area is development of prototyping boards (called mbed) based on ARM processors (Cortex M0 and Cortex M3). The purpose is to make available a simple and easy to setup prototyping solutions using 32-bits processors. Mbeds boards have been designed for quick experimentation. Users can try something and see if it is doable in a very easily and quickly manner.
 
 \subsection{Mbed boards: LPC1768 and LPC11U24}
-For the moment, two boards have been developped. The first one is based on the LPC1768 microcontroller from NXP which uses a Cortex m3. More recently, a new board based on a LPC11U24 (Cortex m0) was born. This last mbed has been particularly designed to prototype USB devices or battery powered applications. 
+For the moment, two boards have been developped. The first one is based on the LPC1768 microcontroller from NXP which uses a Cortex m3:
+\begin{packed_item}
+	\item 96 MHz, 32 Kb of RAM, 512 Kb of flash
+	\item 3 UART, 2 SPI, 2 I2C, 6 PWM, 6 ADC, GPIO, Ethernet, USB Host/Device
+\end{packed_item}
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.3\textwidth]{./lpc1768.png}
-\caption{mbed board: lpc1768 (cortex m3)}
+\caption{mbed board: lpc1768 (Cortex m3)}
 \label{mbed_board: lpc1768 (Cortex m3)}
 \end{figure}
+
+
+More recently, a new board based on a LPC11U24 (Cortex m0) was born. This last mbed has been particularly designed to prototype USB devices or battery powered applications:
+\begin{packed_item}
+	\item 48 MHz, 8 Kb of RAM, 32 Kb of flash
+	\item UART, I2C, 2 SPI, 6 ADC, GPIO, USB Device
+\end{packed_item}
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.3\textwidth]{./lpc11U24.png}
-\caption{mbed board: lpc11U24 (cortex m0)}
+\caption{mbed board: lpc11U24 (Cortex m0)}
 \label{mbed_board: lpc11U24 (Cortex m0)}
 \end{figure}
+
+
+Both mbed boards have a built-in USB drag 'n' drop FLASH programmer. This feature allows mbed users to drag and drop a binary into the mbed recognized as USB mass storage device by a computer.
 
 
 \subsection{The online compiler}
 The two main keywords of Mbed are "simple" and "cloud computing". Users indeed use an online compiler to develop their program in C++. They compile online and transfer the binary received into the mbed, which is connected to a computer over a USB cable and detected as a mass storage device. They just have to press the reset button to see their program running.
 \\
 
-As explained before, users have a complete online IDE totally independant of the underlying operating system. 
-This IDE has a lot of very interesting features:
+The online IDE is totally independant of the underlying operating system. It contains a lot of interesting features:
 \begin{packed_item}
 	\item Code editing with syntax highlighting
 	\item Multiple programs
@@ -118,7 +169,7 @@ This IDE has a lot of very interesting features:
 \end{packed_item}
 
 \subsection{Mbed libraries}
-In addition to the online compiler, almost all drivers have been implemented. Users just have to instanciate an object such as SPI, I2C,... to have access to a great API which abstract all the low-level layer. \\
+In addition to the online compiler, almost all drivers have been implemented. Users just have to instanciate an object such as SPI, I2C,... to have access to an API which abstracts all the low-level layer. \\
 
 
 \begin{figure}[h!]
@@ -130,7 +181,7 @@ In addition to the online compiler, almost all drivers have been implemented. Us
 
 
 \subsection{Mbed website: \textit{http://mbed.org/}}
-To finish this tour of the mbed environment, users can find an active website. First, users have access to a forum. They have also access to a handbook where there is a lot of documentation and examples concerning mbed libraries, the hardware part of the mbed,... But the most important feature of this website is for me the central cookbook. This cookbook is a great source of example coming from other mbed users. You can almost find for instance a lot of libraries to use popular sensors like accelerometers, pressure sensors,... Each user is free to contribute to this part of the website by doing articles explaining their project. 
+To finish this tour of the mbed environment, users can find an active website. First, users have access to a forum. They have also access to a handbook where there is a lot of documentation and examples concerning mbed libraries or the hardware part of the mbed. But the most important feature of this website is for me the cookbook. This cookbook is a great source of example coming from other mbed users. You can almost find one library to use popular sensors like accelerometers, pressure sensors,... Each user is free to contribute to this part of the website by doing articles explaining their project. 
 
 \begin{figure}[h!]
 \centering
@@ -357,9 +408,9 @@ The WebSocket server is divided into channels. All clients can send and receive 
 There are 3 connection modes:
 
 \begin{packed_item}
-	\item write-only (wo): the client can write on a certain channel but cannot receive messages
-	\item read-only (ro): the client can read messages on a certain channel but cannot write messages
-	\item read-write (rw): the client can read and write messages over a channel
+	\item \textbf{write-only (wo)}: the client can write on a certain channel but cannot receive messages
+	\item \textbf{read-only (ro)}: the client can read messages on a certain channel but cannot write messages
+	\item \textbf{read-write (rw)}: the client can read and write messages over a channel
 \end{packed_item}
 
 When the server receives a message from a client in a certain channel which is not in 'ro' mode, it will broadcast the message to all clients connected to this channel which are in 'rw' or 'ro' mode. This mechanism is done in WShandler which inherits from tornado.websocket.WebSocketHandler. The websocket protocol is implemented in the base class. You can override three different events in WShandler: 
@@ -647,7 +698,7 @@ The RPC mechanism relies on messages exchanged. On these messages, we need to sp
 			\item INFO\_METHODS: a client can have access to all methods registered from a specific client
 			\item ERROR: an error has been detected
 		\end{packed_item}
-	\item message ID
+	\item message ID: random number used to identify a transaction. For a valid RPC transaction, the request and the answer have to have the same message ID.
 \end{packed_item}
 
 These previous fields are common to all messages exchanged. After for each message, other fields can be present:
@@ -1133,14 +1184,14 @@ All devices capabilities are transmitted in data structures called \textbf{descr
 
 A typical enumeration follows:
 \begin{packed_item}
-	\item GET DEVICE DESCRIPTOR: The host sends a get device descriptor request. The device
+	\item \textbf{GET\_DEVICE\_DESCRIPTOR}: The host sends a get device descriptor request. The device
 replies with its device descriptor to report its attributes (Device Class, maximum packet size for endpoint zero).
-	\item SET ADDRESS: A USB device uses the default address (0) after reset until the host assigns a unique address using the set address request. The firmware writes the device address assigned by the host.
-	\item GET CONFIGURATION DESCRIPTOR: The host sends a get configuration request. The device replies with its configuration descriptor, interface descriptor and endpoint descriptor. The configuration descriptor describes the number of interfaces provided by the configuration, the power source
+	\item \textbf{SET\_ADDRESS}: A USB device uses the default address (0) after reset until the host assigns a unique address using the set address request. The firmware writes the device address assigned by the host.
+	\item \textbf{GET\_CONFIGURATION\_DESCRIPTOR}: The host sends a get configuration request. The device replies with its configuration descriptor, interface descriptor and endpoint descriptor. The configuration descriptor describes the number of interfaces provided by the configuration, the power source
 (Bus or Self powered) and the maximum power consumption of the USB device from the bus.
 The Interface descriptor describes the number of endpoints used by this interface. The Endpoint
 descriptor describes the transfer type supported and the bandwidth requirements.
-	\item SET CONFIGURATION: The host assigns a configuration value to the device based on the
+	\item \textbf{SET\_CONFIGURATION}: The host assigns a configuration value to the device based on the
 configuration information. The device is now configured and ready to be
 used.
 \end{packed_item}
@@ -1158,14 +1209,14 @@ A transfer consists of 1 or more transactions. Each transaction contains a token
 
 I will illustrate a whole transfer with a control read transfer. This type of transfer is used by the host to request descriptors to a device on the control endpoint:
 \begin{packed_item}
-	\item Setup transaction:
+	\item \textbf{Setup transaction}:
 	\begin{packed_item}
 		\item SETUP token packet sent by the host
 		\item Data packet: the host sends a request concerning specific descriptor
 		\item Handshake packet: the device returns ACK
 	\end{packed_item}
 	
-	\item One or more data transaction(s):
+	\item \textbf{One or more data transaction(s)}:
 	\begin{packed_item}
 		\item IN token packet sent by the host
 		\item Data packet: the device sends the descriptor requested
@@ -1173,7 +1224,7 @@ I will illustrate a whole transfer with a control read transfer. This type of tr
 	\end{packed_item}
 	
 	
-	\item Status transaction:
+	\item \textbf{Status transaction}:
 	\begin{packed_item}
 		\item OUT token packet sent by the host
 		\item Data packet: 0 length data
@@ -1226,11 +1277,11 @@ A USB device stack has been developped to allow mbed users to design their own U
 
 \begin{packed_item}
 
-	\item USBHAL: The USB hardware layer for the LPC11U24 and for the LPC1768. In this class, all low level methods are defined. There are USBHAL\_LPC11U24.cpp and USBHAL\_LPC1768.cpp which define functions defined in USBHAL.h. The right .cpp file is chosen according to a macro defined by the compiler: if a user is compiling a program for the LPC1768, the macro TARGET\_LPC1768 is defined. If a user wants to compile a program for the LPC11U24, the macro TARGET\_LPC11U24 is defined. Virtual functions are called on specific events to be treated by subclasses.
+	\item \textbf{USBHAL}: The USB hardware layer for the LPC11U24 and for the LPC1768. In this class, all low level methods are defined. There are USBHAL\_LPC11U24.cpp and USBHAL\_LPC1768.cpp which define functions defined in USBHAL.h. The right .cpp file is chosen according to a macro defined by the compiler: if a user is compiling a program for the LPC1768, the macro TARGET\_LPC1768 is defined. If a user wants to compile a program for the LPC11U24, the macro TARGET\_LPC11U24 is defined. Virtual functions are called on specific events to be treated by subclasses.
 	
-	\item USBDevice: This layer is in charge to abstract the hardware. At this level, no differences are made between the LPC11U24 and the LPC1768 concerning the target. USBDevice is in charge to perform the setup packet treatment (enumeration step is performed in this class) and provide an abstraction to handle the USB interface.
+	\item \textbf{USBDevice}: This layer is in charge to abstract the hardware. At this level, no differences are made between the LPC11U24 and the LPC1768 concerning the target. USBDevice is in charge to perform the setup packet treatment (enumeration step is performed in this class) and provide an abstraction to handle the USB interface.
 	
-	\item USB class layer:
+	\item \textbf{USB class layer}:
 		\begin{packed_item}
 			\item USBHID: implements standard requests of the HID class specification. When a USBHID object is instanciated, the mbed is enumerated as a generic HID device so that raw data can be sent and receive to and from a custom program running on the host side.
 			\item USBCDC: implements a subset of the CDC class specification to allow the mbed to be recognized as a virtual serial port
@@ -1239,7 +1290,7 @@ A USB device stack has been developped to allow mbed users to design their own U
 			\item USBMSD: implements the mass storage specification. This class is generic: a subclass has to implement some pure virtual functions defined in USBMSD to access a storage chip.
 		\end{packed_item}
 		
-	\item USB device layer:
+	\item \textbf{USB device layer}:
 		\begin{packed_item}
 			\item USBMouse: used to emulate a mouse
 			\item USBKeyboard: used to emulate a keyboard.
@@ -1248,13 +1299,6 @@ A USB device stack has been developped to allow mbed users to design their own U
 			\item USBMSD\_??: All users can implement their own class which inherits from USBMSD in order to access their storage chip.
 		\end{packed_item}
 	
-	\begin{comment}
-	Methods such as init, connect, disconnect, addEndpoint, readEndpoint, writeEndpoint can be found in this class. It's also in this class that the enumeration step is performed for requests concerning standard descriptors. When a packet is received on the control endpoint (endpoint 0 OUT), it is decoded to analyze the request and a response to the host is sent. Descriptors are accessible via virtual functions such as getDeviceDescriptor which returns a pointer on the descriptor. As these functions are virtual, all child classes will be able to use their own descriptors.
-	
-		\item USBHID, USBCDC and USBMSD: As explained before, these classes represent a specific USB class. A part of the enumeration step can be done here if the host requests a class specific descriptor. These three classes are explained in the next section of this document.
-		\item USB\_MOUSE, USB\_KEYBOARD, USB\_MOUSE\_KEYBOARD, USB\_RAW\_HID and \\ USB\_SERIAL: High level libraries to emulate a specific peripheral according to their class. For instance, a keyboard is emulated over the HID class. Methods such as printf, putc are accessible for a keyboard. The USB\_RAW\_HID class is used to send and receive raw data. This can be a good opportunity to design a USB device. USB\_SERIAL is a virtual serial port.
-		
-		\end{comment}
 \end{packed_item}
 
 
@@ -1934,7 +1978,7 @@ The Audio specification defines several class specific requests. All these reque
 	\item GET\_RES: allows the host to know the resolution attribute between two volume levels
 \end{packed_item}
 
-\subsubsection{Reception and sending audio packets}
+\subsubsection{Audio packets management}
 As explained before, one audio packet is sent or receive on a Start Of Frame event (each ms). So let's say that a frequency of 48 kHz has been chosen with 2 channels (stereo). Knowing that each sample of a packet is 16 bits long, 48 * 2 bytes will be received or sent each millisecond for one channel. In total, for 2 channels, 48 * 2 * 2 bytes will be received. The audio length packet received or sent each millisecond can be compute:
 \begin{center}
 	AUDIO\_LENGTH\_PACKET = (FREQ / 500) * nb\_channel
@@ -1957,11 +2001,10 @@ According to the number of channels, audio packets have to be interpreted differ
 \end{figure}
 
 
-The main part of sending and reception of audio packets is in the virtual function called in USBHAL on each start of frame events:
-\begin{lstlisting}[label=Manage audio packets in SOF events,caption=Manage audio packets in SOF events]
+The main part of sending and reception of audio packets is in the virtual function called in USBHAL on each start of frame event:
+\begin{lstlisting}[label=Audio packets management in SOF events,caption=Audio packets management in SOF events]
 // Called in ISR context on each start of frame
 void USBAudio::SOF(int frameNumber) {
-
     uint16_t size = 0;
     
     // read the isochronous endpoint if the user has provided a buffer
@@ -1971,7 +2014,6 @@ void USBAudio::SOF(int frameNumber) {
            if (size) {
                available = true;
                readStart(EP3OUT, PACKET_SIZE_ISO_IN);
-               buf_stream_in = NULL;
            }
        }
     }
@@ -1979,7 +2021,6 @@ void USBAudio::SOF(int frameNumber) {
     // write if needed
     if (buf_stream_out != NULL) {
        USBDevice::writeNB(EP3IN, (uint8_t *)buf_stream_out, PACKET_SIZE_ISO_OUT, PACKET_SIZE_ISO_OUT);
-       buf_stream_out = NULL;
     }
 
     SOF_handler = true;

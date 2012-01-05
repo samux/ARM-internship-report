@@ -38,7 +38,7 @@
 	tabsize=4,
 	rulecolor=,
 	language=C++,
-        basicstyle=\scriptsize,
+        basicstyle=\footnotesize,
         upquote=true,
         columns=fixed,
         showstringspaces=false,
@@ -69,10 +69,10 @@
 ARM Holdings plc is a British multinational semiconductor and software company. The headquarter is based in Cambridge. This company is well-known in the processor field, although it also designs, licenses and sells software development tools under the RealView and KEIL brands, systems and platforms, system-on-a-chip infrastructure and software. 
 \\
 
-Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It is the result of a joint venture between Acorn Computers, Apple Computer (now Apple Inc.) and VLSI Technology (now NXP semiconductor). The purpose of this joint venture was to develop a RISC chip originally developped by Acorn Computer involved in an Apple project. ARM got bigger little by little by acquiring companies like Micrologic Solutions, a software consulting company based in Cambridge 1999. In 2000, ARM acquired Allant Software, Infinite Designs in Sheffield (UK) and EuroMips in Sophia Antipolis (France). Then, in 2001, it acquired a team specialized in hardware and software debugging based in Blackburn (UK). In 2005, ARM acquired Keil Software, a leader in the software development tools for microcontrollers. More recently, ARM joined with Texas Instrument, Samsung, IBM, ST-Ericsson and Freescale Semiconductor in forming an open source engineering company named Linaro. Linaro produces for example ARM tools or linux kernels for ARM based system-on-chips. Today, ARM has offices and design centres all over the world, including UK, Germany, France, Israel, Sweden, Norway, Slovenia, USA, China, South Korea, Japan, Taiwan and India. 
+Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It is the result of a joint venture between Acorn Computers, Apple Computer (now Apple Inc.) and VLSI Technology (now NXP semiconductor). The purpose of this joint venture was to develop a RISC chip originally developed by Acorn Computer involved in an Apple project. ARM got bigger little by little by acquiring companies like Micrologic Solutions, a software consulting company based in Cambridge 1999. In 2000, ARM acquired Allant Software, Infinite Designs in Sheffield (UK) and EuroMips in Sophia Antipolis (France). Then, in 2001, it acquired a team specialized in hardware and software debugging based in Blackburn (UK). In 2005, ARM acquired Keil Software, a leader in the software development tools for microcontrollers. More recently, ARM joined with Texas Instruments, Samsung, IBM, ST-Ericsson and Freescale Semiconductor in forming an open source engineering company named Linaro. Linaro produces for example ARM tools or linux kernels for ARM based system-on-chips. Today, ARM has offices and design centres all over the world, including the UK, Germany, France, Israel, Sweden, Norway, Slovenia, USA, China, South Korea, Japan, Taiwan and India. 
 \\
 
-Nowadays, ARM processors are widely used in mobile phones, tablets, personal digital assistants, GPS, digital cameras and digital televions. The main reason of this success is their low electric power consumption; making them suitable for embedded systems. Even if ARM products are widely used, the company doesn't manufacture its own CPUs. The company licenses its technology as Intellectual Property (IP). Companies like Intel, Texas Intrument or Nvidia are making processors based on ARM's IP.
+Nowadays, ARM processors are widely used in mobile phones, tablets, personal digital assistants, GPS, digital cameras and digital televions. The main reason of this success is their low electric power consumption, making them suitable for embedded systems. Even if ARM products are widely used, the company doesn't manufacture its own CPUs. The company licenses its technology as Intellectual Property (IP). Companies like Intel, Texas Intrument or Nvidia are making processors based on ARM's IP.
 
 \subsection{ARM Processors}
 The ARM architecture is described as a Reduced Instruction Set Computer (RISC) architecture. Main RISC features are:
@@ -86,27 +86,27 @@ Over time the ARM architecture has evolved in order to improve performance, prov
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.5\textwidth]{./arm_arch.jpg}
+\includegraphics[width=0.7\textwidth]{./arm_arch.jpg}
 \caption{ARM Processor Architecture Versionning}
 \label{ARM Processor Architecture Versionning}
 \end{figure}
 
 \begin{packed_item}
-	\item \textbf{ARMv5}: support for digital signal processing (DSP) algorithms and the Jazelle® Java byte code engine to enable hardware execution of Java bytecodes, thus improving performance of applications written in Java.
-	\item \textbf{ARMv6}: introduction of the SIMD (Single Instruction Multiple Data) technology. This extension is particularly used in audio and video processing. In addition a security extension has been introduced known as TrustZone. The Thumb-2 mode has also been introduced to achieve code density and performance.
-	\item \textbf{ARMv7}: this architecture delivers a set of profiles customized to target applications. All Cortex processors implement the ARMv7 architecture, (except Cortex-M0 and Cortex-M1 series which implement ARMv6M):
+	\item \textbf{ARMv5}: support for digital signal processing (DSP) algorithms and the Jazelle® Java byte code engine to enable hardware execution of Java bytecodes, thus improving performance of applications written in Java
+	\item \textbf{ARMv6}: introduction of the SIMD (Single Instruction Multiple Data) technology. This extension is particularly used in audio and video processing. In addition a security extension has been introduced known as TrustZone. The Thumb-2 mode has also been introduced to achieve code density and performance
+	\item \textbf{ARMv7}: this architecture delivers a set of profiles customized to target applications. All Cortex processors implement the ARMv7 architecture, (except Cortex M0 and Cortex M1 series which implement ARMv6M):
 	\begin{packed_item}
-		\item \textbf{Cortex A}: Application profile implementing a virtual memory system architecture based on an MMU (memory management unit). An optional NEON processing unit for multimedia applications and advanced hardware Floating Point unit can be added.
-		\item \textbf{Cortex R}: Realtime profile implementing a protected memory system architecture based on an MPU (memory protection unit).
-		\item \textbf{Cortex M}: Microcontroller profile designed for fast interrupt processing and ideal for cost-sensitive devices requiring highly deterministic behaviour.
+		\item \textbf{Cortex A}: Application profile implementing a virtual memory system architecture based on an MMU (memory management unit). An optional NEON processing unit for multimedia applications and advanced hardware Floating Point unit can be added
+		\item \textbf{Cortex R}: Realtime profile implementing a protected memory system architecture based on an MPU (memory protection unit)
+		\item \textbf{Cortex M}: Microcontroller profile designed for fast interrupt processing and ideal for cost-sensitive devices requiring highly deterministic behaviour
 	\end{packed_item}
-	\item \textbf{ARMv8}: ARMv8 will introduce a 64-bit architecture support. There will also an instruction level support for cryptography. This new architecture is in development.
+	\item \textbf{ARMv8}: ARMv8 will introduce a 64-bit architecture support. There will also be be instruction level support for cryptography. This new architecture is in development
 \end{packed_item}
 
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.5\textwidth]{./arm_proc.jpg}
+\includegraphics[width=0.7\textwidth]{./arm_proc.jpg}
 \caption{ARM processors}
 \label{ARM processors}
 \end{figure}
@@ -114,10 +114,10 @@ Over time the ARM architecture has evolved in order to improve performance, prov
 \newpage
 
 \section{Mbed}
-In wish to pursue new areas of expertise, ARM founded Mbed in 2009. Mbeds core area is development of prototyping boards (called mbed) based on ARM processors (Cortex M0 and Cortex M3). The purpose is to make available a simple and easy to setup prototyping solutions using 32-bits processors. Mbeds boards have been designed for quick experimentation. Users can try something and see if it is doable in a very easily and quickly manner.
+Aiming to pursue new areas of expertise, ARM founded Mbed in 2009. Mbed's core area is the development of prototyping boards (called mbed) based on ARM processors (Cortex M0 and Cortex M3). Their purpose is to make simple and easy to setup prototyping solutions using 32-bit processors. Mbeds boards have been designed for quick experimentation; users can try something and see if it is doable in a very quick and easy manner.
 
 \subsection{Mbed boards: LPC1768 and LPC11U24}
-For the moment, two boards have been developped. The first one is based on the LPC1768 microcontroller from NXP which uses a Cortex m3:
+For the moment, two boards have been developed. The first is based on the LPC1768 microcontroller from NXP which uses a Cortex m3:
 \begin{packed_item}
 	\item 96 MHz, 32 Kb of RAM, 512 Kb of flash
 	\item 3 UART, 2 SPI, 2 I2C, 6 PWM, 6 ADC, GPIO, Ethernet, USB Host/Device
@@ -125,13 +125,13 @@ For the moment, two boards have been developped. The first one is based on the L
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.3\textwidth]{./lpc1768.png}
+\includegraphics[width=0.5\textwidth]{./lpc1768.png}
 \caption{mbed board: lpc1768 (Cortex m3)}
 \label{mbed_board: lpc1768 (Cortex m3)}
 \end{figure}
 
 
-More recently, a new board based on a LPC11U24 (Cortex m0) was born. This last mbed has been particularly designed to prototype USB devices or battery powered applications:
+More recently, a new board based on a LPC11U24 (Cortex M0) was born. This mbed has been designed to prototype USB devices or battery powered applications:
 \begin{packed_item}
 	\item 48 MHz, 8 Kb of RAM, 32 Kb of flash
 	\item UART, I2C, 2 SPI, 6 ADC, GPIO, USB Device
@@ -139,17 +139,17 @@ More recently, a new board based on a LPC11U24 (Cortex m0) was born. This last m
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.3\textwidth]{./lpc11U24.png}
-\caption{mbed board: lpc11U24 (Cortex m0)}
-\label{mbed_board: lpc11U24 (Cortex m0)}
+\includegraphics[width=0.5\textwidth]{./lpc11U24.png}
+\caption{mbed board: lpc11U24 (Cortex M0)}
+\label{mbed_board: lpc11U24 (Cortex M0)}
 \end{figure}
 
 
-Both mbed boards have a built-in USB drag 'n' drop FLASH programmer. This feature allows mbed users to drag and drop a binary into the mbed recognized as USB mass storage device by a computer.
+Both mbed boards have a built-in USB drag and drop FLASH programmer. This feature allows mbed users to drag and drop a binary into the mbed recognized as a USB mass storage device by a computer.
 
 
 \subsection{The online compiler}
-The two main keywords of Mbed are "simple" and "cloud computing". Users indeed use an online compiler to develop their program in C++. They compile online and transfer the binary received into the mbed, which is connected to a computer over a USB cable and detected as a mass storage device. They just have to press the reset button to see their program running.
+The two main keywords of Mbed are "simple" and "cloud computing". Users indeed use an online compiler to develop their program in C++. They compile online and transfer the binary received into the mbed, which is connected to a computer over a USB cable. They just have to press the reset button to see their program running.
 \\
 
 The online IDE is totally independant of the underlying operating system. It contains a lot of interesting features:
@@ -169,7 +169,7 @@ The online IDE is totally independant of the underlying operating system. It con
 \end{packed_item}
 
 \subsection{Mbed libraries}
-In addition to the online compiler, almost all drivers have been implemented. Users just have to instanciate an object such as SPI, I2C,... to have access to an API which abstracts all the low-level layer. \\
+In addition to the online compiler, almost all drivers have been implemented. Users just have to instantiate an object such as SPI, I2C,... to have access to an API which abstracts all the low-level layers. \\
 
 
 \begin{figure}[h!]
@@ -181,11 +181,11 @@ In addition to the online compiler, almost all drivers have been implemented. Us
 
 
 \subsection{Mbed website: \textit{http://mbed.org/}}
-To finish this tour of the mbed environment, users can find an active website. First, users have access to a forum. They have also access to a handbook where there is a lot of documentation and examples concerning mbed libraries or the hardware part of the mbed. But the most important feature of this website is for me the cookbook. This cookbook is a great source of example coming from other mbed users. You can almost find one library to use popular sensors like accelerometers, pressure sensors,... Each user is free to contribute to this part of the website by doing articles explaining their project. 
+Finally, users can access the mbed forums to troubleshoot their programs or ask questions. They also have access to a handbook where there is a lot of documentation and examples concerning mbed libraries or the hardware part of the mbed. But the most important feature of this website is for me the cookbook. The cookbook is a great source of examples from other mbed users. You can almost always find a library to use with popular sensors like accelerometers, pressure sensors... The user is free to contribute to this part of the website by writing articles explaining their project and code. 
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.8\textwidth]{./cookbook.png}
+\includegraphics[width=1.0\textwidth]{./cookbook.png}
 \caption{mbed cookbook}
 \label{mbed cookbook}
 \end{figure}
@@ -193,7 +193,7 @@ To finish this tour of the mbed environment, users can find an active website. F
 
 \chapter{Internet Of Things: HTML5 on embedded systems}
 Nowadays, an increasing number of devices are connected to the Internet. These devices include not only personal computers, but also mobile phones and digital televisions, ect.
-Cisco predicts in an interview from the BBC that the number of internet connected devices is set to explode in the next four years to over 15 billion - twice the world's population by 2015. And Cisco is not the only one company to predict a such boom. VMware's CEO Paul Maritz said during a speech at the annual VMworld conference in Las Vegas in August 2011 that:
+Cisco predicted in an interview with the BBC that the number of internet connected devices is set to explode in the next four years to over 15 billion - twice the world's population by 2015. Cisco is not the only company to predict a such boom; VMware's CEO Paul Maritz said during a speech at the annual VMworld conference in Las Vegas at August 2011 that:
 
 \begin{quote} "Three years ago over 95 percent of the devices connected to the Internet were personal computers. Three years from now that number will probably be less than 20 percent. More than 80 percent of the devices connected to the Internet will not be Windows-based personal computers." \\
 \end{quote}
@@ -203,7 +203,7 @@ Thus, working on the connection of different sensors to the Internet is becoming
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.4\textwidth]{./logo_ws.jpg}
+		\includegraphics[width=0.6\textwidth]{./logo_ws.jpg}
 		\caption{HTML5 on embedded systems}
 		\label{HTML5 on embedded systems}
 \end{figure}
@@ -214,18 +214,18 @@ The WebSocket specification is a new feature of HTML5. It defines a full-duplex 
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./ws_poll.jpg}
-		\caption{Reduction of polling and overhead by Websocket \textit(Image coutesy of Kaazing)}
+		\includegraphics[width=0.7\textwidth]{./ws_poll.jpg}
+		\caption{Reduction of polling and overhead by Websocket \textit(Image courtesy of Kaazing)}
 		\label{Reduction of polling and overhead by Websocket}
 \end{figure}
 
-This figure shows the reduction in latency. Once the connection is established, messages can flow from the server to the browser. As the connection remains open, there is no need to send another request to the server.
+The figure~\ref{Reduction of polling and overhead by Websocket} shows the reduction in latency. Once the connection is established, messages can flow from the server to the browser. As the connection remains open, there is no need to send another request to the server.
 
 \subsection{Websocket protocol}
 
-To establish a WebSocket connection, the client and server upgrade from the HTTP protocol to the WebSocket protocol during their initial handshake.
+To establish a WebSocket connection, the client and server upgrade from the HTTP protocol to the WebSocket protocol during their initial handshake. \\
 
-The handshake from the client looks as follows: \\
+The handshake from the client is as follows: \\
 
 \fbox{\begin{minipage}{1.0\textwidth} \small
 	GET /ws HTTP/1.1 \\
@@ -234,25 +234,28 @@ The handshake from the client looks as follows: \\
   Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ== \\
   Upgrade: WebSocket \\
   Origin: http://example.org \\
-  Sec-WebSocket-Version: 13 \\
+  Sec-WebSocket-Version: 13
   \end{minipage}
 }
-\\ \\
-The handshake from the server looks as follows: \\
+\\
+
+
+The handshake from the server is as follows: \\
 
 \fbox{\begin{minipage}{1.0\textwidth} \small
         HTTP/1.1 101 Switching Protocols \\
         Upgrade: websocket \\
         Connection: Upgrade \\
-        Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo= \\
+        Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
         \end{minipage} 
-        }
-\\ \\
-Once the Websocket connection is established, data can be exchanged between client and server. Data can either be text frame encoded as UTF-8 or binary data.
+        } \\
+
+
+Once the Websocket connection is established, data can be exchanged between client and server. Data can either be text frame encoded as UTF-8 or binary data. Main fields of the data framing represented on the figure~\ref{Websocket data framing} are:
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.6\textwidth]{./frame_ws.jpg}
+		\includegraphics[width=0.7\textwidth]{./frame_ws.jpg}
 		\caption{Websocket data framing}
 		\label{Websocket data framing}
 \end{figure}
@@ -282,17 +285,17 @@ Once the Websocket connection is established, data can be exchanged between clie
 
 
 \subsection{Architecture of a Websocket communication}
-A websocket communication involves several clients connected to the same websocket server. All messages from browsers are sent to the server. The server manages all messages. It can decide to send a message received from a client to another client, to broadcast all messages received to all clients connected,...
+Websocket communication involves several clients connected to the same websocket server. All messages from browsers are sent to the server. The server manages all messages. It can for instance decide to send a message received from a client to another client or to broadcast all messages received to all clients connected.
 
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./ws.jpg}
+		\includegraphics[width=0.6\textwidth]{./ws.jpg}
 		\caption{Example of websocket communication}
 		\label{Example of websocket communication}
 \end{figure}
 
-For instance, let's say that there is an existing websocket server: example.com which is listening on port 80. A client can open a connection, receive and send messages to this server with this few lines of javascript:
+For example, let's say that there is an existing websocket server: example.com which is listening on port 80. A client can open a connection, receive and send messages to this server with this few lines of javascript:
 
 \begin{center}
 \begin{lstlisting}[label=Device descriptor,caption=Device Descriptor]
@@ -312,7 +315,7 @@ ws.onclose = function(evt) {
 
 
 \subsection{The mbed websocket library}
-A websocket client library has been developped in order to exchange data between an mbed and a server over a websocket communication. This library can either be used over an ethernet connection or a wifi connection using a roving networks wifly module. This library uses existing libraries such as the wifi module library or the TCP socket library, part of the TCP/IP stack (port of lwIP for mbed). For instance, the method which connects an mbed to a websocket server over wifly is:
+A websocket client library has been developed in order to exchange data between an mbed and a server over a websocket communication. The library can be used over an ethernet connection, or a wifi connection using a Roving Networks wifly module. The library uses existing libraries such as the wifi module library or the TCP socket library, part of the TCP/IP stack (port of lwIP for mbed). For instance, the method which connects an mbed to a websocket server over wifly is:
 
 
 \begin{center}
@@ -340,7 +343,7 @@ if (!wifi->send("Sec-WebSocket-Version: 13", "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="))
 \newpage
 
 \section{Real-Time Data Streaming from sensors}
-Mbed wanted to demonstrate that it was possible to access sensor data all over the world using an mbed board. For this, two prototypes boards has been developed with different sensors:
+Mbed wanted to demonstrate that it was possible to access sensor data all over the world using an mbed board and HTML5 websockets. For this, two prototype boards were developed with different sensors:
 
 \begin{packed_item}
 	\item accelerometer board with a three axis accelerometer
@@ -352,10 +355,10 @@ Mbed wanted to demonstrate that it was possible to access sensor data all over t
 		\end{packed_item}
 \end {packed_item}
 
-The idea behind this project is that the sensor data has to be available from everywhere as quick as possible. That's why we want to involve smartphones connected to the Internet over 3G for instance. To achieve this, we used QR codes to speed up the whole process. The steps to access data for a user are:
+The idea behind this project is that the sensor data has to be available everywhere as quickly as possible. That's why we wanted to involve smartphones connected to the Internet over 3G. To achieve this, we used QR codes to speed up the whole process. The steps to access data for a user are:
 
 \begin{packed_item}
-	\item Place the object (mbed and sensors) where desired
+	\item Place the objects (mbed and sensors) where desired
 	\item Scan the QR code on the sensor with a smartphone to see its data displayed
 	\item Click the 'add' button to add the sensor to your dashboard (central webpage showing all sensors connected)
 \end{packed_item}
@@ -369,7 +372,7 @@ We can distinguish three different parts:
 	\item browsers which are connected to the same server (running on laptops or smartphones)
 \end{packed_item}
 
-All mbed boards send messages in JSON format to the websocket server containing sensors data. The websocket server will broadcast to all client connected all messages received. So all browsers connected to this server are able to receive data from sensors.
+All mbed boards send messages in JSON format to the websocket server containing sensor data. The websocket server will broadcast to all client connected all messages received, so all browsers connected to this server are able to receive data from sensors.
 
 \begin{figure}[h!]
 		\centering
@@ -379,8 +382,8 @@ All mbed boards send messages in JSON format to the websocket server containing 
 \end{figure}
 
 
-\subsection{Websocket server}
-The websocket server which has been developed uses Tornado framework. This framework is written in Python. It's a non blocking web server. It uses epoll which permit to handle thousands of connections and so provides realtime features. Some interesting features are for instance:
+\subsection{Websocket server: Tornado}
+The websocket server which has been developed uses Tornado framework. This framework is written in Python, and it's a non blocking web server. It uses epoll which permits the handling of thousands of connections and so provides realtime features. Some interesting features are, for instance:
 \begin{packed_item}
 	\item http server
 	\item template language
@@ -404,7 +407,7 @@ These few lines launch a http server associated with a handler (WSHandler) when 
 \textbf{ws://sockets.mbed.org/ws/\textless{}channel\textgreater{}/\textless{}mode\textgreater{}}
 \end{center}
 
-The WebSocket server is divided into channels. All clients can send and receive messages over a same channel according their connection mode.
+The WebSocket server is divided into channels. All clients can send and receive messages over the same channel according their connection mode.
 There are 3 connection modes:
 
 \begin{packed_item}
@@ -442,14 +445,14 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 \subsection{Mbed boards}
 \subsubsection{Hardware}
-The hardware is very simple to setup as mbed is especially designed to prototype. The main parts are:
+The hardware is very simple to setup as mbed has been designed with quick prototyping in mind. The main parts are:
 \begin{packed_item}
 	\item one mbed
 	\item a wifi module
 	\item sensors
 \end{packed_item}
 
-To connect the mbed to the internet and access the websocket server, a wifi module has been chosen. I wanted a wifi module easy to use and easy to connect to the mbed. I chose a wifi module from roving networks which integrates a full TCP/IP stack. The communication between the mbed and the wifly module is established over a serial port. This module is integrated on a breakout board so that we just need wires to connect with the mbed. 
+To connect the mbed to the internet and access the websocket server, a wifi module has been chosen. I wanted a wifi module easy to use and easy to connect to the mbed. I chose a wifi module from Roving Networks which integrates a full TCP/IP stack. The communication between the mbed and the wifly module is established over a serial port. This module is integrated on a breakout board so that we just need wires to connect with the mbed. 
 
 Concerning sensors, all are also very easy to use and to connect. The 3-axis accelerometer and the pressure sensor are connected to the mbed over SPI. Libraries has been developed by the mbed community to use these two previous sensors. The light sensor is connected over a GPIO as the microphone. 
 
@@ -511,7 +514,7 @@ int main() {
       //microphone
       mic = readMicrophone();
 
-			// format data in a JSON string and sent it
+      //format data in a JSON string and sent it
       sprintf(json_str, "{\"id\":\"wifly_env\",\"p\":\"%d\",\"t\":\"%d\",\"l\":\"%d\",\"m\":\"%d\"}", (int)press, (int)temp, (int)(140 - light), mic);
       ws.send(json_str);
    }
@@ -528,12 +531,12 @@ To develop webpages running on a laptop in the case of the dashboard or running 
 
 There are two different webpages:
 \begin{packed_item}
-	\item smartphones webpage: displays only the graph of the corresponding QR code scanned. Two buttons can be used to add or remove a specific graph of the dashboard webpage.
-	\item dashboard: displays all graphs added by users.
+	\item smartphone webpages: display only the graph of the corresponding QR code scanned. Two buttons can be used to add or remove a specific graph of the dashboard webpage
+	\item dashboard: display all graphs added by users
 \end{packed_item}
 
 \subsubsection{Realtime graphs}
-I use Smoothie Charts which is a javascript library to stream data on a canvas element. Smoothie Charts is a small charting library designed for live streaming data. The idea is to display in realtime sensor data in a live chart refreshed everytime that we receive a new data.
+I use Smoothie Charts which is a javascript library to stream data on a canvas element. Smoothie Charts is a small charting library designed for live streaming data. The idea is to display in realtime sensor data in a chart refreshed everytime that we receive a new data.
 
 \subsubsection{Websocket and JSON messages}
 Several messages are exchanged between clients and server. 
@@ -553,8 +556,8 @@ Several messages are exchanged between clients and server.
 		
 \end{packed_item}
 
-Messages sent by mbed boards contain sensor data. When a client will receive a such message, it will refresh a realtime graph showing the sensor data evolution. \\
-Messages sent by smartphones control graphs on the dashboard webpage. For instance, if a user scans the QR code of the accelerometer board and press the add button, the message 
+Messages sent by mbed boards contain sensor data. When a client receives such a message, it refreshes a realtime graph showing the sensor data against time. \\
+Messages sent by smartphones control graphs on the dashboard webpage. For instance, if a user scans the QR code of the accelerometer board and presses the add button, the message 
 		\begin{center}
 				\{"id"="acc\_add"\}
 		\end{center}
@@ -579,7 +582,7 @@ The architecture of all webpages is quite simple:
 
 \begin{center}
 \begin{lstlisting}[label=Streaming data code example,caption=Streaming data code example]
-		// Websocket instance connected on the same subnetwork as the mbed boards
+		//Websocket instance connected on the same subnetwork as the mbed boards
     websocket = new WebSocket('ws://sockets.mbed.org/ws/sensors/rw');
 
     websocket.onmessage = function (evt) {
@@ -613,8 +616,8 @@ As expected, when a websocket message is received the corresponding graph is upd
 
 \begin{figure}[htp]
   \centering
-  \subfigure[Dashboard webpage]{\label{fig:edge-a}\includegraphics[scale=0.75]{./dashboard.jpg}}                
-  \subfigure[Smartphone webpage]{\label{fig:contour-b}\includegraphics[scale=0.75]{./dashboard.jpg}} \\
+  \subfigure[Dashboard webpage]{\label{fig:edge-a}\includegraphics[scale=0.9]{./dashboard.jpg}}                
+  \subfigure[Smartphone webpage]{\label{fig:contour-b}\includegraphics[scale=0.9]{./dashboard.jpg}} \\
   \caption{Webpages which access sensor data}
   \label{fig:contour}
 \end{figure}
@@ -626,12 +629,6 @@ On the dashboard, we can see that the environmental board has been added:
 \end{packed_item}
 
 On the smartphone webpage, we can observe the live graph containing sensor data. On this webpage, we can manage the dashboard with the "add" and "clear" buttons.
-
-\subsection{Conclusion}
-This first project shows the powerful of the new HTML5 feature: websockets. I am able to stream sensor data and display them in realtime graphs. Therefore, these data are accessible all over the world.
-
-
-After the Internet of Things project, mbed wanted to develop a Remote Procedure Call mechanism between several mbeds over a websocket communication.
 
 
 
@@ -648,13 +645,13 @@ After the Internet of Things project, mbed wanted to develop a Remote Procedure 
 \newpage
 
 \section{Remote Procedure Call over Websockets}
-After the Internet of Things project which shows the power of HTML5 in embedded systems, mbed wanted to use websockets to design a RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbed are connected to the Internet.
+After the Internet of Things project demonstrated the power of HTML5 in embedded systems, mbed wanted to use websockets to design a RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbeds are connected to the Internet.
 
 \subsection{Architecture: mbed boards, websocket server}
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./rpc-1.jpg}
+		\includegraphics[width=0.7\textwidth]{./rpc-1.jpg}
 		\caption{RPC architecture}
 		\label{RPC architecture}
 \end{figure}
@@ -662,8 +659,8 @@ After the Internet of Things project which shows the power of HTML5 in embedded 
 
 On the previous diagram, two main elements can be distinguished:
 \begin{packed_item}
-	\item Two different sub-networks. On each sub-networks, all Mbeds can share methods or execute a non-local one.
-	\item A RPC Websocket server which is responsible to manage all sub-networks and all messages exchanged. This server is written in Python and uses Tornado.
+	\item Two different sub-networks. On each sub-networks, all Mbeds can share methods or execute a non-local one
+	\item An RPC Websocket server which is responsible for managing all sub-networks and all messages exchanged. This server is written in Python and uses Tornado
 \end{packed_item}
 
 
@@ -671,7 +668,7 @@ As for the Internet of Things project, each mbed will belong to a specific subne
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./rpc_ws.jpg}
+		\includegraphics[width=0.7\textwidth]{./rpc_ws.jpg}
 		\caption{RPC: mbed identification on a subnetwork}
 		\label{RPC: mbed identification on a subnetwork}
 \end{figure}
@@ -679,7 +676,7 @@ As for the Internet of Things project, each mbed will belong to a specific subne
 Different steps are required to execute a distant method:
 \begin{packed_item}
 	\item connect several mbeds to the same subnetwork over a websocket communication
-	\item then all mbeds can register methods: an mbed has to register on the server one or several methods before than others can call them
+	\item all mbeds can register methods: an mbed has to register on the server one or several methods before than others can call them
 	\item an mbed connected over the same subnetwork as the previous mbed can call the registered method
 	\item the distant mbed will execute the method and return the results
 	\item the local mbed can then handle the result of the distant method
@@ -730,11 +727,11 @@ These previous fields are common to all messages exchanged. After for each messa
 \end{packed_item}
 
 \subsection{Signature of methods handled}
-A user wants to be able to register and then call a function of his choice. So a function can take all kinds of input argument and return whatever type.
+A user wants to be able to register and then call a function of his choice. So a function can take all kinds of input arguments and return whatever type.
 As messages are exchanged in JSON format, I decided to use this signature for all methods handled by the RPC mechanism:
 
 \begin{center}
-\textbf{ void fn(MbedJSONValue\& in, MbedJSONValue\& out)}
+\textbf{void fn(MbedJSONValue\& in, MbedJSONValue\& out)}
 \end{center}
 
 A MbedJSONValue object is the object associated to a string in JSON format. This class can handle parameters such as:
@@ -757,18 +754,18 @@ This class has been developed in order to simplifies at maximum the creation of 
  int main() {     
     MbedJSONValue demo;
 
-   const  char * json = "{\"my_array\": [\"demo_string\", 10], \"my_boolean\": true}";
+    const  char * json = "{\"my_array\": [\"demo_string\", 10], \"my_boolean\": true}";
 
-   //parse the previous string and fill the object demo
-   parse(demo, json);
+    //parse the previous string and fill the object demo
+    parse(demo, json);
 
-   std::string my_str;
-   int my_int;
-   bool my_bool;
+    std::string my_str;
+    int my_int;
+    bool my_bool;
 
-   my_str = demo["my_array"][0].get<std::string>();
-   my_int = demo["my_array"][1].get<int>();
-   my_bool = demo["my_boolean"].get<bool>();
+    my_str = demo["my_array"][0].get<std::string>();
+    my_int = demo["my_array"][1].get<int>();
+    my_bool = demo["my_boolean"].get<bool>();
    
     printf("my_str: %s\r\n", my_str.c_str());
     printf("my_int: %d\r\n", my_int);
@@ -789,7 +786,7 @@ This method is responsible to register on the rpc websocket server the specified
 	\item Send a websocket message to the server containing a MSG\_REGISTER request:
 	\begin{packed_item}
 		\item from: mbed\_id
-		\item to: gateway
+		\item to: server
 		\item msg: REGISTER
 		\item fn: public\_name 
 	\end{packed_item}
@@ -810,7 +807,7 @@ To call a distant method, a user has to invoke:
 RPC_TYPE MbedJSONRpc::call(const char * fn, const char * dest, MbedJSONValue& in, MbedJSONValue& out)
 \end{lstlisting}
 
-This method, in order to call a distant method, realizes several steps:
+This method, in order to call a distant method, requires several steps:
 \begin{packed_item}
 	\item Serialize the in MbedJSONValue object in order to be sent over websockets
 	\item Send a websocket message to the server containing a MSG\_CALL request
@@ -822,7 +819,8 @@ This method, in order to call a distant method, realizes several steps:
 		\item params: "in" serialized
 	\end{packed_item}
 	\item Wait a MSG\_RESULT message from the server containing the result of the distant method
-	\item Fill the "out" reference with the result
+	\item Convert the JSON string contained in the "result" parameter into a MbedJSONValue
+	\item Fill the "out" reference with the previous MbedJSONValue
 \end{packed_item}
 
 After this step, a user can handle the result of the distant method contained in the "out" reference.
@@ -835,7 +833,7 @@ void MbedJSONRpc::work()
 
 This method does the following steps:
 \begin{packed_item}
-	\item Try to read a websocket message
+	\item Tries to read a websocket message
 	\item If a message is available:
 		\begin{packed_item}
 			\item Check the validity of the message
@@ -855,12 +853,12 @@ This method does the following steps:
 
 \subsection{Mbed boards}
 \subsubsection{Hardware}
-The only requirement for the hardware is to have access to the internet. So a wifi module or an ethernet jack is required.
+The only requirement for the hardware is to have access to the internet so a wifi module or ethernet jack is required.
 
 TODO: photo
 
 \subsubsection{Software: mbed which registers a method}
-I will present the main program running on an mbed which has an accelerometer connected. The idea is to remotely access these accelerometers values from another mbed.
+I will demonstrate the main program running on an mbed which has an accelerometer connected. The idea is to remotely access this accelerometer's values from another mbed.
 
 
 \begin{lstlisting}[label=Register a method,caption=Register a method]
@@ -894,13 +892,12 @@ public:
 Acc acc;
 
 int main() {
-    
     RPC_TYPE t;
     
     //Accelerometers init
     accelerometer.init();
     
-    // join the network
+    //join the network
     wifly.join();
     
     //connect the websocket server
@@ -908,12 +905,8 @@ int main() {
 
     //register the acc method and wait for incoming methods
     if((t = rpc.registerMethod("getAcc", &acc, &Acc::getAcc)) == REGISTER_OK) {
-        printf("getAcc is registered\r\n");
     		//wait for incoming CALL requests
     		rpc.work(); 
-    }
-    else {
-        printType(t);
     }
     
 }
@@ -935,7 +928,7 @@ int main() {
     //out results of the distant method (accelerometers values)
     MbedJSONValue in, out;
 
-		// connect the websocket server
+		//connect the websocket server
     webs.connect();
 
     //CALL getAcc on mbed_acc
@@ -943,15 +936,14 @@ int main() {
         printf("acc_x: %d\r\n", out[0].get<int>());
         printf("acc_y: %d\r\n", out[1].get<int>());
         printf("acc_z: %d\r\n", out[2].get<int>());
-    } else
-        printType(t);
+    }
 }
 \end{lstlisting}
 
 TODO: screenshot of result
 
-\subsection{Websocket server}
-The server uses the same framework used for the realtime streaming data project: Tornado. The server is responsible to manage all subnetworks and messages exchanged over a same subnetwork. \\
+\subsection{Websocket server: Tornado}
+The server uses the same framework used for the realtime streaming data project: Tornado. The server is responsible for managing all subnetworks and messages exchanged over a same subnetwork. \\
 
 
 The main data structure in order to represent the state of the whole network is a dictionnary:
@@ -977,7 +969,7 @@ The main data structure in order to represent the state of the whole network is 
 \end{figure}
 
 
-The websocket server follows the following logic:
+The websocket server does the following:
 \begin{packed_item}
 	\item If a new mbed connects a specific subnetwork:
 	\begin{packed_item}
@@ -1004,17 +996,19 @@ The websocket server follows the following logic:
 	
 \end{packed_item}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+\section{Conclusion}
+For Mbed the Internet of Things is a very important field. We really think that in the future more and more devices will be connected to the cloud. Examples of applications could include:
+\begin{packed_item}
+	\item smart buildings
+	\item medical devices
+	\item factories
+\end{packed_item}
+
+The first project shows that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provide a mean to execute a method on a distant mbed. This can be really useful for instance in critical places where people cannot go frequently. The common point of these two projects is the use of a websocket communication, new feature of HTML5. This new way of communication enables realtime capabilities with a bidirectionnal communication between client and server. \\
+
+
+After having worked on the Internet of Things, Mbed wanted to explore USB capabilities on the two mbed boards.
 	
 	
 	
@@ -1030,9 +1024,9 @@ The websocket server follows the following logic:
 
 \section{Inside the USB bus}
 \subsection{USB overview}
-The Universal Serial Bus (USB) is the most widely used bus in today's computer. USB has particularly been designed to standardize connections between the computer and peripherals. For instance, keyboards, printers, scanners, disk drives or cameras can use the same bus to exchange data with a computer. USB has effectively replaced a variety of earlier interfaces, such as serial or parallel ports. The USB bus provides several benefits such as the same interface for many device, the hot pluggable capability which allows a user to connect and disconnect  a USB device whenever he wants or the automatic configuration which is the capacity of the operating system to load a specific driver according to the device connected. Another useful benefit is that the USB interface provides power supply (5V) that can be used by a device if it doesn't require more than 500 mA.\\
+The Universal Serial Bus (USB) is the most widely used bus in today's computer. USB has particularly been designed to standardize connections between the computer and peripherals. For instance, keyboards, printers, scanners, disk drives or cameras can use the same bus to exchange data with a computer. USB has effectively replaced a variety of earlier interfaces, such as serial or parallel ports. The USB bus provides several benefits such as the same interface for many device, the hot pluggable capability which allows a user to connect and disconnect a USB device whenever he wants, or the automatic configuration which is the capacity of the operating system to load a specific driver according to the device connected. Another useful benefit is that the USB interface provides power supply (5V) that can be used by a device if it doesn't require more than 500 mA.\\
 
-USB version 1.0 supported two speeds, a full speed mode of 12Mbits/s and a low speed mode of 1.5Mbits/s. USB 2.0, which is the most widely version of USB, can reach 480Mbits/s. The 480Mbits/s is known as High Speed mode. USB version 3.0 specifies a maximum transmission speed of up to 5Gbits/s (known as SuperSpeed), but few products are supporting USB 3.0 at present.
+USB version 1.0 supported two speeds, a full speed mode of 12Mbits/s and a low speed mode of 1.5Mbits/s. USB 2.0, which is the most widely version of USB, can reach 480Mbits/s. The 480Mbits/s is known as High Speed mode. USB version 3.0 specifies a maximum transmission speed of up to 5Gbits/s (known as SuperSpeed), but few products support USB 3.0 at present.
 \\
 \begin{table}[h!]
 \begin{center}
@@ -1048,10 +1042,10 @@ USB 3.0 & super-speed & 5Gbits/s \\ \hline
 \label{USB speeds}
 \end{table}
 
-The Universal Serial Bus is host controlled. However, there can only be one host per bus and the host is responsible for undertaking all transactions. Considering this restriction, two devices cannot exchange information without one host. Nevertheless, the On-The-Go specification, which is part of the USB 2.0 standard, has introduced a Host Negotiation Protocol, allowing two devices to negotiate for the role of host. With this specification, we can imagine a camera exchanging data with a printer without the need of a computer. 
+The Universal Serial Bus is host controlled. However, there can only be one host per bus and the host is responsible for undertaking all transactions. Considering this restriction, two devices cannot exchange information without one host. Nevertheless, the On-The-Go specification, which is part of the USB 2.0 standard, has introduced a Host Negotiation Protocol, allowing two devices to negotiate for the role of host. With this specification, we can imagine a camera exchanging data with a printer without the need for a computer. 
 
 \subsection{Topology}
-The physical bus topology defines how USB devices are connected to the host. The USB network is implemented as a tiered star network with one host (master) and several devices (slaves). The topology looks like a tree. In order to increase the number of devices connected, a hub need to be connected to the root port. This special hub and the root port are the first tier of the network. Furthermore, the USB network can support up to 127 external nodes but the number of tiers does not exceed 7. The following diagram represents a possible connection architecture on a USB bus.
+The physical bus topology defines how USB devices are connected to the host. The USB network is implemented as a tiered star network with one host (master) and several devices (slaves). The topology looks like a tree. In order to increase the number of devices connected, a hub needs to be connected to the root port. This special hub and the root port are the first tier of the network. Furthermore, the USB network can support up to 127 external nodes but the number of tiers cannot exceed 7. The following diagram represents a possible connection architecture on a USB bus.
 
 
 \begin{figure}[h!]
@@ -1062,7 +1056,7 @@ The physical bus topology defines how USB devices are connected to the host. The
 \end{figure}
 \footnotetext{reference: http://www.usblyzer.com}
 \subsection{Endpoints and type of transfers}
-Devices have a series of buffers to communicate with the host. Each buffer will belong to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on a NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. One logical endpoint represents two physical endpoints. Each physical endpoints has a specific direction: either OUT to receive data from the host or IN to send data to the host. 
+Devices have a series of buffers to communicate with the host. Each buffer will belong to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on a NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. One logical endpoint represents two physical endpoints. Each physical endpoint has a specific direction: either OUT to receive data from the host or IN to send data to the host. 
 
 \begin{figure}[h!]
 		\centering
@@ -1073,10 +1067,10 @@ Devices have a series of buffers to communicate with the host. Each buffer will 
 
 There are four types of endpoints which corresponds to different requirements according to the device: 
 \begin{packed_item}
-	\item \textbf{Control endpoint}: All USB devices once connected performed an \textit{enumeration step} wherein the host requests all capabilities of the device. Control transfers are used to enumerate a device.
+	\item \textbf{Control endpoint}: All USB devices once connected performed an \textit{enumeration step} wherein the host requests all capabilities of the device. Control transfers are used to enumerate a device
 	\item \textbf{Interrupt endpoints}: Interrupts transfers are used when a device requires responsiveness. Typical applications would include keyboard and mouse. Users don't want a noticeable delay between pressing a key or moving a mouse and seeing the result on the screen. An interrupt transfer only occurs when the host polls the device. There is a guarantee that the host will request a data within a specified time interval
-	\item \textbf{Bulk endpoints}: Bulk transfers are typically used to transfer large amount of data like files to a printer. A bulk transfer use spare un-allocated bandwidth, so time is not critical with bulk transfers. Typical applications include printers, scanners or mass storage devices.
-	\item \textbf{Isochronous endpoints}: Isochronous tranfers are used for streaming and realtime data. For instance, streaming audio and video devices use isochronous transfers. Such devices need a guaranteed delivery rate for data but if an error occurs, the data is not re-transmitted.
+	\item \textbf{Bulk endpoints}: Bulk transfers are typically used to transfer large amount of data like files to a printer. A bulk transfer use spare un-allocated bandwidth, so time is not critical with bulk transfers. Typical applications include printers, scanners or mass storage devices
+	\item \textbf{Isochronous endpoints}: Isochronous tranfers are used for streaming and realtime data. For instance, audio and video streaming devices use isochronous transfers. Such devices need a guaranteed delivery rate for data but if an error occurs, the data is not re-transmitted
 \end{packed_item}
 	
 
@@ -1156,7 +1150,7 @@ ENDP & 4bits & The endpoint number which the packet is designed for \\ \hline
   	\end{itemize}
   	
   	
-	\item \textbf{Start of Frame Packet}: USB manages time in units called "frames" (USB 2.0 further added "microframes"), and uses frames/microframes to realize the concept of time. Each "frame" represents 1 ms, and each microframe represents 125 microseconds. When performing control, bulk or interrupt transfers with a peripheral device, there is little need to pay attention to the frames/microframes. However, when performing isochronous transfers, frames/microframes may need to be taken into consideration for proper synchronization with the system. For this reason, the host issues SOF (Start Of Frame) packets to the bus to indicate the starting point of each frame/microframe.
+	\item \textbf{Start Of Frame Packet}: USB manages time in units called "frames" (USB 2.0 further added "microframes"), and uses frames/microframes to realize the concept of time. Each "frame" represents 1 ms, and each microframe represents 125 microseconds. When performing control, bulk or interrupt transfers with a peripheral device, there is little need to pay attention to the frames/microframes. However, when performing isochronous transfers, frames/microframes may need to be taken into consideration for proper synchronization with the system. For this reason, the host issues SOF (Start Of Frame) packets to the bus to indicate the starting point of each frame/microframe
 	
 		\begin{center}
 		\begin{tabular}{|c|c|c|c|c|}
@@ -1173,7 +1167,7 @@ ENDP & 4bits & The endpoint number which the packet is designed for \\ \hline
 \subsection{Enumeration}
 The host hub port is able to detect the attachment of the USB device and makes the host controller aware of the same. The host controller then starts communicating with the USB device (which could be a mouse, keyboard, flash drive etc.). This initial communication between the host and the device is termed as “bus enumeration”. Bus enumeration is the process through which the host learns about the capabilities of the device. Since any USB device can be connected to the host hub port at anytime, bus enumeration becomes the essential first step of USB communication. This step is performed on the control endpoint (endpoint 0). So, all devices must at least have the control endpoint enabled.
 During this step, the host will assign a unique address to the device.
-All devices capabilities are transmitted in data structures called \textbf{descriptors}. Descriptors are arrays containing some information like the device class, the number of endpoints used, the maximum length of these endpoints,... There are several types of descriptors. Standards descriptors are: device descriptor, configuration descriptor, interface descriptor and endpoint descriptor. But, for each USB class, other descriptors can be found such as the HID (Human Interface Device) descriptor and the report descriptor for HID devices.
+All devices capabilities are transmitted in data structures called \textbf{descriptors}. Descriptors are arrays containing information like the device class, the number of endpoints used, the maximum length of these endpoints... There are several types of descriptors. Standards descriptors are: device descriptor, configuration descriptor, interface descriptor and endpoint descriptor. But, for each USB class, other descriptors can be found such as the HID (Human Interface Device) descriptor and the report descriptor for HID devices.
 
 \begin{figure}[h!]
 		\centering
@@ -1185,15 +1179,14 @@ All devices capabilities are transmitted in data structures called \textbf{descr
 A typical enumeration follows:
 \begin{packed_item}
 	\item \textbf{GET\_DEVICE\_DESCRIPTOR}: The host sends a get device descriptor request. The device
-replies with its device descriptor to report its attributes (Device Class, maximum packet size for endpoint zero).
-	\item \textbf{SET\_ADDRESS}: A USB device uses the default address (0) after reset until the host assigns a unique address using the set address request. The firmware writes the device address assigned by the host.
+replies with its device descriptor to report its attributes (Device Class, maximum packet size for endpoint zero)
+	\item \textbf{SET\_ADDRESS}: A USB device uses the default address (0) after reset until the host assigns a unique address using the set address request. The firmware writes the device address assigned by the host
 	\item \textbf{GET\_CONFIGURATION\_DESCRIPTOR}: The host sends a get configuration request. The device replies with its configuration descriptor, interface descriptor and endpoint descriptor. The configuration descriptor describes the number of interfaces provided by the configuration, the power source
 (Bus or Self powered) and the maximum power consumption of the USB device from the bus.
 The Interface descriptor describes the number of endpoints used by this interface. The Endpoint
-descriptor describes the transfer type supported and the bandwidth requirements.
+descriptor describes the transfer type supported and the bandwidth requirements
 	\item \textbf{SET\_CONFIGURATION}: The host assigns a configuration value to the device based on the
-configuration information. The device is now configured and ready to be
-used.
+configuration information. The device is now configured and ready to be used
 \end{packed_item}
 
 
@@ -1250,7 +1243,7 @@ Isochronous transfers are the same as bulk or interrupt transfers without the ha
 
 \newpage
 \section{USB Device stack}
-A USB device stack has been developped to allow mbed users to design their own USB device or to use their mbed as USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a device’s functionality. This class code is parsed by the USB host stack to load an appropriate device driver. Several classes has been implemented:
+A USB device stack has been developed to allow mbed users to design their own USB device or to use their mbed as USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a device’'s functionality. This class code is parsed by the USB host stack to load an appropriate device driver. Several classes have been implemented:
 \begin{packed_item}
 	\item HID (Human Interface Device)
 	\item MSD (Mass Storage Device)
@@ -1277,26 +1270,26 @@ A USB device stack has been developped to allow mbed users to design their own U
 
 \begin{packed_item}
 
-	\item \textbf{USBHAL}: The USB hardware layer for the LPC11U24 and for the LPC1768. In this class, all low level methods are defined. There are USBHAL\_LPC11U24.cpp and USBHAL\_LPC1768.cpp which define functions defined in USBHAL.h. The right .cpp file is chosen according to a macro defined by the compiler: if a user is compiling a program for the LPC1768, the macro TARGET\_LPC1768 is defined. If a user wants to compile a program for the LPC11U24, the macro TARGET\_LPC11U24 is defined. Virtual functions are called on specific events to be treated by subclasses.
+	\item \textbf{USBHAL}: The USB hardware layer for the LPC11U24 and for the LPC1768. In this class, all low level methods are defined. There are USBHAL\_LPC11U24.cpp and USBHAL\_LPC1768.cpp which define functions defined in USBHAL.h. The right .cpp file is chosen according to a macro defined by the compiler: if a user is compiling a program for the LPC1768, the macro TARGET\_LPC1768 is defined. If a user wants to compile a program for the LPC11U24, the macro TARGET\_LPC11U24 is defined. Virtual functions are called on specific events to be treated by subclasses
 	
-	\item \textbf{USBDevice}: This layer is in charge to abstract the hardware. At this level, no differences are made between the LPC11U24 and the LPC1768 concerning the target. USBDevice is in charge to perform the setup packet treatment (enumeration step is performed in this class) and provide an abstraction to handle the USB interface.
-	
+	\item \textbf{USBDevice}: This layer is in charge of abstracting the hardware. At this level, no differences are made between the LPC11U24 and the LPC1768 concerning the target. USBDevice is in charge of performing the setup packet treatment (enumeration step is performed in this class) and provide an abstraction to handle the USB interface
+
 	\item \textbf{USB class layer}:
 		\begin{packed_item}
-			\item USBHID: implements standard requests of the HID class specification. When a USBHID object is instanciated, the mbed is enumerated as a generic HID device so that raw data can be sent and receive to and from a custom program running on the host side.
+			\item USBHID: implements standard requests of the HID class specification. When a USBHID object is instantiated, the mbed is enumerated as a generic HID device so that raw data can be sent and receive to and from a custom program running on the host side
 			\item USBCDC: implements a subset of the CDC class specification to allow the mbed to be recognized as a virtual serial port
-			\item USBMIDI: enables the mbed to send and receive MIDI message to and from a computer
-			\item USBAudio: implements standard requests of the USB Audio class. The mbed is enumerated as a microphone and a speaker on the same device.
-			\item USBMSD: implements the mass storage specification. This class is generic: a subclass has to implement some pure virtual functions defined in USBMSD to access a storage chip.
+			\item USBMIDI: enables the mbed to send and receive MIDI messages to and from a computer
+			\item USBAudio: implements standard requests of the USB Audio class. The mbed is enumerated as a microphone and a speaker on the same device
+			\item USBMSD: implements the mass storage specification. This class is generic: a subclass has to implement some pure virtual functions defined in USBMSD to access a storage chip
 		\end{packed_item}
 		
 	\item \textbf{USB device layer}:
 		\begin{packed_item}
 			\item USBMouse: used to emulate a mouse
-			\item USBKeyboard: used to emulate a keyboard.
+			\item USBKeyboard: used to emulate a keyboard
 			\item USBMouseKeyboard: used to emulate a mouse and a keyboard at the same time
-			\item USBSerial: used to emulate a virtual serial port. 
-			\item USBMSD\_??: All users can implement their own class which inherits from USBMSD in order to access their storage chip.
+			\item USBSerial: used to emulate a virtual serial port
+			\item USBMSD\_??: All users can implement their own class which inherits from USBMSD in order to access their storage chip
 		\end{packed_item}
 	
 \end{packed_item}
@@ -1309,7 +1302,7 @@ A USB device stack has been developped to allow mbed users to design their own U
 \end{center}
 
 
-This section describes the hardware layer implemented for the mbed LPC11U24. This microcontroller has a built-in USB 2.0 device controller. It also has 2kbytes of RAM dedicated for USB operations.
+This section describes the hardware layer implemented for the mbed LPC11U24. This microcontroller has a built-in USB 2.0 device controller. It also has 2 kB of RAM dedicated for USB operations.
 
 \begin{figure}[h!]
 		\centering
@@ -1321,32 +1314,33 @@ This section describes the hardware layer implemented for the mbed LPC11U24. Thi
 To describe the state of each endpoints available, we need to allocate space in USB RAM as specified in the previous figure. Main fields of endpoints status array are:
 \begin{packed_item}
 	\item A: the endpoint is active or not
-	\item NBytes: For OUT endpoints this is the number of bytes that can be received in this buffer. For IN endpoints this is the number of bytes that must be transmitted.
+	\item NBytes: For OUT endpoints this is the number of bytes that can be received in this buffer. For IN endpoints this is the number of bytes that must be transmitted
 	\item Address offset: represents the end of the address where will be stored data. The beginning of the address is specified in DATABUFSTART register 
 \end{packed_item}
 
 
 
 Main methods for USBHAL class:
+
 \begin{packed_item}
-	\item Memory  allocation for endpoints status list and endpoint 0 buffers. These initializations are done in the constructor of USBHAL::USBHAL.
+	\item Memory  allocation for endpoints status list and endpoint 0 buffers. These initializations are done in the constructor of USBHAL::USBHAL
 	\item To add more endpoints, space allocation has to be done. This is done in the method: USBHAL::realiseEndpoint
 	\item To read a specific endpoint:
 		\begin{packed_item}
 			\item Fill the endpoint status list (active bit, address offset and NBytes). After this step, the endpoint is ready to receive data. This is done in USBHAL::endpointRead
-			\item When a data is received on the specific endpoint, an interrupt is raised. Software can read data in the buffer of this OUT endpoint. This is done in USBHAL::endpointReadResult.
+			\item When a data is received on the specific endpoint, an interrupt is raised. Software can read data in the buffer of this OUT endpoint. This is done in USBHAL::endpointReadResult
 		\end{packed_item}
 	\item To write on a specific endpoint:
 		\begin{packed_item}
 			\item Fill the endpoint status list (active bit, address offset and NBytes). Copy data in the buffer of the IN endpoint. After this step, the endpoint is ready to send data. This is done in USBHAL::endpointWrite
-			\item Wait until the writing has been effectively done. This is done in USBHAL::endpoint-\\WriteResult.
+			\item Wait until the writing has been effectively done. This is done in USBHAL::endpoint-\\WriteResult
 		\end{packed_item}
 \end{packed_item}
 
 
 When a specific event occurs, USBHAL calls virtual functions which can be overrided in a subclass to perform a custom treatment. Main callback functions are:
 \begin{packed_item}
-	\item SOF(int frameNumber): called on each start of frame event (each 1ms)
+	\item SOF(int frameNumber): called on each Start Of Frame event (each millisecond)
 	\item EP0setupCallback(): called when a setup packet is received
 	\item EPx\_OUT\_callback(): called a data has been received on a specific endpoint
 	\item EPx\_IN\_callback(): called when a data has been sent on a specific endpoint
@@ -1403,7 +1397,7 @@ typedef struct {
 		\label{Setup packets treatment}
 \end{figure}
 
-For instance, a GET\_DEVICE\_DESCRIPTOR request is processed following this scheme:
+For instance, a GET\_DEVICE\_DESCRIPTOR request is processed according to this scheme:
 \begin{packed_item}
 	\item Reception of a setup packet
 	\item Decoding the setup in the SETUP\_PACKET structure
@@ -1418,7 +1412,7 @@ For instance, a GET\_DEVICE\_DESCRIPTOR request is processed following this sche
 \end{packed_item}
 
 
-A basic device descriptor is quite common to all USB devices. Importants fields are:
+A basic device descriptor is quite common for USB devices. Importants fields are:
 \begin{packed_item}	
 	\item bcdUSB which is the USB specification release number
 	\item bDeviceClass specifies the device class
@@ -1453,9 +1447,9 @@ uint8_t * USBDevice::deviceDesc() {
 
 \subsection{USBHID class}
 \subsubsection{Introduction}
-HID is one of the most frequently used USB classes. The HID class was primarily defined for devices that are used by humans to control the operation of computer systems. Typical examples of HID devices include keyboards, mice, trackballs, and joysticks. HID devices may have knobs, switches, buttons, sliders, etc. The HID class is also frequently used for devices that may not require human interaction but provide data in a similar format as HID class devices. Since all operating systems have a built-in HID driver, it's easy to design a USB HID device which doesn't require any specific driver.
+HID is one of the most frequently used USB classes. The HID class was primarily defined for devices that are used by humans to control the operation of computer systems. Typical examples of HID devices include keyboards, mice, trackballs, and joysticks. HID devices may have knobs, switches, buttons, sliders, etc. The HID class is also frequently used for devices that may not require human interaction but provide data in a similar format to HID class devices. Since all operating systems have a built-in HID driver, it's easy to design a USB HID device which doesn't require any specific driver.
 
-Data exchanged between host and device resides in structure called reports. The report format is flexible and can handle any format of data, but each report has a fixed size. This size is specified in a HID descriptor which is transmitted as part of the configuration descriptor.
+Data exchanged between the host and device resides in a structure called reports. The report format is flexible and can handle any format of data, but each report has a fixed size. This size is specified in a HID descriptor which is transmitted as part of the configuration descriptor.
 HID devices are required to provide a Report Descriptor which enumerates all data fields of a report. A HID device can have at most one interrupt IN endpoint and one interrupt OUT endpoint (and the control endpoint to perform the enumeration step).
 
 For each field in the report, the Report Descriptor defines how many bits the field consumes, how often this data is repeated, and which is the type of the data field. Thus, report descriptors are specific to a device.
@@ -1518,7 +1512,7 @@ uint8_t * USBHID::configurationDesc() {
 }
 \end{lstlisting}
 
-In the configuration descriptor, we find particularly the interface descriptor which defines the class used by this device (HID\_CLASS) and the number of endpoints that will be used (2). The HID descriptor gives information on the length of the report descriptor. There are finally endpoint descriptors. The communication uses two interrupt endpoints: one IN to send data to the host and one OUT to receive data from the host. Interrupts endpoint are polled by the host, that is why there is a bInterval field in endpoint descriptors.
+In the configuration descriptor, we find the interface descriptor which defines the class used by this device (HID\_CLASS) and the number of endpoints that will be used (2). The HID descriptor gives information on the length of the report descriptor. Finally, there are endpoint descriptors. The communication uses two interrupt endpoints: one IN to send data to the host and one OUT to receive data from the host. Interrupts endpoint are polled by the host, that is why there is a bInterval field in endpoint descriptors.
 \\
 
 
@@ -1526,9 +1520,9 @@ In the configuration descriptor, we find particularly the interface descriptor w
 The HID specification defines several class specific requests. All these requests are processed in the USBCallback\_request() virtual method. The main specific requests are:
 \begin{packed_item}
 	\item GET\_REPORT: allows the host to receive a report via the Control pipe. This request is useful at initialization time for absolute items and for 
-determining the state of feature items.
-	\item SET\_REPORT: allows the host to send a report to the device, possibly setting the state of input, output, or feature controls. 
-	\item GET\_DESCRIPTOR: to request the HID descriptor or the report descriptor
+determining the state of feature items
+	\item SET\_REPORT: allows the host to send a report to the device, possibly setting the state of input, output, or feature controls.
+	\item GET\_DESCRIPTOR: to request the HID descriptor and the report descriptor
 \end{packed_item}
 
 \subsubsection{Generic HID device}
@@ -1635,9 +1629,9 @@ uint8_t * USBMouse::reportDesc() {
 
 On this report descriptor, we can distinguish three different parts:
 \begin{packed_item}
-	\item At the beginning, there is the indication that a mouse report descriptor will be described.
-	\item Buttons mouse: There are 3 buttons represented by 1 bit. Values for these buttons are 0 or 1 (pressed or not). They are input values which means that the device will send information to the host.
-	\item X, Y and scroll: 3 different features, each represented by 1 byte. Values can vary between -127 and 127. There are also input values.
+	\item At the beginning, there is the indication that a mouse report descriptor will be described
+	\item Mouse buttons: There are 3 buttons represented by 1 bit. Values for these buttons are 0 or 1 (pressed or not). They are input values which means that the device will send information to the host
+	\item X, Y and scroll: 3 different features, each represented by 1 byte. Values can vary between -127 and 127. They are also input values
 \end{packed_item}
 
 The main method to send a mouse state to the host is:
@@ -1680,14 +1674,14 @@ Two interfaces are used in the configuration descriptor:
 \begin{packed_item}
 	\item \textbf{Communication Class Interface}: used to request and manage the device state. This interface is also used by the host to request capabilities and parameters of the communication. To provide information about the communication, four descriptors are used:
 	\begin{packed_item}
-		\item CDCHeaderDescriptor: marks the beginning of the concatenated set of functional descriptors for the interface.
+		\item CDCHeaderDescriptor: marks the beginning of the concatenated set of functional descriptors for the interface
 		\item CDCCallManagementDescriptor: describes the processing of calls for the Communication Class interface
  		\item CDCAbstractControlManagementDescriptor: describes the commands supported by the Communication Class interface. This device supports for instance the request GET\_LINE\_CODING which allows the host to know parameters of the communication (number of stop bits, parity, number of data bits)
 		\item CDCUnionDescriptor: describes the relationship between a group of interfaces that can be considered to form
-a functional unit. Here, the master interface is the Communication Class Interface and the slave one is the data Class Interface.
+a functional unit. Here, the master interface is the Communication Class Interface and the slave one is the data Class Interface
 	\end{packed_item}
 	\item \textbf{Data Class Interface}: this interface is used for data transfers. For the communication, either bulk or interrupt endpoints are required. For a serial port,  reliability
-of the transmission is very important and the data transfers are not time-critical. That is why, two bulk endpoints (one IN and one OUT) are used.
+of the transmission is very important and the data transfers are not time-critical. That is why, two bulk endpoints (one IN and one OUT) are used
 \end{packed_item}
 
 
@@ -1739,11 +1733,11 @@ bool USBSerial::EP2_OUT_callback() {
 \subsection{MSD class}
 \subsubsection{Introduction}
 The Mass Storage Device (MSD) class is an extension to the USB specification that defines
-how mass storage devices, such as a hard-disk, SD card, flash chip should operate on the USB.
-Many devices use the MSD class to symplify data transfer. More common devices which use this class are hard-drives, USB-stick, MP3 or video player.
+how mass storage devices, such as a hard-disk, SD card or flash chip should operate on the USB.
+Many devices use the MSD class to simplify data transfer. More common devices which use this class are hard-drives, USB-stick, MP3 or video player.
 
 \subsubsection{MSD descriptors}
-The MSD configuration descriptor defines one interface with bInterfaceClass = 08h specifying the mass storage class. Two bulk endpoints are then defined to transfer data. Bulk endpoints are used because big amount of data can be transferred.
+The MSD configuration descriptor defines one interface with bInterfaceClass = 08h specifying the mass storage class. Two bulk endpoints are then defined to transfer data. Bulk endpoints are used because large amount of data can be transferred.
 
 \subsubsection{MSD class specific requests}
 The MSD specification defines several class specific requests. All these requests are processed in the USBCallback\_request() virtual method. The main specific requests are:
@@ -1816,7 +1810,7 @@ This state machine contains 5 states:
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.3\textwidth]{./msd_state_machine.png}
+		\includegraphics[width=0.5\textwidth]{./msd_state_machine.png}
 		\caption{MSD state machine}
 		\label{MSD state machine}
 \end{figure}
@@ -1829,15 +1823,15 @@ All commands sent by the host contained in the CBW are part of the SCSI command 
 Main commands that have to be processed by the device are:
 \begin{packed_item}
 	\item SCSI\_INQUIRY: The host usually issues an Inquiry command right after the enumeration phase to get more
-information about the device.
+information about the device
 
-	\item SCSI\_READ\_CAPACITY: The Read Capacity command enables the host to retrieve the number of block present on a
-media, as well as their size.
+	\item SCSI\_READ\_CAPACITY: The Read Capacity command enables the host to retrieve the number of blocks present on a
+media, as well as their size
 
 	\item SCSI\_READ (6)/(10): This command is used by the host to read data from the device.
 	
-	\item SCSI\_REQUEST\_SENSE: If there is an error the execution of a command, the host will issue a
-Request Sense to get more information about the problem. 
+	\item SCSI\_REQUEST\_SENSE: If there is an error during the execution of a command, the host will issue a
+Request Sense to get more information about the problem
 
 	\item SCSI\_TEST\_UNIT\_READY: This command provides a way to check if a logical unit is ready. If the logical unit is not ready, the device reports an error in the CSW. Then the host sends a SCSI\_REQUEST\_SENSE to have more information about the error
 \end{packed_item}
@@ -1930,27 +1924,40 @@ The USBMSD class implements the MSD protocol as defined previously. But this cla
 
 Six pure virtual functions have to be defined:
 \begin{packed_item}
-	\item virtual int disk\_read(char * data, int block): function to read a block
-	\item virtual int disk\_write(const char * data, int block): function to write a block
-	\item virtual int disk\_initialize(): function to initialize the memory
-	\item virtual int disk\_sectors(): return the number of blocks
-	\item virtual int disk\_size(): return the memory size
-	\item virtual int disk\_status(): return the status of the storage chip (0: OK, 1: not initialized, 2: no medium in the drive, 4: write protection)
+	\item virtual \textbf{int disk\_read(char * data, int block)}: function to read a block
+	\item virtual \textbf{int disk\_write(const char * data, int block)}: function to write a block
+	\item virtual \textbf{int disk\_initialize()}: function to initialize the memory
+	\item virtual \textbf{int disk\_sectors()}: return the number of blocks
+	\item virtual \textbf{int disk\_size()}: return the memory size
+	\item virtual \textbf{int disk\_status()}: return the status of the storage chip (0: OK, 1: not initialized, 2: no medium in the drive, 4: write protection)
 \end{packed_item}
 
 
 \subsection{Audio class}
 \subsubsection{Introduction}
-The audio class enables a USB device to send and receive encoded voice or music for instance. In the mbed library, a USB audio device has been developed in order to provide a speaker and a microphone in the same device. Devices in the audio class use isochronous transfers for audio streams. The general idea for the device developed is to receive an audio packet each Start of Frame (SOF) generated each 1ms. This device is synchronous. Asynchronous audio devices can be developed using an external clock for instance.
+The audio class enables a USB device to send and receive, for example, encoded speech or music. In the mbed library, a USB audio device has been developed in order to send and receive audio packets in the same device. An application of the Audio class could be to play music on a speaker or an I2S/I2C chip connected to the mbed, or to send audio packets from a microphone. Devices in the audio class use isochronous transfers for audio streams. Audio devices can either be synchronous or asynchronous:
+\begin{packed_item}
+	\item Asynchronous isochronous audio endpoints produce or consume data at a rate that is locked either to a
+clock external to the USB or to a free-running internal clock. These endpoints cannot be synchronized to a Start Of Frame (SOF)
+	\item Synchronous isochronous endpoints are handled in the Start Of Frame event generated each millisecond
+\end{packed_item}
+In the mbed library, only the synchronous mode has been developed:
+\begin{packed_item}
+	\item on each Start Of Frame event:
+	\begin{packed_item}
+		\item if a user has requested the reading of an audio packet: try to read a packet on the OUT isochronous endpoint
+		\item if a user wants to send an audio packet: write the audio packet on the IN isochronous endpoint
+	\end{packed_item}
+\end{packed_item}
 
 \subsubsection{Descriptors}
 Three interfaces are defined in the configuration descriptor:
 \begin{packed_item}
-	\item Audio Control Interface: describe the functionnal behavior of the device including input terminal, output terminal or features unit. 
+	\item Audio Control Interface: describes the functional behavior of the device including input terminal, output terminal or features unit:
 	\begin{packed_item}
-		\item An Input Terminal is used to interface between outside the device and other Units inside the device. 
-		\item An Output Terminal is used to interface between Units inside the audio function and outside the device. 
-		\item A feature Unit provides audio control concerning volume or mute for instance.
+		\item An Input Terminal is used to interface between outside the device and other Units inside the device
+		\item An Output Terminal is used to interface between Units inside the audio function and outside the device
+		\item A feature Unit provides audio control concerning volume or mute for instance
 	\end{packed_item}
 	
 	\item Audio Streaming Interface: used to interchange digital audio data streams between the Host and the audio device. In our case, two audio streaming interfaces are defined:
@@ -1958,7 +1965,7 @@ Three interfaces are defined in the configuration descriptor:
 		\item to receive an audio stream over an isochronous OUT endpoint
 		\item to send a stream over an isochronous IN endpoint
 	\end{packed_item}
-	This interface specifies the type of data exchanged, the number of channels used, the number of bits used to encode a sample or the frequency. In the mbed library, a PCM representation on 16 bits is used to send and receive audio packets. Other parameters can be chosen by a user.
+	This interface specifies the type of data exchanged, the number of channels used, the number of bits used to encode a sample or the frequency. In the mbed library, a PCM representation on 16 bits is used to send and receive audio packets. Other parameters can be chosen by the user.
 \end{packed_item}
 
 \begin{figure}[h!]
@@ -1979,7 +1986,7 @@ The Audio specification defines several class specific requests. All these reque
 \end{packed_item}
 
 \subsubsection{Audio packets management}
-As explained before, one audio packet is sent or receive on a Start Of Frame event (each ms). So let's say that a frequency of 48 kHz has been chosen with 2 channels (stereo). Knowing that each sample of a packet is 16 bits long, 48 * 2 bytes will be received or sent each millisecond for one channel. In total, for 2 channels, 48 * 2 * 2 bytes will be received. The audio length packet received or sent each millisecond can be compute:
+As explained before, one audio packet is sent or received on a Start Of Frame event (each millisecond). So let's say that a frequency of 48 kHz has been chosen with 2 channels (stereo). Knowing that each sample of a packet is 16 bits long, 48 * 2 bytes will be received or sent each millisecond for one channel. In total, for 2 channels, 48 * 2 * 2 bytes will be received. The audio length packet received or sent each millisecond can be compute:
 \begin{center}
 	AUDIO\_LENGTH\_PACKET = (FREQ / 500) * nb\_channel
 \end{center}
@@ -2001,13 +2008,13 @@ According to the number of channels, audio packets have to be interpreted differ
 \end{figure}
 
 
-The main part of sending and reception of audio packets is in the virtual function called in USBHAL on each start of frame event:
+The main part of sending and reception of audio packets is in the virtual function called in USBHAL on each Start Of Frame event:
 \begin{lstlisting}[label=Audio packets management in SOF events,caption=Audio packets management in SOF events]
-// Called in ISR context on each start of frame
+// Called in ISR context on each Start Of Frame
 void USBAudio::SOF(int frameNumber) {
     uint16_t size = 0;
     
-    // read the isochronous endpoint if the user has provided a buffer
+    //read the isochronous endpoint if the user has provided a buffer
     if (buf_stream_in != NULL) {
        if (USBDevice::readEP_NB(EP3OUT, (uint8_t *)buf_stream_in, &size, PACKET_SIZE_ISO_IN)) {
            // if an audio packet is available, notify
@@ -2018,7 +2025,7 @@ void USBAudio::SOF(int frameNumber) {
        }
     }
     
-    // write if needed
+    //write if needed
     if (buf_stream_out != NULL) {
        USBDevice::writeNB(EP3IN, (uint8_t *)buf_stream_out, PACKET_SIZE_ISO_OUT, PACKET_SIZE_ISO_OUT);
     }
@@ -2027,11 +2034,23 @@ void USBAudio::SOF(int frameNumber) {
 }
 \end{lstlisting}
 
+\section{Conclusion}
+Mbed users can now use their mbed to emulate a USB device. I really wanted explore all capabilities of USB. That is why several classes has been developed:
+\begin{packed_item}
+	\item Human Interface Device (HID) which is in my opinion the best way to develop a custom USB device because it permits to exchange raw data without the need of a specific driver on the host side.
+	\item Communication Device Class (CDC) to provide a virtual serial port
+	\item Mass Storage Device (MSD) to access a block storage chip from a computer
+	\item Audio to receive and send audio packets
+	\item MIDI to send and receive MIDI messages
+\end{packed_item}
 
+\chapter{Conclusion}
+TODO
 
-\chapter{References}
+\chapter*{References}
 http://www.bbc.co.uk/news/technology-13613536
 
+TODO
 
 
 
@@ -2095,70 +2114,98 @@ USBHAL::USBHAL(void) {
 }
 \end{lstlisting}
 
-\begin{lstlisting}[label=USBHAL::realiseEndpoint(),caption=USBHAL::realiseEndpoint()]
-bool USBHAL::realiseEndpoint(uint8_t endpoint, uint32_t maxPacket, uint32_t options) {
-    uint32_t tmpEpRamPtr;
+\begin{lstlisting}[label=USBHAL::usbisr(),caption=USBHAL::usbisr()]
+void USBHAL::usbisr(void) {
+    // Start of frame
+    if (LPC_USB->INTSTAT & FRAME_INT) {
+        // Clear SOF interrupt
+        LPC_USB->INTSTAT = FRAME_INT;
 
-    if (endpoint > LAST_PHYSICAL_ENDPOINT) {
-        return false;
+        // SOF event, read frame number
+        SOF(FRAME_NR(LPC_USB->INFO));
     }
 
-    // Not applicable to the control endpoints
-    if ((endpoint==EP0IN) || (endpoint==EP0OUT)) {
-        return false;
-    }
+    // Device state
+    if (LPC_USB->INTSTAT & DEV_INT) {
+        LPC_USB->INTSTAT = DEV_INT;
 
-    // Allocate buffers in USB RAM
-    tmpEpRamPtr = epRamPtr;
+        if (LPC_USB->DEVCMDSTAT & DCON_C) {
+            // Connect status changed
+            LPC_USB->DEVCMDSTAT = devCmdStat | DCON_C;
 
-    // Must be 64 byte aligned
-    tmpEpRamPtr = ROUND_UP_TO_MULTIPLE(tmpEpRamPtr, 64);
-
-    if ((tmpEpRamPtr + maxPacket) > (USB_RAM_START + USB_RAM_SIZE)) {
-        // Out of memory
-        return false;
-    }
-
-    // Allocate first buffer
-    endpointState[endpoint].buffer[0] = tmpEpRamPtr;
-    tmpEpRamPtr += maxPacket;
-
-    if (!(options & SINGLE_BUFFERED)) {
-        // Must be 64 byte aligned
-        tmpEpRamPtr = ROUND_UP_TO_MULTIPLE(tmpEpRamPtr, 64);
-
-        if ((tmpEpRamPtr + maxPacket) > (USB_RAM_START + USB_RAM_SIZE)) {
-            // Out of memory
-            return false;
+            connectStateChanged((LPC_USB->DEVCMDSTAT & DCON) != 0);
         }
 
-        // Allocate second buffer
-        endpointState[endpoint].buffer[1] = tmpEpRamPtr;
-        tmpEpRamPtr += maxPacket;
+        if (LPC_USB->DEVCMDSTAT & DSUS_C) {
+            // Suspend status changed
+            LPC_USB->DEVCMDSTAT = devCmdStat | DSUS_C;
+
+            suspendStateChanged((LPC_USB->DEVCMDSTAT & DSUS) != 0);
+        }
+
+        if (LPC_USB->DEVCMDSTAT & DRES_C) {
+            // Bus reset
+            LPC_USB->DEVCMDSTAT = devCmdStat | DRES_C;
+
+            // Disable endpoints > 0
+            disableEndpoints();
+
+            // Bus reset event
+            busReset();
+        }
     }
 
-    // Commit to this USB RAM allocation
-    epRamPtr = tmpEpRamPtr;
+    // Endpoint 0
+    if (LPC_USB->INTSTAT & EP(EP0OUT)) {
+        // Clear EP0OUT/SETUP interrupt
+        LPC_USB->INTSTAT = EP(EP0OUT);
 
-    // Remaining endpoint state values
-    endpointState[endpoint].maxPacket = maxPacket;
-    endpointState[endpoint].options = options;
+        // Check if SETUP
+        if (LPC_USB->DEVCMDSTAT & SETUP) {
 
-    // Enable double buffering if required
-    if (options & SINGLE_BUFFERED) {
-        LPC_USB->EPBUFCFG &= ~EP(endpoint);
-    } else {
-        // Double buffered
-        LPC_USB->EPBUFCFG |= EP(endpoint);
+            // Clear EP0IN interrupt
+            LPC_USB->INTSTAT = EP(EP0IN);
+
+            // Clear SETUP (and INTONNAK_CI/O) in device status register
+            LPC_USB->DEVCMDSTAT = devCmdStat | SETUP;
+
+            // EP0 SETUP event (SETUP data received)
+            EP0setupCallback();
+        } else {
+            // EP0OUT ACK event (OUT data received)
+            EP0_OUT_callback();
+        }
     }
 
-    // Enable interrupt
-    LPC_USB->INTEN |= EP(endpoint);
+    if (LPC_USB->INTSTAT & EP(EP0IN)) {
+        // Clear EP0IN interrupt
+        LPC_USB->INTSTAT = EP(EP0IN);
 
-    // Enable endpoint
-    unstallEndpoint(endpoint);
-    return true;
-} 
+        // EP0IN ACK event (IN data sent)
+        EP0_IN_callback();
+    }
+
+    if (LPC_USB->INTSTAT & EP(EP1IN)) {
+        // Clear EP1IN interrupt
+        LPC_USB->INTSTAT = EP(EP1IN);
+        epComplete |= EP(EP1IN);
+        if (EP1_IN_callback())
+            epComplete &= ~EP(EP1IN);
+    }
+
+    if (LPC_USB->INTSTAT & EP(EP1OUT)) {
+        // Clear EP1OUT interrupt
+        LPC_USB->INTSTAT = EP(EP1OUT);
+        epComplete |= EP(EP1OUT);
+        if (EP1_OUT_callback())
+            epComplete &= ~EP(EP1OUT);
+    }
+    
+    // Same for all following endpoints
+    .
+    .
+    .
+}
 \end{lstlisting}
 
 \begin{lstlisting}[label=USBHAL::endpointReadResult(),caption=USBHAL::endpointReadResult()]

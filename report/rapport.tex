@@ -69,11 +69,11 @@ I took immense pleasure in this internship and would like to begin this report b
 
 Firstly, I wish to express my deep sense of gratitude to my manager, Mr Simon Ford. This internship would not have been possible without him. I also will never forget the excellent atmosphere in the mbed team thanks to: Mr Simon Ford, Mr Chris Style, Mr Dan Ros, Mr Emilio Monti and Mr Amit Naran. \\
 
-I also want to thank two teachers of T\'{e}l\'{e}com Paristech who gave me working method and a lot of knowledge. I will never forget the two month project working with them on an octocopter. It was a unique experience. \\
+I also want to thank two teachers of T\'{e}l\'{e}com Paristech: Mr Alexis Polti and Mr Samuel Tardieu who gave me working method and a lot of knowledge. I will never forget the two month project working with them on an octocopter. It was a unique experience. \\
 
 Special thank to the summer intern Mr Nathan Hutton. I realized the Internet of Things project with him. It was a great pleasure to work with him. \\
 
-Finally, I would like to express my heartfelt thanks to my parents. They are always by my side. I owe them my success. 
+Finally, I would like to express my heartfelt thanks to my parents. They are always by my side. I owe them everything. 
 
 \tableofcontents
 
@@ -140,8 +140,8 @@ For the moment, two boards have been developed. The first is based on the LPC176
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.5\textwidth]{./lpc1768.png}
-\caption{mbed board: lpc1768 (Cortex m3)}
-\label{mbed_board: lpc1768 (Cortex m3)}
+\caption{mbed board: lpc1768 (Cortex M3)}
+\label{mbed_board: lpc1768 (Cortex M3)}
 \end{figure}
 
 
@@ -197,12 +197,14 @@ In addition to the online compiler, almost all drivers have been implemented. Us
 \subsection{Mbed website: \textit{http://mbed.org/}}
 Finally, users can access the mbed forums to troubleshoot their programs or ask questions. They also have access to a handbook where there is a lot of documentation and examples concerning mbed libraries or the hardware part of the mbed. But the most important feature of this website is for me the cookbook. The cookbook is a great source of examples from other mbed users. You can almost always find a library to use with popular sensors like accelerometers, pressure sensors... The user is free to contribute to this part of the website by writing articles explaining their project and code. 
 
+\begin{comment}
 \begin{figure}[h!]
 \centering
 \includegraphics[width=1.0\textwidth]{./cookbook.png}
 \caption{mbed cookbook}
 \label{mbed cookbook}
 \end{figure}
+\end{comment}
 
 
 \chapter{Internet Of Things: HTML5 on embedded systems}
@@ -212,7 +214,7 @@ Cisco predicted in an interview with the BBC that the number of internet connect
 \begin{quote} "Three years ago over 95 percent of the devices connected to the Internet were personal computers. Three years from now that number will probably be less than 20 percent. More than 80 percent of the devices connected to the Internet will not be Windows-based personal computers." \\
 \end{quote}
 
-Thus, working on the connection of different sensors to the Internet is becoming more and more crucial. I will describe in this chapter two projects concerning the Internet of Things: real-time data streaming from sensors and Remote Procedure Call mechanism. Both of these projects use a new feature of HTML5: a Webscocket communication.
+Thus, working on the connection of different sensors to the Internet is becoming more and more crucial. I will describe in this chapter two projects concerning the Internet of Things: realtime data streaming from sensors and Remote Procedure Call mechanism. Both of these projects use a new feature of HTML5: a Webscocket communication.
 
 
 \begin{figure}[h!]
@@ -226,6 +228,32 @@ Thus, working on the connection of different sensors to the Internet is becoming
 \subsection{Introduction}
 The WebSocket specification is a new feature of HTML5. It defines a full-duplex single socket connection over which messages can be sent between client and server. The WebSocket standard simplifies much of the complexity around bi-directional web communication and connection management. Furthermore, it reduces polling and unnecessary network throughput overhead.
 
+\subsection{Why the need of Websockets ?}
+Traditionally, when a web browser loads a webpage, it follows these basic steps:
+
+\begin{packed_item}
+	\item Open a short-lived connection to a web server
+	\item Send a request to the server
+	\item The web server acknowledges this request and sends back the response
+	\item Close the connection to the server
+\end{packed_item}
+
+This architecture was designed primarily for document retrieval, where web browsers load static web pages from web servers. A transaction is based on a request/response mechanism. However, web applications require more and more realtime capabilities. Developers wanted a technology where the server can send data to a client without the need of a client request. This technique is called server push. First attempts to provide realtime web applications was based on polling or server push technology:
+\begin{packed_item}
+	\item \textbf{polling}: the browser sends HTTP requests at regular intervals and immediately receives a response. This is a first solution but it's not optimized because if the server does not have data to send, unnecessary requests has been done and as a result there is a waste bandwidth and CPU time on both the client and the server
+	\item \textbf{long polling}: a basic example is XMLHttpRequest object with long polling: The client sends requests through a XMLHttpRequest Javascript object. After each response, the client "rearms" the polling by sending a new request. The server holds client requests open until it has data to send, thus reducing unnecessary requests. But the request/response mechanism is not avoided. In high message rate situations, long polling results in a continuous loop of immediate polls. Another problem with this technique is that during the reconnection process the data on the page could be out of date and inaccurate
+	\item \textbf{streaming}: The browser sends a request and the server sends and maintains an open response that is continuously updated and kept open. This is much more efficient than polling or long polling as no HTTP headers are sent during the streaming period. The network traffic is reduced. The downside of streaming is that it is still encapsulated in HTTP, so intervening HTTP proxies may choose to buffer the response, increasing the latency of the message delivery
+\end{packed_item}
+
+
+Ultimately, to provide full duplex communication on top of the HTTP half duplex architecture, many of today's solutions use two connections: one for the downstream and one for the upstream. The maintenance and coordination of these two connections introduces significant overhead in terms of resource consumption and adds lots of complexity. That is why a new technology called websocket has been developed. Websocket provide:
+\begin{packed_item}
+	\item full duplex communication
+	\item over a single TCP socket
+	\item overhead reduction
+	\item less traffic: no need for polling
+\end{packed_item}
+
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.7\textwidth]{./ws_poll.jpg}
@@ -233,7 +261,7 @@ The WebSocket specification is a new feature of HTML5. It defines a full-duplex 
 		\label{Reduction of polling and overhead by Websocket}
 \end{figure}
 
-The figure~\ref{Reduction of polling and overhead by Websocket} shows the reduction in latency. Once the connection is established, messages can flow from the server to the browser. As the connection remains open, there is no need to send another request to the server.
+The figure~\ref{Reduction of polling and overhead by Websocket} shows the reduction in latency. Once the connection is established, messages can flow between server and client. As the connection remains open, there is no need to send another request to the server.
 
 \subsection{Websocket protocol}
 
@@ -312,7 +340,7 @@ Websocket communication involves several clients connected to the same websocket
 For example, let's say that there is an existing websocket server: example.com which is listening on port 80. A client can open a connection, receive and send messages to this server with this few lines of javascript:
 
 \begin{center}
-\begin{lstlisting}[label=Device descriptor,caption=Device Descriptor]
+\begin{lstlisting}[label=Javascript Websocket Heelo World,caption=Javascript Websocket Heelo World]
 var ws = new WebSocket("ws://example.com");
 ws.onopen = function(evt) { 
    alert("Connection open"); 
@@ -329,7 +357,7 @@ ws.onclose = function(evt) {
 
 
 \subsection{The mbed websocket library}
-A websocket client library has been developed in order to exchange data between an mbed and a server over a websocket communication. The library can be used over an ethernet connection, or a wifi connection using a Roving Networks wifly module. The library uses existing libraries such as the wifi module library or the TCP socket library, part of the TCP/IP stack (port of lwIP for mbed). For instance, the method which connects an mbed to a websocket server over wifly is:
+A websocket client library has been developed in order to exchange data between an mbed and a server over a websocket communication. The library can be used over an ethernet connection, or a wifi connection using a Roving Networks wifly module. The library uses existing libraries such as the wifi module library or the TCP socket library, part of the TCP/IP stack (port of lwIP for mbed). For instance, the method which connects an mbed to a websocket server over wifi is:
 
 
 \begin{center}
@@ -356,7 +384,7 @@ if (!wifi->send("Sec-WebSocket-Version: 13", "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="))
 
 \newpage
 
-\section{Real-Time Data Streaming from sensors}
+\section{Realtime Data Streaming from sensors}
 Mbed wanted to demonstrate that it was possible to access sensor data all over the world using an mbed board and HTML5 websockets. For this, two prototype boards were developed with different sensors:
 
 \begin{packed_item}
@@ -391,8 +419,8 @@ All mbed boards send messages in JSON format to the websocket server containing 
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.8\textwidth]{./ws_arch.png}
-		\caption{Architecture real-time data streaming}
-		\label{Architecture real-time data streaming}
+		\caption{Realtime data streaming project architecture}
+		\label{Realtime data streaming project architecture}
 \end{figure}
 
 
@@ -405,7 +433,7 @@ The websocket server which has been developed uses Tornado framework. This frame
 	\item websocket server
 \end{packed_item}
 
-\begin{lstlisting}[label=Open a websocket connection,caption=Open a websocket connection]
+\begin{lstlisting}[label=Launching of an HTTP server with Tornado,caption=Launching of an HTTP server with Tornado]
 application = tornado.web.Application([
     (r'/ws/(.*)/(.*)', WSHandler),
 ], **settings)
@@ -595,7 +623,7 @@ The architecture of all webpages is quite simple:
 
 
 \begin{center}
-\begin{lstlisting}[label=Streaming data code example,caption=Streaming data code example]
+\begin{lstlisting}[label=Manipulation of websocket messages,caption=Manipulation of websocket messages]
 		//Websocket instance connected on the same subnetwork as the mbed boards
     websocket = new WebSocket('ws://sockets.mbed.org/ws/sensors/rw');
 
@@ -790,7 +818,7 @@ This class has been developed in order to simplifies at maximum the creation of 
 \subsection{Core of the RPC mechanism: MbedJSONRpc}
 \subsubsection{Register a method}
 To register a method, a user has to invoke:
-\begin{lstlisting}[label=MbedJSONValue manipulation,caption=MbedJSONValue manipulation]
+\begin{lstlisting}[label=Register a method,caption=Register a method]
 template<typename T> RPC_TYPE registerMethod(const char * public_name, T * obj_ptr, void (T::*fn)(MbedJSONValue& val, MbedJSONValue& res))
 \end{lstlisting}
 
@@ -817,7 +845,7 @@ After this step, a distant mbed will be able to call the method registered ident
     
 \subsubsection{Call a registered method}
 To call a distant method, a user has to invoke:
-\begin{lstlisting}[label=MbedJSONValue manipulation,caption=MbedJSONValue manipulation]
+\begin{lstlisting}[label=Call a distant method,caption=Call a distant method]
 RPC_TYPE MbedJSONRpc::call(const char * fn, const char * dest, MbedJSONValue& in, MbedJSONValue& out)
 \end{lstlisting}
 
@@ -841,7 +869,7 @@ After this step, a user can handle the result of the distant method contained in
 
 \subsubsection{Listen for incoming request}
 To listen incoming requests, a user has to invoke:
-\begin{lstlisting}[label=MbedJSONValue manipulation,caption=MbedJSONValue manipulation]
+\begin{lstlisting}[label=Listen incoming requests,caption=Listen incoming requests]
 void MbedJSONRpc::work()
 \end{lstlisting}
 
@@ -875,7 +903,7 @@ TODO: photo
 I will demonstrate the main program running on an mbed which has an accelerometer connected. The idea is to remotely access this accelerometer's values from another mbed.
 
 
-\begin{lstlisting}[label=Register a method,caption=Register a method]
+\begin{lstlisting}[label=Client which registers a method,caption=Client which registers a method]
 
 // accelerometer
 ADXL345 accelerometer(p5, p6, p7, p8);
@@ -928,7 +956,7 @@ int main() {
 
 \subsubsection{Software: mbed which calls a distant method}
 
-\begin{lstlisting}[label=Register a method,caption=Register a method]
+\begin{lstlisting}[label=Client which calls a distant method,caption=Client which calls a distant method]
 //websocket over ethernet: configuration with sub-network = samux and mbed_id = mbed_acc
 Websocket webs("ws://sockets.mbed.org/rpc/sensor/mbed_client");
 
@@ -953,8 +981,6 @@ int main() {
     }
 }
 \end{lstlisting}
-
-TODO: screenshot of result
 
 \subsection{Websocket server: Tornado}
 The server uses the same framework used for the realtime streaming data project: Tornado. The server is responsible for managing all subnetworks and messages exchanged over a same subnetwork. \\
@@ -1019,7 +1045,8 @@ For Mbed the Internet of Things is a very important field. We really think that 
 	\item factories
 \end{packed_item}
 
-The first project shows that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provide a mean to execute a method on a distant mbed. This can be really useful for instance in critical places where people cannot go frequently. The common point of these two projects is the use of a websocket communication, new feature of HTML5. This new way of communication enables realtime capabilities with a bidirectionnal communication between client and server. \\
+The first project shows that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provide a mean to execute a method on a distant mbed. This can be really useful for instance in critical places where people cannot go frequently. The common point of these two projects is the use of a websocket communication, new feature of HTML5. This new way of communication enables realtime capabilities with a bidirectionnal communication between client and server. It was quite interesting to develop projects using websocket which the protocol was in development. For instance, at the beginning, the data framing was not at all the same as now. It was much more simpler: a data was started with 0x00 and ended with 0xff. The overhead was reduced but the final protocol provide more capabilities such as: raw binary can be sent, a ping/pong mechanism, a packet can be segmented. This change in the protocol led to tricky situations where the browser has been updated with the new protocol and not the websocket server. So that the browser and the server were not compatible.\\
+
 
 
 After having worked on the Internet of Things, Mbed wanted to explore USB capabilities on the two mbed boards.
@@ -1068,9 +1095,11 @@ The physical bus topology defines how USB devices are connected to the host. The
 		\caption{USB physical topology \footnotemark}
 		\label{USB physical topology}
 \end{figure}
-\footnotetext{reference: http://www.usblyzer.com}
 \subsection{Endpoints and type of transfers}
 Devices have a series of buffers to communicate with the host. Each buffer will belong to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on a NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. One logical endpoint represents two physical endpoints. Each physical endpoint has a specific direction: either OUT to receive data from the host or IN to send data to the host. 
+
+
+\footnotetext{reference: http://www.usblyzer.com}
 
 \begin{figure}[h!]
 		\centering
@@ -1186,8 +1215,8 @@ All devices capabilities are transmitted in data structures called \textbf{descr
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.7\textwidth]{./descr.jpg}
-		\caption{Descriptors}
-		\label{Descriptors}
+		\caption{Descriptor architecture}
+		\label{Descriptor architecture}
 \end{figure}
 
 A typical enumeration follows:
@@ -1243,7 +1272,7 @@ I will illustrate a whole transfer with a control read transfer. This type of tr
 
 Concerning bulk or interrupts endpoints, a whole OUT transfer can be:
 \begin{packed_item}
-	\item OUT transaction:
+	\item \textbf{OUT transaction}:
 	\begin{packed_item}
 		\item OUT token packet sent by the host
 		\item Data packet: the host sends data
@@ -1272,6 +1301,8 @@ A USB device stack has been developed to allow mbed users to design their own US
 		\caption{USB device stack capabilities}
 		\label{USB device stack capabilities}
 \end{figure}
+
+I will describe in this section the USB stack architecture and some USB classes such as HID, MSD, Audio and CDC.
 
 
 \subsection{USB Device stack architecture}
@@ -1310,12 +1341,6 @@ A USB device stack has been developed to allow mbed users to design their own US
 
 
 \subsection{USBHAL: USB Hardware abstraction layer for the LPC11U24}
-
-\begin{center}
-\textbf{Source code of main methods are in Annexe A: USBHAL class}
-\end{center}
-
-
 This section describes the hardware layer implemented for the mbed LPC11U24. This microcontroller has a built-in USB 2.0 device controller. It also has 2 kB of RAM dedicated for USB operations.
 
 \begin{figure}[h!]
@@ -1337,7 +1362,7 @@ To describe the state of each endpoints available, we need to allocate space in 
 Main methods for USBHAL class:
 
 \begin{packed_item}
-	\item Memory  allocation for endpoints status list and endpoint 0 buffers. These initializations are done in the constructor of USBHAL::USBHAL
+	\item Memory allocation for endpoints status list and endpoint 0 buffers. These initializations are done in the constructor of USBHAL::USBHAL
 	\item To add more endpoints, space allocation has to be done. This is done in the method: USBHAL::realiseEndpoint
 	\item To read a specific endpoint:
 		\begin{packed_item}
@@ -1360,6 +1385,71 @@ When a specific event occurs, USBHAL calls virtual functions which can be overri
 	\item EPx\_IN\_callback(): called when a data has been sent on a specific endpoint
 \end{packed_item}
 
+All this callback methods are called from the USB interrupt handler:
+
+\begin{lstlisting}[label=Main part of the USB interrupt handler,caption=Main part of the USB interrupt handler]
+void USBHAL::usbisr(void) {
+    // Start of frame
+    if (LPC_USB->INTSTAT & FRAME_INT) {
+        // Clear SOF interrupt
+        LPC_USB->INTSTAT = FRAME_INT;
+
+        // SOF event, read frame number
+        SOF(FRAME_NR(LPC_USB->INFO));
+    }
+
+    // Endpoint 0
+    if (LPC_USB->INTSTAT & EP(EP0OUT)) {
+        // Clear EP0OUT/SETUP interrupt
+        LPC_USB->INTSTAT = EP(EP0OUT);
+
+        // Check if SETUP
+        if (LPC_USB->DEVCMDSTAT & SETUP) {
+
+            // Clear EP0IN interrupt
+            LPC_USB->INTSTAT = EP(EP0IN);
+
+            // Clear SETUP (and INTONNAK_CI/O) in device status register
+            LPC_USB->DEVCMDSTAT = devCmdStat | SETUP;
+
+            // EP0 SETUP event (SETUP data received)
+            EP0setupCallback();
+        } else {
+            // EP0OUT ACK event (OUT data received)
+            EP0_OUT_callback();
+        }
+    }
+
+    if (LPC_USB->INTSTAT & EP(EP0IN)) {
+        // Clear EP0IN interrupt
+        LPC_USB->INTSTAT = EP(EP0IN);
+
+        // EP0IN ACK event (IN data sent)
+        EP0_IN_callback();
+    }
+
+    if (LPC_USB->INTSTAT & EP(EP1IN)) {
+        // Clear EP1IN interrupt
+        LPC_USB->INTSTAT = EP(EP1IN);
+        epComplete |= EP(EP1IN);
+        if (EP1_IN_callback())
+            epComplete &= ~EP(EP1IN);
+    }
+
+    if (LPC_USB->INTSTAT & EP(EP1OUT)) {
+        // Clear EP1OUT interrupt
+        LPC_USB->INTSTAT = EP(EP1OUT);
+        epComplete |= EP(EP1OUT);
+        if (EP1_OUT_callback())
+            epComplete &= ~EP(EP1OUT);
+    }
+    
+    // Same for all following endpoints
+    .
+    .
+    .
+}\end{lstlisting}
+
 
 \subsection{USBDevice: target abstraction and setup packet treatment}
 \subsubsection{Target abstraction}
@@ -1373,15 +1463,15 @@ One of the purpose of this class is to provide an API in order to handle the USB
 	\item writeEP(int endpoint) to write a specific endpoint 
 \end{packed_item}
 
-\subsubsection{Setup packet treatment}
-Two data structures has been defined in order to perform the control endpoint treatment. The enumeration step is part of this treatment:
+\subsubsection{Setup packet processing}
+Two data structures has been defined in order to perform the control endpoint processing. The enumeration step is part of this treatment:
 \begin{packed_item}
 	\item SETUP\_PACKET: to describe a setup packet
 	\item CONTROL\_TRANSFER: to describe a transfer on the control endpoint
 \end{packed_item}
 
 
-\begin{lstlisting}[label=Data structures for control endpoint treatment,caption=Data structures for control endpoint treatment]
+\begin{lstlisting}[label=Data structures for control endpoint processing,caption=Data structures for control endpoint processing]
 typedef struct {
     struct {
         uint8_t dataTransferDirection;
@@ -1407,8 +1497,8 @@ typedef struct {
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\textwidth]{./setup_packets.png}
-		\caption{Setup packets treatment}
-		\label{Setup packets treatment}
+		\caption{Setup packets processing}
+		\label{Setup packets processing}
 \end{figure}
 
 For instance, a GET\_DEVICE\_DESCRIPTOR request is processed according to this scheme:
@@ -2058,8 +2148,8 @@ Mbed users can now use their mbed to emulate a USB device. I really wanted explo
 	\item MIDI to send and receive MIDI messages
 \end{packed_item}
 
-\chapter{Conclusion}
-By way of concluion, I want to thank another time my manager Simon Ford. He permitted me to discover new domains involved in my projects:
+\chapter*{Conclusion}
+By way of conclusion, I want to thank another time my manager Simon Ford. He permitted me to discover new domains involved in my projects:
 \begin{packed_item}
 	\item the Internet of Things project where I had to connect sensors to the Internet over a websocket communication. 
 	\item the Remote Procedure Call Mechanism over websocket which permitted to call methods on a distant mbed
@@ -2072,301 +2162,22 @@ The Internet of Things and the RPC projects was very interesting because it need
 	\item software skills in web programming
 	\item hardware skills
 \end{packed_item}
-Thanks to these project, I discovered web programming with in particular Javascript. I am now more familiar with web technologies such as HTML5 and websockets. It was a very good experience to develop a project which required several skills. \\
-
-I really appreciated my work on the USB. It was a totally new domain for me. It was very interesting to discover the USB protocol. It was satisfying and motivating to observe days after days technical results on the USB device stack knowing that it was a totally new subject. At the end, I was very happy to provide to mbed users a USB device stack to emulate a lot of USB classes. \\
 
 
-This internship was a great experience. It was a real pleasure to work in the mbed team in a very good atmosphere. Carrying out this
-internship in a foreign country allows me to be immersed in a different culture and faced the problem of living and working entirely in a non-native language- English. I met several
+Thanks to these project, I discovered web programming with in particular Javascript. I am now more familiar with web technologies such as HTML5 and websockets. It was a very good experience to develop a project which required several skills. I also really appreciated my work on the USB. It was a totally new domain for me. It was very interesting to discover the USB protocol. It was satisfying and motivating to observe days after days technical results on the USB device stack knowing that it was a totally new subject. At the end, I was very happy to provide to mbed users a USB device stack to emulate a lot of USB classes. \\
+
+
+This internship was a great experience. It was a real pleasure to work in the mbed team in a very good atmosphere. Fyrthermore, carrying out this
+internship in a foreign country allows me to be immersed in a different culture and faced the problem of living and working entirely in a non-native language (English). I met several
 interesting people in and out of the lab such as engineers, students, but also people not connected with computer science.
 
 
 
 
-
-\begin{comment}
-My project during this internship was to  design the drawings to manufacture the box 
-connecting the cryostat and the detector by the Berkeley labs workshop. I started by defining
-what we needed to accomplish  that. Then we designed all the drawings and ordered all the 
-components we wante d for our box. We finished by  choosing and buying the inside optical
-equipment. However, the project isn’t finished and someone must continue it to arrive at a 
-useful application for the beamline.
-Concerning this project, it was interesting to discover some thing else that I was taught in 
-my engineering school such as electronics or spectroscopy in x-ray region. The work in itself 
-was also interesting in different point of views.  Designing the box drawings allowed me to 
-learn some new design techniques.
-Moreover, working on a concrete problem made me learn several things. Even though that 
-was something new for me, I could use tools I knew to find solutions like cutting a big
-parabolic mirror to make several little ones with the focal distance we need. Now, I
-understand the principle of a cryostat thanks to what I learnt 2 or 3 years ago in
-thermodynamic and the process for manufacturing equipment such as this. I  was  already 
-aware of much of this,  but here I could see for real that besides the tools we learn in our 
-studies, what is really useful is the scientific approach we acquired to solve problems. Then, 
-talking with people and exchanging ideas, I came up to the view factor. 
-This internship was a great experience. It was a real pleasure to work in this ALS at the 
-beamline 1.4. I could work with nice people in a good atmosphere. Carrying out this
-internship in a foreign country allows me to be immersed in a different culture and faced the 
-problem of living and working entirely in a non-native language- English. I met several
-interesting people in and out of the lab such as researchers, students in physics, but also 
-people not connected with science
-\end{comment}
-
 \chapter*{References}
 http://www.bbc.co.uk/news/technology-13613536
 
 TODO
-
-
-
-
-
-
-\appendix
-\chapter*{USBHAL class}
-
-\begin{lstlisting}[label=USBHAL::USBHAL(),caption=USBHAL::USBHAL()]
-USBHAL::USBHAL(void) {
-    NVIC_DisableIRQ(USB_IRQn);
-
-    // nUSB_CONNECT output
-    LPC_IOCON->PIO0_6 = 0x00000001;
-
-    // Enable clocks (USB registers, USB RAM)
-    LPC_SYSCON->SYSAHBCLKCTRL |= CLK_USB | CLK_USBRAM;
-
-    // Ensure device disconnected (DCON not set)
-    LPC_USB->DEVCMDSTAT = 0;
-
-    // to ensure that the USB host sees the device as
-    // disconnected if the target CPU is reset.
-    wait(0.3);
-
-    // Reserve space in USB RAM for endpoint command/status list
-    // Must be 256 byte aligned
-    usbRamPtr = ROUND_UP_TO_MULTIPLE(usbRamPtr, 256);
-    ep = (EP_COMMAND_STATUS *)usbRamPtr;
-    usbRamPtr += (sizeof(EP_COMMAND_STATUS) * NUMBER_OF_LOGICAL_ENDPOINTS);
-    LPC_USB->EPLISTSTART = (uint32_t)(ep) & 0xffffff00;
-
-    // Reserve space in USB RAM for Endpoint 0
-    // Must be 64 byte aligned
-    usbRamPtr = ROUND_UP_TO_MULTIPLE(usbRamPtr, 64);
-    ct = (CONTROL_TRANSFER *)usbRamPtr;
-    usbRamPtr += sizeof(CONTROL_TRANSFER);
-    LPC_USB->DATABUFSTART =(uint32_t)(ct) & 0xffc00000;
-
-    // Setup command/status list for EP0
-    ep[0].out[0] = 0;
-    ep[0].in[0] =  0;
-    ep[0].out[1] = CMDSTS_ADDRESS_OFFSET((uint32_t)ct->setup);
-
-    // Route all interrupts to IRQ, some can be routed to
-    // USB_FIQ if you wish.
-    LPC_USB->INTROUTING = 0;
-
-    // Set device address 0, enable USB device, no remote wakeup
-    devCmdStat = DEV_ADDR(0) | DEV_EN | DSUS;
-    LPC_USB->DEVCMDSTAT = devCmdStat;
-
-    // Enable interrupts for device events and EP0
-    LPC_USB->INTEN = DEV_INT | EP(EP0IN) | EP(EP0OUT);
-    instance = this;
-    
-    //attach IRQ handler and enable interrupts
-    NVIC_SetVector(USB_IRQn, (uint32_t)&_usbisr);
-    NVIC_EnableIRQ(USB_IRQn);
-}
-\end{lstlisting}
-
-\begin{lstlisting}[label=USBHAL::usbisr(),caption=USBHAL::usbisr()]
-void USBHAL::usbisr(void) {
-    // Start of frame
-    if (LPC_USB->INTSTAT & FRAME_INT) {
-        // Clear SOF interrupt
-        LPC_USB->INTSTAT = FRAME_INT;
-
-        // SOF event, read frame number
-        SOF(FRAME_NR(LPC_USB->INFO));
-    }
-
-    // Device state
-    if (LPC_USB->INTSTAT & DEV_INT) {
-        LPC_USB->INTSTAT = DEV_INT;
-
-        if (LPC_USB->DEVCMDSTAT & DCON_C) {
-            // Connect status changed
-            LPC_USB->DEVCMDSTAT = devCmdStat | DCON_C;
-
-            connectStateChanged((LPC_USB->DEVCMDSTAT & DCON) != 0);
-        }
-
-        if (LPC_USB->DEVCMDSTAT & DSUS_C) {
-            // Suspend status changed
-            LPC_USB->DEVCMDSTAT = devCmdStat | DSUS_C;
-
-            suspendStateChanged((LPC_USB->DEVCMDSTAT & DSUS) != 0);
-        }
-
-        if (LPC_USB->DEVCMDSTAT & DRES_C) {
-            // Bus reset
-            LPC_USB->DEVCMDSTAT = devCmdStat | DRES_C;
-
-            // Disable endpoints > 0
-            disableEndpoints();
-
-            // Bus reset event
-            busReset();
-        }
-    }
-
-    // Endpoint 0
-    if (LPC_USB->INTSTAT & EP(EP0OUT)) {
-        // Clear EP0OUT/SETUP interrupt
-        LPC_USB->INTSTAT = EP(EP0OUT);
-
-        // Check if SETUP
-        if (LPC_USB->DEVCMDSTAT & SETUP) {
-
-            // Clear EP0IN interrupt
-            LPC_USB->INTSTAT = EP(EP0IN);
-
-            // Clear SETUP (and INTONNAK_CI/O) in device status register
-            LPC_USB->DEVCMDSTAT = devCmdStat | SETUP;
-
-            // EP0 SETUP event (SETUP data received)
-            EP0setupCallback();
-        } else {
-            // EP0OUT ACK event (OUT data received)
-            EP0_OUT_callback();
-        }
-    }
-
-    if (LPC_USB->INTSTAT & EP(EP0IN)) {
-        // Clear EP0IN interrupt
-        LPC_USB->INTSTAT = EP(EP0IN);
-
-        // EP0IN ACK event (IN data sent)
-        EP0_IN_callback();
-    }
-
-    if (LPC_USB->INTSTAT & EP(EP1IN)) {
-        // Clear EP1IN interrupt
-        LPC_USB->INTSTAT = EP(EP1IN);
-        epComplete |= EP(EP1IN);
-        if (EP1_IN_callback())
-            epComplete &= ~EP(EP1IN);
-    }
-
-    if (LPC_USB->INTSTAT & EP(EP1OUT)) {
-        // Clear EP1OUT interrupt
-        LPC_USB->INTSTAT = EP(EP1OUT);
-        epComplete |= EP(EP1OUT);
-        if (EP1_OUT_callback())
-            epComplete &= ~EP(EP1OUT);
-    }
-    
-    // Same for all following endpoints
-    .
-    .
-    .
-}
-\end{lstlisting}
-
-\begin{lstlisting}[label=USBHAL::endpointReadResult(),caption=USBHAL::endpointReadResult()]
-EP_STATUS USBHAL::endpointReadResult(uint8_t endpoint, uint8_t *data, uint32_t *bytesRead) {
-
-    uint8_t bf = 0;
-    
-    if (!(epComplete & EP(endpoint)))
-        return EP_PENDING;
-    else {
-        epComplete &= ~EP(endpoint);
-
-        //check which buffer has been filled
-        if (LPC_USB->EPBUFCFG & EP(endpoint)) {
-            // Double buffered (here we read the previous buffer which was used)
-            if (LPC_USB->EPINUSE & EP(endpoint)) {
-                bf = 0;
-            } else {
-                bf = 1;
-            }
-        }
-
-        // Find how many bytes were read
-        *bytesRead = (uint32_t) (endpointState[endpoint].maxPacket - BYTES_REMAINING(ep[PHY_TO_LOG(endpoint)].out[bf]));
-
-        // Copy data
-        USBMemCopy(data, ct->out, *bytesRead);
-        return EP_COMPLETED;
-    }
-}
-\end{lstlisting}
-
-\begin{lstlisting}[label=USBHAL::endpointWrite(),caption=USBHAL::endpointWrite()]
-EP_STATUS USBHAL::endpointWrite(uint8_t endpoint, uint8_t *data, uint32_t size) {
-    uint32_t flags = 0;
-    uint32_t bf;
-
-    // Validate parameters
-    if (data == NULL) {
-        return EP_INVALID;
-    }
-
-    if (endpoint > LAST_PHYSICAL_ENDPOINT) {
-        return EP_INVALID;
-    }
-
-    if ((endpoint==EP0IN) || (endpoint==EP0OUT)) {
-        return EP_INVALID;
-    }
-
-    if (size > endpointState[endpoint].maxPacket) {
-        return EP_INVALID;
-    }
-
-    if (LPC_USB->EPBUFCFG & EP(endpoint)) {
-        // Double buffered
-        if (LPC_USB->EPINUSE & EP(endpoint)) {
-            bf = 1;
-        } else {
-            bf = 0;
-        }
-    } else {
-        // Single buffered
-        bf = 0;
-    }
-
-    // Check if already active
-    if (ep[PHY_TO_LOG(endpoint)].in[bf] & CMDSTS_A) {
-        return EP_INVALID;
-    }
-
-    // Check if stalled
-    if (ep[PHY_TO_LOG(endpoint)].in[bf] & CMDSTS_S) {
-        return EP_STALLED;
-    }
-
-    // Copy data to USB RAM
-    USBMemCopy((uint8_t *)endpointState[endpoint].buffer[bf], data, size);
-
-    // Add options
-    if (endpointState[endpoint].options & RATE_FEEDBACK_MODE) {
-        flags |= CMDSTS_RF;
-    }
-
-    if (endpointState[endpoint].options & ISOCHRONOUS) {
-        flags |= CMDSTS_T;
-    }
-
-    // Add transfer
-    ep[PHY_TO_LOG(endpoint)].in[bf] = CMDSTS_ADDRESS_OFFSET( \
-                                      endpointState[endpoint].buffer[bf]) \
-                                      | CMDSTS_NBYTES(size) | CMDSTS_A | flags;
-
-    return EP_PENDING;
-}
-\end{lstlisting}
 
 
 

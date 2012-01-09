@@ -69,9 +69,9 @@ I took immense pleasure in this internship and would like to begin this report b
 
 Firstly, I wish to express my deep sense of gratitude to my manager, Mr Simon Ford. This internship would not have been possible without him. I also will never forget the excellent atmosphere in the mbed team thanks to: Mr Simon Ford, Mr Chris Style, Mr Dan Ros, Mr Emilio Monti and Mr Amit Naran. \\
 
-I also want to thank two teachers of T\'{e}l\'{e}com Paristech: Mr Alexis Polti and Mr Samuel Tardieu who gave me working method and a lot of knowledge. I will never forget the two month project working with them on an octocopter. It was a unique experience. \\
+I also want to thank two teachers of T\'{e}l\'{e}com Paristech: Mr Alexis Polti and Mr Samuel Tardieu who gave me working method and taught me many things. I will never forget my two month project during which I worked with them on an octocopter. It was a unique experience. \\
 
-Special thank to the summer intern Mr Nathan Hutton. I realized the Internet of Things project with him. It was a great pleasure to work with him. \\
+Special thanks to the summer intern Nathan Hutton. We worked on the Internet Of Things project together, and it was a great pleasure to work with him. \\
 
 Finally, I would like to express my heartfelt thanks to my parents. They are always by my side. I owe them everything. 
 
@@ -80,13 +80,13 @@ Finally, I would like to express my heartfelt thanks to my parents. They are alw
 \chapter{ARM and Mbed}
 \section{ARM}
 \subsection{History}
-ARM Holdings plc is a British multinational semiconductor and software company. The headquarter is based in Cambridge. This company is well-known in the processor field, although it also designs, licenses and sells software development tools under the RealView and KEIL brands, systems and platforms, system-on-a-chip infrastructure and software. 
+ARM Holdings plc is a British multinational semiconductor and software company. The headquarters are based in Cambridge, where it was established. ARM is well known in the processor field, although it also designs, licenses and sells software development tools under the RealView and KEIL brands, systems and platforms, system-on-a-chip infrastructure and software. 
 \\
 
-Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It is the result of a joint venture between Acorn Computers, Apple Computer (now Apple Inc.) and VLSI Technology (now NXP semiconductor). The purpose of this joint venture was to develop a RISC chip originally developed by Acorn Computer involved in an Apple project. ARM got bigger little by little by acquiring companies like Micrologic Solutions, a software consulting company based in Cambridge 1999. In 2000, ARM acquired Allant Software, Infinite Designs in Sheffield (UK) and EuroMips in Sophia Antipolis (France). Then, in 2001, it acquired a team specialized in hardware and software debugging based in Blackburn (UK). In 2005, ARM acquired Keil Software, a leader in the software development tools for microcontrollers. More recently, ARM joined with Texas Instruments, Samsung, IBM, ST-Ericsson and Freescale Semiconductor in forming an open source engineering company named Linaro. Linaro produces for example ARM tools or linux kernels for ARM based system-on-chips. Today, ARM has offices and design centres all over the world, including the UK, Germany, France, Israel, Sweden, Norway, Slovenia, USA, China, South Korea, Japan, Taiwan and India. 
+Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It is the result of a joint venture between Acorn Computers, Apple Computer (now Apple Inc.) and VLSI Technology (now NXP semiconductor). The purpose of this joint venture was to develop a RISC chip originally developed by Acorn Computer involved in an Apple project. ARM became bigger throughout the years by acquiring companies like Micrologic Solutions, a software consulting company based in Cambridge 1999. In 2000, ARM acquired Allant Software, Infinite Designs in Sheffield (UK) and EuroMips in Sophia Antipolis (France). Then, in 2001, it acquired a team specialized in hardware and software debugging based in Blackburn (UK). In 2005, ARM acquired Keil Software, a leader in software development tools for microcontrollers. More recently, ARM joined with Texas Instruments, Samsung, IBM, ST-Ericsson and Freescale Semiconductor in forming an open source engineering company named Linaro. Linaro produces for example ARM tools or linux kernels for ARM based system-on-chips. Today, ARM has offices and design centres all over the world, including the UK, Germany, France, Israel, Sweden, Norway, Slovenia, USA, China, South Korea, Japan, Taiwan and India. 
 \\
 
-Nowadays, ARM processors are widely used in mobile phones, tablets, personal digital assistants, GPS, digital cameras and digital televions. The main reason of this success is their low electric power consumption, making them suitable for embedded systems. Even if ARM products are widely used, the company doesn't manufacture its own CPUs. The company licenses its technology as Intellectual Property (IP). Companies like Intel, Texas Intrument or Nvidia are making processors based on ARM's IP.
+Nowadays, ARM processors are widely used in mobile phones, tablets, personal digital assistants, GPS, digital cameras and digital televions. The main reason for this success is their low electric power consumption, making them suitable for embedded systems. Even if ARM products are widely used, the company itself doesn't manufacture its own CPUs. ARM licenses its technology as Intellectual Property (IP). Companies like Intel, Texas Intrument or Nvidia are making processors based on ARM's IP.
 
 \subsection{ARM Processors}
 The ARM architecture is described as a Reduced Instruction Set Computer (RISC) architecture. Main RISC features are:
@@ -106,8 +106,8 @@ Over time the ARM architecture has evolved in order to improve performance, prov
 \end{figure}
 
 \begin{packed_item}
-	\item \textbf{ARMv5}: support for digital signal processing (DSP) algorithms and the Jazelle® Java byte code engine to enable hardware execution of Java bytecodes, thus improving performance of applications written in Java
-	\item \textbf{ARMv6}: introduction of the SIMD (Single Instruction Multiple Data) technology. This extension is particularly used in audio and video processing. In addition a security extension has been introduced known as TrustZone. The Thumb-2 mode has also been introduced to achieve code density and performance
+	\item \textbf{ARMv5}: support for digital signal processing (DSP) algorithms and the Jazelleï¿½ Java byte code engine to enable hardware execution of Java bytecodes, thus improving performance of applications written in Java
+	\item \textbf{ARMv6}: introduction of the SIMD (Single Instruction Multiple Data) technology. This extension is particularly used in audio and video processing. In addition a security extension has been introduced known as TrustZone. The Thumb-2 mode has also been introduced to improve code density and performance
 	\item \textbf{ARMv7}: this architecture delivers a set of profiles customized to target applications. All Cortex processors implement the ARMv7 architecture, (except Cortex M0 and Cortex M1 series which implement ARMv6M):
 	\begin{packed_item}
 		\item \textbf{Cortex A}: Application profile implementing a virtual memory system architecture based on an MMU (memory management unit). An optional NEON processing unit for multimedia applications and advanced hardware Floating Point unit can be added
@@ -130,8 +130,15 @@ Over time the ARM architecture has evolved in order to improve performance, prov
 \section{Mbed}
 Aiming to pursue new areas of expertise, ARM founded Mbed in 2009. Mbed's core area is the development of prototyping boards (called mbed) based on ARM processors (Cortex M0 and Cortex M3). Their purpose is to make simple and easy to setup prototyping solutions using 32-bit processors. Mbeds boards have been designed for quick experimentation; users can try something and see if it is doable in a very quick and easy manner.
 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.5\textwidth]{./mbed_4elements.png}
+\caption{Four main elements of Mbed}
+\label{Four main elements of Mbed}
+\end{figure}
+
 \subsection{Mbed boards: LPC1768 and LPC11U24}
-For the moment, two boards have been developed. The first is based on the LPC1768 microcontroller from NXP which uses a Cortex m3:
+For the moment, two boards have been developed. The first is based on the LPC1768 microcontroller from NXP which uses a Cortex M3:
 \begin{packed_item}
 	\item 96 MHz, 32 Kb of RAM, 512 Kb of flash
 	\item 3 UART, 2 SPI, 2 I2C, 6 PWM, 6 ADC, GPIO, Ethernet, USB Host/Device
@@ -145,7 +152,7 @@ For the moment, two boards have been developed. The first is based on the LPC176
 \end{figure}
 
 
-More recently, a new board based on a LPC11U24 (Cortex M0) was born. This mbed has been designed to prototype USB devices or battery powered applications:
+More recently, a new board based on a LPC11U24 (Cortex M0) was introduced. This mbed has been designed to prototype USB devices or battery powered applications:
 \begin{packed_item}
 	\item 48 MHz, 8 Kb of RAM, 32 Kb of flash
 	\item UART, I2C, 2 SPI, 6 ADC, GPIO, USB Device
@@ -159,14 +166,14 @@ More recently, a new board based on a LPC11U24 (Cortex M0) was born. This mbed h
 \end{figure}
 
 
-Both mbed boards have a built-in USB drag and drop FLASH programmer. This feature allows mbed users to drag and drop a binary into the mbed recognized as a USB mass storage device by a computer.
+Both mbed boards have a built-in USB drag and drop FLASH programmer. This feature allows mbed users to drag and drop a binary into the mbed, recognized as a USB mass storage device by a computer.
 
 
 \subsection{The online compiler}
-The two main keywords of Mbed are "simple" and "cloud computing". Users indeed use an online compiler to develop their program in C++. They compile online and transfer the binary received into the mbed, which is connected to a computer over a USB cable. They just have to press the reset button to see their program running.
+The two main keywords of Mbed are "simple" and "cloud computing". Users uniquely use an online compiler to develop their programs in C++. They compile online and transfer the binary received into the mbed, which is connected to a computer over a USB cable. They just have to press the reset button to see their program running.
 \\
 
-The online IDE is totally independant of the underlying operating system. It contains a lot of interesting features:
+The online IDE is totally independent from the underlying operating system. It contains a lot of interesting features:
 \begin{packed_item}
 	\item Code editing with syntax highlighting
 	\item Multiple programs
@@ -183,7 +190,7 @@ The online IDE is totally independant of the underlying operating system. It con
 \end{packed_item}
 
 \subsection{Mbed libraries}
-In addition to the online compiler, almost all drivers have been implemented. Users just have to instantiate an object such as SPI, I2C,... to have access to an API which abstracts all the low-level layers. \\
+In addition to the online compiler, almost all drivers have been implemented. Users just have to instantiate an object such as SPI, I2C,... to have access to an API which abstracts all the low-level layers. The figure~\ref{mbed libraries} shows on the left hand side all the drivers which has been implemented and are accessible over a C++ class. On the right hand side, a description, some basic examples and the API of a specific class can be found. Users can code using meaningful abstract objects and API calls, so there is no need to learn the microcontroller hardware details to get going.\\
 
 
 \begin{figure}[h!]
@@ -195,7 +202,7 @@ In addition to the online compiler, almost all drivers have been implemented. Us
 
 
 \subsection{Mbed website: \textit{http://mbed.org/}}
-Finally, users can access the mbed forums to troubleshoot their programs or ask questions. They also have access to a handbook where there is a lot of documentation and examples concerning mbed libraries or the hardware part of the mbed. But the most important feature of this website is for me the cookbook. The cookbook is a great source of examples from other mbed users. You can almost always find a library to use with popular sensors like accelerometers, pressure sensors... The user is free to contribute to this part of the website by writing articles explaining their project and code. 
+Finally, users can access the mbed \textbf{forum} to troubleshoot their programs or ask questions. They also have a \textbf{handbook} where there is a lot of documentation and examples concerning mbed libraries or the hardware part of the mbed. However, I find that the most important and useful part of the website is the \textbf{cookbook}. The cookbook is a great source of examples contributed from, and edited by, other mbed users. You can almost always find a library to use with popular peripherals like accelerometers, pressure sensors... The user is free to contribute to this part of the website by writing articles explaining their project and code. 
 
 \begin{comment}
 \begin{figure}[h!]
@@ -208,13 +215,13 @@ Finally, users can access the mbed forums to troubleshoot their programs or ask 
 
 
 \chapter{Internet Of Things: HTML5 on embedded systems}
-Nowadays, an increasing number of devices are connected to the Internet. These devices include not only personal computers, but also mobile phones and digital televisions, ect.
-Cisco predicted in an interview with the BBC that the number of internet connected devices is set to explode in the next four years to over 15 billion - twice the world's population by 2015. Cisco is not the only company to predict a such boom; VMware's CEO Paul Maritz said during a speech at the annual VMworld conference in Las Vegas at August 2011 that:
+Nowadays, an increasing number of devices are connected to the Internet. These devices include not only personal computers, but also mobile phones and digital televisions, etc.
+Cisco predicted in an interview with the BBC that the number of internet connected devices is set to explode in the next four years to over 15 billion, twice the world's population, by 2015. Cisco is not the only company to predict a such boom; VMware's CEO Paul Maritz said during a speech at the 2011 VMworld conference in Las Vegas that:
 
 \begin{quote} "Three years ago over 95 percent of the devices connected to the Internet were personal computers. Three years from now that number will probably be less than 20 percent. More than 80 percent of the devices connected to the Internet will not be Windows-based personal computers." \\
 \end{quote}
 
-Thus, working on the connection of different sensors to the Internet is becoming more and more crucial. I will describe in this chapter two projects concerning the Internet of Things: realtime data streaming from sensors and Remote Procedure Call mechanism. Both of these projects use a new feature of HTML5: a Webscocket communication.
+Thus, the development and progress of technologies connecting different sensors and devices to the Internet is becoming ever more important. I will describe in this chapter two projects concerning the Internet of Things: realtime data streaming from sensors and Remote Procedure Call mechanism. Both of these projects use a new feature of HTML5: a Websocket communication.
 
 
 \begin{figure}[h!]
@@ -228,7 +235,7 @@ Thus, working on the connection of different sensors to the Internet is becoming
 \subsection{Introduction}
 The WebSocket specification is a new feature of HTML5. It defines a full-duplex single socket connection over which messages can be sent between client and server. The WebSocket standard simplifies much of the complexity around bi-directional web communication and connection management. Furthermore, it reduces polling and unnecessary network throughput overhead.
 
-\subsection{Why the need of Websockets ?}
+\subsection{Why the need for Websockets ?}
 Traditionally, when a web browser loads a webpage, it follows these basic steps:
 
 \begin{packed_item}
@@ -238,15 +245,15 @@ Traditionally, when a web browser loads a webpage, it follows these basic steps:
 	\item Close the connection to the server
 \end{packed_item}
 
-This architecture was designed primarily for document retrieval, where web browsers load static web pages from web servers. A transaction is based on a request/response mechanism. However, web applications require more and more realtime capabilities. Developers wanted a technology where the server can send data to a client without the need of a client request. This technique is called server push. First attempts to provide realtime web applications was based on polling or server push technology:
+This architecture was designed primarily for document retrieval, where web browsers load static web pages from web servers. A transaction is based on a request/response mechanism. However, more and more frequently web applications require realtime capabilities. Developers wanted a technology where the server can send data to a client without the need of a client request. This technique is called server push. First attempts to provide realtime web applications was based on polling or server push technology:
 \begin{packed_item}
-	\item \textbf{polling}: the browser sends HTTP requests at regular intervals and immediately receives a response. This is a first solution but it's not optimized because if the server does not have data to send, unnecessary requests has been done and as a result there is a waste bandwidth and CPU time on both the client and the server
-	\item \textbf{long polling}: a basic example is XMLHttpRequest object with long polling: The client sends requests through a XMLHttpRequest Javascript object. After each response, the client "rearms" the polling by sending a new request. The server holds client requests open until it has data to send, thus reducing unnecessary requests. But the request/response mechanism is not avoided. In high message rate situations, long polling results in a continuous loop of immediate polls. Another problem with this technique is that during the reconnection process the data on the page could be out of date and inaccurate
-	\item \textbf{streaming}: The browser sends a request and the server sends and maintains an open response that is continuously updated and kept open. This is much more efficient than polling or long polling as no HTTP headers are sent during the streaming period. The network traffic is reduced. The downside of streaming is that it is still encapsulated in HTTP, so intervening HTTP proxies may choose to buffer the response, increasing the latency of the message delivery
+	\item \textbf{polling}: the browser sends HTTP requests at regular intervals and immediately receives a response. This is an intuitive solution but it's often inefficient because in the case that the server does not have data to send, unnecessary requests will be sent. As a result there is a waste of bandwidth and CPU time on both the client and the server
+	\item \textbf{long polling}: a basic example is a XMLHttpRequest object with long polling: The client sends requests through a XMLHttpRequest Javascript object. After each response, the client "rearms" the polling by sending a new request. The server holds client requests open until it has data to send, thus reducing unnecessary requests. However, the request/response mechanism is not avoided. In situations where there is a large volume of messages, long polling results in a continuous loop of immediate polls. Another problem with this technique is that during the reconnection process the data on the page could be out of date and inaccurate
+	\item \textbf{streaming}: The browser sends a request and the server sends and maintains an open response that is continuously updated and kept open. This is much more efficient than polling or long polling as no HTTP headers are sent during the streaming period. As a result, the network traffic is reduced. The downside of streaming is that it is still encapsulated in HTTP, so intervening HTTP proxies may choose to buffer the response, increasing the latency of the message delivery
 \end{packed_item}
 
 
-Ultimately, to provide full duplex communication on top of the HTTP half duplex architecture, many of today's solutions use two connections: one for the downstream and one for the upstream. The maintenance and coordination of these two connections introduces significant overhead in terms of resource consumption and adds lots of complexity. That is why a new technology called websocket has been developed. Websocket provide:
+Ultimately, to provide full duplex communication on top of the HTTP half duplex architecture, many of today's solutions use two connections: one for the downstream and one for the upstream. The maintenance and coordination of these two connections introduces significant overhead in terms of resource consumption and increased complexity. WebSocket was developed to solve these issues. Websocket provides:
 \begin{packed_item}
 	\item full duplex communication
 	\item over a single TCP socket
@@ -327,7 +334,7 @@ Once the Websocket connection is established, data can be exchanged between clie
 
 
 \subsection{Architecture of a Websocket communication}
-Websocket communication involves several clients connected to the same websocket server. All messages from browsers are sent to the server. The server manages all messages. It can for instance decide to send a message received from a client to another client or to broadcast all messages received to all clients connected.
+Websocket communication involves several clients connected to the same websocket server. All messages from browsers are sent to the server, where the server manages them. It can, for instance, decide to send a message received from one client to another, or to broadcast all messages received to all clients connected.
 
 
 \begin{figure}[h!]
@@ -337,10 +344,10 @@ Websocket communication involves several clients connected to the same websocket
 		\label{Example of websocket communication}
 \end{figure}
 
-For example, let's say that there is an existing websocket server: example.com which is listening on port 80. A client can open a connection, receive and send messages to this server with this few lines of javascript:
+For example, let's say that there is an existing websocket server: \textbf{example.com} which is listening on port 80. A client can open a connection, receive and send messages to this server with these few lines of javascript:
 
 \begin{center}
-\begin{lstlisting}[label=Javascript Websocket Heelo World,caption=Javascript Websocket Heelo World]
+\begin{lstlisting}[label=Javascript Websocket Hello World,caption=Javascript Websocket Hello World]
 var ws = new WebSocket("ws://example.com");
 ws.onopen = function(evt) { 
    alert("Connection open"); 
@@ -385,11 +392,11 @@ if (!wifi->send("Sec-WebSocket-Version: 13", "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="))
 \newpage
 
 \section{Realtime Data Streaming from sensors}
-Mbed wanted to demonstrate that it was possible to access sensor data all over the world using an mbed board and HTML5 websockets. For this, two prototype boards were developed with different sensors:
+Mbed wanted to demonstrate that it was possible to access sensor data all over the world using an mbed board and HTML5 websockets. For this, two prototype boards has been developed with different sensors:
 
 \begin{packed_item}
-	\item accelerometer board with a three axis accelerometer
-	\item environmental board with:
+	\item \textbf{accelerometer board} with a three axis accelerometer
+	\item \textbf{environmental board} with:
 		\begin{packed_item}
 			\item light sensor
 			\item pressure sensor
@@ -397,12 +404,11 @@ Mbed wanted to demonstrate that it was possible to access sensor data all over t
 		\end{packed_item}
 \end {packed_item}
 
-The idea behind this project is that the sensor data has to be available everywhere as quickly as possible. That's why we wanted to involve smartphones connected to the Internet over 3G. To achieve this, we used QR codes to speed up the whole process. The steps to access data for a user are:
+The idea behind this project is that the sensor data has to be available everywhere as quickly as possible. That's why we wanted to involve smartphones connected to the Internet over 3G. To achieve this, we used QR codes containing the URL of a webpage which receives the sensor data. Each board has a different QR code. The steps to access data for a user are:
 
 \begin{packed_item}
-	\item Place the objects (mbed and sensors) where desired
-	\item Scan the QR code on the sensor with a smartphone to see its data displayed
-	\item Click the 'add' button to add the sensor to your dashboard (central webpage showing all sensors connected)
+	\item Place the objects (mbed, sensors, QR code associated to this board) where desired
+	\item Scan the QR code with a smartphone to see its data displayed
 \end{packed_item}
 
 
@@ -411,11 +417,15 @@ We can distinguish three different parts:
 \begin{packed_item}
 	\item a websocket server
 	\item mbed boards which are connected to this websocket server
-	\item browsers which are connected to the same server (running on laptops or smartphones)
+	\item browsers which are connected to the same server:
+	\begin{packed_item}
+		\item \textbf{smartphone webpages}: displays a unique graph containing sensor data of a specific board. This webpage is accessed by reading the QR code associated to the board. A user can then decide to \textbf{add} or "remove" this graph to or from a central dashboard
+		\item \textbf{dashboard}: central webpage showing graphs of different boards added by users
+	\end{packed_item}
 \end{packed_item}
 
-All mbed boards send messages in JSON format to the websocket server containing sensor data. The websocket server will broadcast to all client connected all messages received, so all browsers connected to this server are able to receive data from sensors.
-
+All mbed boards send messages in JSON format to the websocket server containing sensor data. The websocket server broadcasts to all client connected all messages received, so all browsers connected to this server are able to receive data from sensors. Browsers can then ignore or not the messages received.
+ 
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.8\textwidth]{./ws_arch.png}
@@ -425,7 +435,7 @@ All mbed boards send messages in JSON format to the websocket server containing 
 
 
 \subsection{Websocket server: Tornado}
-The websocket server which has been developed uses Tornado framework. This framework is written in Python, and it's a non blocking web server. It uses epoll which permits the handling of thousands of connections and so provides realtime features. Some interesting features are, for instance:
+The websocket server used for this project is based on the Tornado Framework. This framework is written in Python, and it's a non blocking web server. It uses \textbf{epoll} which permits the handling of thousands of connections and so provides realtime features. Some interesting features are, for instance:
 \begin{packed_item}
 	\item http server
 	\item template language
@@ -440,11 +450,11 @@ application = tornado.web.Application([
 
 if __name__ == "__main__":
     http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(443)
+    http_server.listen(80)
     tornado.ioloop.IOLoop.instance().start()
 \end{lstlisting}
 
-These few lines launch a http server associated with a handler (WSHandler) when an event occurs. All requests having a path matching the regular expression \textbf{/ws/*/*} will be redirected to  WSHandler. The first argument of the path represents a channel and the second one the connection mode. This means that to open a connection with this server, a client has to join the server at the address: 
+These few lines launch a http server associated with a handler (WSHandler). All requests having a path matching the regular expression \textbf{/ws/*/*} will be processed by WSHandler. The first argument of the path represents a channel and the second one the connection mode. This means that to open a connection with this server, a client has to join the server at the address: 
 \begin{center}
 \textbf{ws://sockets.mbed.org/ws/\textless{}channel\textgreater{}/\textless{}mode\textgreater{}}
 \end{center}
@@ -458,7 +468,7 @@ There are 3 connection modes:
 	\item \textbf{read-write (rw)}: the client can read and write messages over a channel
 \end{packed_item}
 
-When the server receives a message from a client in a certain channel which is not in 'ro' mode, it will broadcast the message to all clients connected to this channel which are in 'rw' or 'ro' mode. This mechanism is done in WShandler which inherits from tornado.websocket.WebSocketHandler. The websocket protocol is implemented in the base class. You can override three different events in WShandler: 
+When the server receives a message from a client in a certain channel which is not in \textbf{ro} mode, it will broadcast the message to all clients connected to this channel which are in \textbf{rw} or \textbf{ro} mode. This mechanism is done in WShandler which inherits from tornado.websocket.WebSocketHandler. The websocket protocol is implemented in the base class. You can override in WShandler three different methods corresponding to different events: 
 
 \begin{packed_item}
 	\item a connection has been opened
@@ -494,9 +504,9 @@ The hardware is very simple to setup as mbed has been designed with quick protot
 	\item sensors
 \end{packed_item}
 
-To connect the mbed to the internet and access the websocket server, a wifi module has been chosen. I wanted a wifi module easy to use and easy to connect to the mbed. I chose a wifi module from Roving Networks which integrates a full TCP/IP stack. The communication between the mbed and the wifly module is established over a serial port. This module is integrated on a breakout board so that we just need wires to connect with the mbed. 
+A wifi module has been chosen to connect the mbed to the internet and access the websocket server. I wanted a wifi module easy to use and easy to connect to the mbed. I chose a wifi module from Roving Networks which integrates a full TCP/IP stack. The communication between the mbed and the wifi module is established over a serial port. This module is integrated on a breakout board so that we just need wires to connect with the mbed. 
 
-Concerning sensors, all are also very easy to use and to connect. The 3-axis accelerometer and the pressure sensor are connected to the mbed over SPI. Libraries has been developed by the mbed community to use these two previous sensors. The light sensor is connected over a GPIO as the microphone. 
+Concerning sensors, all are also very easy to use and to connect. The 3-axis accelerometer and the pressure sensor are connected to the mbed over SPI. Libraries for these sensors have already been developed by the mbed community. The light sensor is connected over a GPIO, as is the microphone. 
 
 
 \begin{figure}[h!]
@@ -508,7 +518,7 @@ Concerning sensors, all are also very easy to use and to connect. The 3-axis acc
 
 
 \subsubsection{Software}
-The program running on the mbed has to :
+The program running on the mbed has to:
 \begin{packed_item}
 	\item connect to a network
 	\item connect to the websocket server
@@ -567,18 +577,27 @@ int main() {
 
 
 \subsection{Browsers}
-To develop webpages running on a laptop in the case of the dashboard or running on a smartphone, I wanted to use another new HTML5 feature which is the canvas element. Javascript code can access this drawable region through a complete API. The canvas element can be for instance used to display realtime graphs or to build games and animations.
+In the process of developing clean and minimalist webpages for computer and smartphone use, I needed a graph for data that scrolled smoothly in real time. For this, I chose to use another new HTML5 feature, the canvas element. Javascript code can access this drawable region through a complete API. The canvas element can be for instance used to display realtime graphs or to build games and animations.
 \\
 
 
 There are two different webpages:
 \begin{packed_item}
-	\item smartphone webpages: display only the graph of the corresponding QR code scanned. Two buttons can be used to add or remove a specific graph of the dashboard webpage
-	\item dashboard: display all graphs added by users
+	\item \textbf{smartphone webpages}: display only the graphed data from the corresponding devices, added via QR code. Two buttons can be used to add or remove a specific graph from the dashboard webpage
+	\item \textbf{dashboard}: display all graphs added by users
 \end{packed_item}
 
 \subsubsection{Realtime graphs}
-I use Smoothie Charts which is a javascript library to stream data on a canvas element. Smoothie Charts is a small charting library designed for live streaming data. The idea is to display in realtime sensor data in a chart refreshed everytime that we receive a new data.
+I used Smoothie Charts which is a javascript library to stream data using a canvas element. Smoothie Charts is a small charting library designed for live streaming data. The idea is to display in realtime sensor data in a chart refreshed everytime that we receive a new data.
+
+\subsubsection{A QR code associated to each mbed board}
+A smartphone has to scan a QR code to access sensor data of a specific board. The difference between all mbed boards is made over a variable passed to a PHP webpage:
+\begin{packed_item}
+	\item \textbf{accelerometer board}: sensors.php?id=wifly\_acc
+	\item \textbf{environmental board}: sensors.php?id=wifly\_env
+\end{packed_item}
+
+According to the parameter, the webpage will then listen only messages from a specific board.
 
 \subsubsection{Websocket and JSON messages}
 Several messages are exchanged between clients and server. 
@@ -598,32 +617,55 @@ Several messages are exchanged between clients and server.
 		
 \end{packed_item}
 
-Messages sent by mbed boards contain sensor data. When a client receives such a message, it refreshes a realtime graph showing the sensor data against time. \\
+Messages sent by mbed boards contain sensor data. When a client receives such a message, it can refresh a realtime graph showing the sensor data against time. \\
 Messages sent by smartphones control graphs on the dashboard webpage. For instance, if a user scans the QR code of the accelerometer board and presses the add button, the message 
 		\begin{center}
 				\{"id"="acc\_add"\}
 		\end{center}
 will be sent. The dashboard will then display the corresponding graph. \\
 
-
-The architecture of all webpages is quite simple:
+\subsubsection{Architecture of webpages}
+The architecture of smartphone webpages is quite simple:
 \begin{packed_item}
 	\item Connection to the websocket server
-	\item When a message is received from sensors:
+	\item When a message is received:
 		\begin{packed_item}
 			\item check the validity of the message
-			\item update the corresponding graph (there is one graph per sensor board)
+			\item if the message is a request to add a graph on a dashboard:
+			\begin{packed_item}
+				\item ignore it
+			\end{packed_item}
+			\item if the message is coming from a board:
+					\begin{packed_item}
+						\item if the \textbf{id field} matches the argument passed to the PHP webpage, refresh the graph
+						\item otherwise, ignore the message
+					\end{packed_item}
 		\end{packed_item}
-	\item When a message is received from smartphones:
+\end{packed_item}
+
+The architecture of the dashboard is a little more complicated because it has to take into account messages from boards and from smartphones:
+\begin{packed_item}
+	\item Connection to the websocket server
+	\item When a message is received:
 		\begin{packed_item}
 			\item check the validity of the message
-			\item update the Document Object Model (DOM) using the jQuery javascript library
+			\begin{packed_item}
+				\item if the message is a request to add a graph on a dashboard:
+				\begin{packed_item}
+					\item update the Document Object Model (DOM) using the jQuery javascript library
+					\item display the graph associated to this request
+				\end{packed_item}
+				\item if the message is coming from a board:
+				\begin{packed_item} 
+					\item if the board has been previously added, refreshes a specific graph according to the \textbf{id field}
+				\end{packed_item}
+			\end{packed_item}
 		\end{packed_item}
 \end{packed_item}
 
 
 \begin{center}
-\begin{lstlisting}[label=Manipulation of websocket messages,caption=Manipulation of websocket messages]
+\begin{lstlisting}[label=Manipulation of websocket messages by the dashboard,caption=Manipulation of websocket messages by the dashboard]
 		//Websocket instance connected on the same subnetwork as the mbed boards
     websocket = new WebSocket('ws://sockets.mbed.org/ws/sensors/rw');
 
@@ -687,7 +729,7 @@ On the smartphone webpage, we can observe the live graph containing sensor data.
 \newpage
 
 \section{Remote Procedure Call over Websockets}
-After the Internet of Things project demonstrated the power of HTML5 in embedded systems, mbed wanted to use websockets to design a RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbeds are connected to the Internet.
+After the Internet of Things project demonstrated the power of HTML5 in embedded systems, mbed wanted to use websockets to design an RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbeds are connected to the Internet.
 
 \subsection{Architecture: mbed boards, websocket server}
 
@@ -701,12 +743,12 @@ After the Internet of Things project demonstrated the power of HTML5 in embedded
 
 On the previous diagram, two main elements can be distinguished:
 \begin{packed_item}
-	\item Two different sub-networks. On each sub-networks, all Mbeds can share methods or execute a non-local one
+	\item Two different sub-networks. On each sub-network, all mbeds can share methods or execute a non-local one
 	\item An RPC Websocket server which is responsible for managing all sub-networks and all messages exchanged. This server is written in Python and uses Tornado
 \end{packed_item}
 
 
-As for the Internet of Things project, each mbed will belong to a specific subnetwork and will be identified by a specific name. This identification is made over the URL used to connect the websocket server:
+As with the Internet of Things project, each mbed will belong to a specific subnetwork and will be identified by a specific name. This identification is made over the URL used to connect the websocket server:
 
 \begin{figure}[h!]
 		\centering
@@ -776,7 +818,7 @@ As messages are exchanged in JSON format, I decided to use this signature for al
 \textbf{void fn(MbedJSONValue\& in, MbedJSONValue\& out)}
 \end{center}
 
-A MbedJSONValue object is the object associated to a string in JSON format. This class can handle parameters such as:
+A MbedJSONValue object is the object associated with a string in JSON format. This class can handle parameters such as:
 \begin{packed_item}
 	\item booleans
 	\item integers
@@ -786,7 +828,7 @@ A MbedJSONValue object is the object associated to a string in JSON format. This
 	\item MbedJSONValue object inside another one
 \end{packed_item}
 
-This class has been developed in order to simplifies at maximum the creation of such objects:
+This class has been designed in order to simplifies at maximum the creation of such objects:
 
 \begin{lstlisting}[label=MbedJSONValue manipulation,caption=MbedJSONValue manipulation]
  #include "mbed.h"
@@ -1038,14 +1080,14 @@ The websocket server does the following:
 	
 
 \section{Conclusion}
-For Mbed the Internet of Things is a very important field. We really think that in the future more and more devices will be connected to the cloud. Examples of applications could include:
+For Mbed the Internet of Things is a very important field. We feel that in the future more and more devices will be connected to the cloud. Examples of applications could include:
 \begin{packed_item}
 	\item smart buildings
 	\item medical devices
 	\item factories
 \end{packed_item}
 
-The first project shows that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provide a mean to execute a method on a distant mbed. This can be really useful for instance in critical places where people cannot go frequently. The common point of these two projects is the use of a websocket communication, new feature of HTML5. This new way of communication enables realtime capabilities with a bidirectionnal communication between client and server. It was quite interesting to develop projects using websocket which the protocol was in development. For instance, at the beginning, the data framing was not at all the same as now. It was much more simpler: a data was started with 0x00 and ended with 0xff. The overhead was reduced but the final protocol provide more capabilities such as: raw binary can be sent, a ping/pong mechanism, a packet can be segmented. This change in the protocol led to tricky situations where the browser has been updated with the new protocol and not the websocket server. So that the browser and the server were not compatible.\\
+The first project shows that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provides a means to execute a method on a distant mbed. This can be useful for instance in critical places where people cannot go frequently. The common point of these two projects is the use of a websocket communication, a new feature of HTML5. This new way of communication enables realtime capabilities with a bidirectionnal communication between client and server. It was quite interesting to develop projects using websocket which the protocol was in development. For instance, at the beginning, the data framing was not at all the same as now. It was much more simple: data frames started with 0x00 and ended with 0xff. The overhead was reduced but the final protocol provides more capabilities such as: raw binary can be sent, a ping/pong mechanism, a packet can be segmented. This change in the protocol led to tricky situations where the browser has been updated with the new protocol and not the websocket server. So that the browser and the server were not compatible.\\
 
 
 
@@ -1065,7 +1107,7 @@ After having worked on the Internet of Things, Mbed wanted to explore USB capabi
 
 \section{Inside the USB bus}
 \subsection{USB overview}
-The Universal Serial Bus (USB) is the most widely used bus in today's computer. USB has particularly been designed to standardize connections between the computer and peripherals. For instance, keyboards, printers, scanners, disk drives or cameras can use the same bus to exchange data with a computer. USB has effectively replaced a variety of earlier interfaces, such as serial or parallel ports. The USB bus provides several benefits such as the same interface for many device, the hot pluggable capability which allows a user to connect and disconnect a USB device whenever he wants, or the automatic configuration which is the capacity of the operating system to load a specific driver according to the device connected. Another useful benefit is that the USB interface provides power supply (5V) that can be used by a device if it doesn't require more than 500 mA.\\
+The Universal Serial Bus (USB) is the most widely used bus in today's computer. USB has particularly been designed to standardize connections between the computer and peripherals. For instance, keyboards, printers, scanners, disk drives or cameras can use the same bus to exchange data with a computer. USB has effectively replaced a variety of earlier interfaces, such as serial or parallel ports. The USB bus provides several benefits such as the same interface for many device, the hot pluggable capability which allows a user to connect and disconnect a USB device whenever he wants, or the automatic configuration which is the capacity of the operating system to load a specific driver according to the device connected. Another useful benefit is that the USB interface provides power supply (5V) that can be used by a device so long as it doesn't require more than 500 mA.\\
 
 USB version 1.0 supported two speeds, a full speed mode of 12Mbits/s and a low speed mode of 1.5Mbits/s. USB 2.0, which is the most widely version of USB, can reach 480Mbits/s. The 480Mbits/s is known as High Speed mode. USB version 3.0 specifies a maximum transmission speed of up to 5Gbits/s (known as SuperSpeed), but few products support USB 3.0 at present.
 \\
@@ -1083,7 +1125,7 @@ USB 3.0 & super-speed & 5Gbits/s \\ \hline
 \label{USB speeds}
 \end{table}
 
-The Universal Serial Bus is host controlled. However, there can only be one host per bus and the host is responsible for undertaking all transactions. Considering this restriction, two devices cannot exchange information without one host. Nevertheless, the On-The-Go specification, which is part of the USB 2.0 standard, has introduced a Host Negotiation Protocol, allowing two devices to negotiate for the role of host. With this specification, we can imagine a camera exchanging data with a printer without the need for a computer. 
+The Universal Serial Bus is host controlled. However, there can only be one host per bus and the host is responsible for undertaking all transactions. Considering this restriction, two devices cannot exchange information without one being the host. Nevertheless, the On-The-Go specification, which is part of the USB 2.0 standard, has introduced a Host Negotiation Protocol, allowing two devices to negotiate for the role of host. With this specification, we can imagine a camera exchanging data with a printer without the need for a computer. 
 
 \subsection{Topology}
 The physical bus topology defines how USB devices are connected to the host. The USB network is implemented as a tiered star network with one host (master) and several devices (slaves). The topology looks like a tree. In order to increase the number of devices connected, a hub needs to be connected to the root port. This special hub and the root port are the first tier of the network. Furthermore, the USB network can support up to 127 external nodes but the number of tiers cannot exceed 7. The following diagram represents a possible connection architecture on a USB bus.
@@ -1108,11 +1150,11 @@ Devices have a series of buffers to communicate with the host. Each buffer will 
 		\label{Different types of endpoints}
 \end{figure}
 
-There are four types of endpoints which corresponds to different requirements according to the device: 
+There are four types of endpoints which correspond to different requirements according to the device: 
 \begin{packed_item}
-	\item \textbf{Control endpoint}: All USB devices once connected performed an \textit{enumeration step} wherein the host requests all capabilities of the device. Control transfers are used to enumerate a device
+	\item \textbf{Control endpoint}: All USB devices once connected perform an \textit{enumeration step} wherein the host requests all capabilities of the device. Control transfers are used to enumerate a device
 	\item \textbf{Interrupt endpoints}: Interrupts transfers are used when a device requires responsiveness. Typical applications would include keyboard and mouse. Users don't want a noticeable delay between pressing a key or moving a mouse and seeing the result on the screen. An interrupt transfer only occurs when the host polls the device. There is a guarantee that the host will request a data within a specified time interval
-	\item \textbf{Bulk endpoints}: Bulk transfers are typically used to transfer large amount of data like files to a printer. A bulk transfer use spare un-allocated bandwidth, so time is not critical with bulk transfers. Typical applications include printers, scanners or mass storage devices
+	\item \textbf{Bulk endpoints}: Bulk transfers are typically used to transfer large amount of data like files to a printer. A bulk transfer uses spare un-allocated bandwidth, so time is not critical with bulk transfers. Typical applications include printers, scanners or mass storage devices
 	\item \textbf{Isochronous endpoints}: Isochronous tranfers are used for streaming and realtime data. For instance, audio and video streaming devices use isochronous transfers. Such devices need a guaranteed delivery rate for data but if an error occurs, the data is not re-transmitted
 \end{packed_item}
 	
@@ -1208,7 +1250,7 @@ ENDP & 4bits & The endpoint number which the packet is designed for \\ \hline
 
 
 \subsection{Enumeration}
-The host hub port is able to detect the attachment of the USB device and makes the host controller aware of the same. The host controller then starts communicating with the USB device (which could be a mouse, keyboard, flash drive etc.). This initial communication between the host and the device is termed as “bus enumeration”. Bus enumeration is the process through which the host learns about the capabilities of the device. Since any USB device can be connected to the host hub port at anytime, bus enumeration becomes the essential first step of USB communication. This step is performed on the control endpoint (endpoint 0). So, all devices must at least have the control endpoint enabled.
+The host hub port is able to detect the attachment of the USB device and makes the host controller aware of the same. The host controller then starts communicating with the USB device (which could be a mouse, keyboard, flash drive etc.). This initial communication between the host and the device is termed as ï¿½bus enumerationï¿½. Bus enumeration is the process through which the host learns about the capabilities of the device. Since any USB device can be connected to the host hub port at any time, bus enumeration becomes the essential first step of USB communication. This step is performed on the control endpoint (endpoint 0). So, all devices must at least have the control endpoint enabled.
 During this step, the host will assign a unique address to the device.
 All devices capabilities are transmitted in data structures called \textbf{descriptors}. Descriptors are arrays containing information like the device class, the number of endpoints used, the maximum length of these endpoints... There are several types of descriptors. Standards descriptors are: device descriptor, configuration descriptor, interface descriptor and endpoint descriptor. But, for each USB class, other descriptors can be found such as the HID (Human Interface Device) descriptor and the report descriptor for HID devices.
 
@@ -1286,7 +1328,7 @@ Isochronous transfers are the same as bulk or interrupt transfers without the ha
 
 \newpage
 \section{USB Device stack}
-A USB device stack has been developed to allow mbed users to design their own USB device or to use their mbed as USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a device’'s functionality. This class code is parsed by the USB host stack to load an appropriate device driver. Several classes have been implemented:
+A USB device stack has been developed to allow mbed users to design their own USB device or to use their mbed as USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a deviceï¿½'s functionality. This class code is parsed by the USB host stack to load an appropriate device driver. Several classes have been implemented:
 \begin{packed_item}
 	\item HID (Human Interface Device)
 	\item MSD (Mass Storage Device)
@@ -1321,7 +1363,7 @@ I will describe in this section the USB stack architecture and some USB classes 
 
 	\item \textbf{USB class layer}:
 		\begin{packed_item}
-			\item USBHID: implements standard requests of the HID class specification. When a USBHID object is instantiated, the mbed is enumerated as a generic HID device so that raw data can be sent and receive to and from a custom program running on the host side
+			\item USBHID: implements standard requests of the HID class specification. When a USBHID object is instantiated, the mbed is enumerated as a generic HID device so that raw data can be sent and received to and from a custom program running on the host side
 			\item USBCDC: implements a subset of the CDC class specification to allow the mbed to be recognized as a virtual serial port
 			\item USBMIDI: enables the mbed to send and receive MIDI messages to and from a computer
 			\item USBAudio: implements standard requests of the USB Audio class. The mbed is enumerated as a microphone and a speaker on the same device
@@ -1359,7 +1401,7 @@ To describe the state of each endpoints available, we need to allocate space in 
 
 
 
-Main methods for USBHAL class:
+Main methods for USBHAL class ARE:
 
 \begin{packed_item}
 	\item Memory allocation for endpoints status list and endpoint 0 buffers. These initializations are done in the constructor of USBHAL::USBHAL
@@ -1385,7 +1427,7 @@ When a specific event occurs, USBHAL calls virtual functions which can be overri
 	\item EPx\_IN\_callback(): called when a data has been sent on a specific endpoint
 \end{packed_item}
 
-All this callback methods are called from the USB interrupt handler:
+These callback methods are called from the USB interrupt handler:
 
 \begin{lstlisting}[label=Main part of the USB interrupt handler,caption=Main part of the USB interrupt handler]
 void USBHAL::usbisr(void) {
@@ -1451,7 +1493,7 @@ void USBHAL::usbisr(void) {
 }\end{lstlisting}
 
 
-\subsection{USBDevice: target abstraction and setup packet treatment}
+\subsection{USBDevice: target abstraction and setup packet processing}
 \subsubsection{Target abstraction}
 One of the purpose of this class is to provide an API in order to handle the USB interface very easily:
 \begin{packed_item}
@@ -1661,8 +1703,8 @@ uint8_t * USBHID::reportDesc() {
 
 There are two main parts:
 \begin{packed_item}
-	\item Bytes are sent to the host by packets of length \textit{input\_length}
-	\item Bytes are received by packets of length \textit{output\_length}
+	\item Bytes are sent to the host by packets of length \textbf{input\_length}
+	\item Bytes are received by packets of length \textbf{output\_length}
 \end{packed_item}
 
 
@@ -1763,7 +1805,7 @@ Concerning USBKeyboard and USBMouseKeyboard classes, the important part is the d
 The Communication Device Class (CDC) is a general-purpose way to enable all
 types of communications on the Universal Serial Bus. This class makes it possible
 to connect telecommunication devices such as digital telephones or analog
-modems, as well as networking devices like ADSL or Cable modems.
+modems, as well as networking devices such as ADSL or Cable modems.
 While a CDC device enables the implementation of quite complex devices, it can also
 be used as a very simple solution for communication on the USB. For example, a CDC
 device can appear as a virtual COM port, which greatly simplifies application programming
@@ -1797,7 +1839,7 @@ The CDC specification defines several class specific requests. All these request
 \end{packed_item}
 
 \subsubsection{USBSerial class}
-Once the device enumerated, data can be exchanged over the two bulk endpoints. To send a character, we just write the character on the bulk IN endpoint. Characters received are pushed on a circular buffer called buf. This step is done in the EPx\_OUT\_callback() virtual function called when a packet is received. We can then define two methods to send and receive data:
+Once the device is enumerated, data can be exchanged over the two bulk endpoints. To send a character, we just write the character on the bulk IN endpoint. Characters received are pushed on a circular buffer called buf. This step is done in the EPx\_OUT\_callback() virtual function called when a packet is received. We can then define two methods to send and receive data:
 
 \begin{lstlisting}[label=USBSerial: putc and getc,caption=USBSerial: putc and getc]
 int USBSerial::_putc(int c) {
@@ -2089,13 +2131,13 @@ The Audio specification defines several class specific requests. All these reque
 	\item GET\_RES: allows the host to know the resolution attribute between two volume levels
 \end{packed_item}
 
-\subsubsection{Audio packets management}
-As explained before, one audio packet is sent or received on a Start Of Frame event (each millisecond). So let's say that a frequency of 48 kHz has been chosen with 2 channels (stereo). Knowing that each sample of a packet is 16 bits long, 48 * 2 bytes will be received or sent each millisecond for one channel. In total, for 2 channels, 48 * 2 * 2 bytes will be received. The audio length packet received or sent each millisecond can be compute:
+\subsubsection{Audio packet management}
+As explained before, one audio packet is sent or received on a Start Of Frame event (each millisecond). So let's say that a frequency of 48 kHz has been chosen with 2 channels (stereo). Knowing that each sample of a packet is 16 bits long, 48 * 2 bytes will be received or sent each millisecond for one channel. In total, for 2 channels, 48 * 2 * 2 bytes will be received. The audio length packet received or sent each millisecond can be calculated as:
 \begin{center}
 	AUDIO\_LENGTH\_PACKET = (FREQ / 500) * nb\_channel
 \end{center}
 
-According to the number of channels, audio packets have to be interpreted differently:
+Audio packets have to be interpreted differently, according to the number of channels:
 
 \begin{figure}[h!]
 		\centering
@@ -2112,7 +2154,7 @@ According to the number of channels, audio packets have to be interpreted differ
 \end{figure}
 
 
-The main part of sending and reception of audio packets is in the virtual function called in USBHAL on each Start Of Frame event:
+The main part for sending and receiving audio packets is in the virtual function called in USBHAL on each Start Of Frame event:
 \begin{lstlisting}[label=Audio packets management in SOF events,caption=Audio packets management in SOF events]
 // Called in ISR context on each Start Of Frame
 void USBAudio::SOF(int frameNumber) {
@@ -2139,9 +2181,9 @@ void USBAudio::SOF(int frameNumber) {
 \end{lstlisting}
 
 \section{Conclusion}
-Mbed users can now use their mbed to emulate a USB device. I really wanted explore all capabilities of USB. That is why several classes has been developed:
+Mbed users can now use their mbed to emulate a USB device. I really wanted explore all the capabilities of USB. This is why I developed several classes:
 \begin{packed_item}
-	\item Human Interface Device (HID) which is in my opinion the best way to develop a custom USB device because it permits to exchange raw data without the need of a specific driver on the host side.
+	\item Human Interface Device (HID), in my opinion the best way to develop a custom USB device as it permits the exchange of raw data without the need for a specific driver on the host side.
 	\item Communication Device Class (CDC) to provide a virtual serial port
 	\item Mass Storage Device (MSD) to access a block storage chip from a computer
 	\item Audio to receive and send audio packets
@@ -2149,14 +2191,14 @@ Mbed users can now use their mbed to emulate a USB device. I really wanted explo
 \end{packed_item}
 
 \chapter*{Conclusion}
-By way of conclusion, I want to thank another time my manager Simon Ford. He permitted me to discover new domains involved in my projects:
+By way of conclusion, I again want to thank my manager Simon Ford. He permitted me to discover new domains involved in my projects:
 \begin{packed_item}
 	\item the Internet of Things project where I had to connect sensors to the Internet over a websocket communication. 
 	\item the Remote Procedure Call Mechanism over websocket which permitted to call methods on a distant mbed
 	\item the USB device stack to emulate USB devices with an mbed
 \end{packed_item}
 
-The Internet of Things and the RPC projects was very interesting because it needed several skills such as:
+The Internet of Things and RPC projects were very interesting because they needed several skills such as:
 \begin{packed_item}
 	\item software skills in embedded systems to program the mbed
 	\item software skills in web programming
@@ -2164,12 +2206,12 @@ The Internet of Things and the RPC projects was very interesting because it need
 \end{packed_item}
 
 
-Thanks to these project, I discovered web programming with in particular Javascript. I am now more familiar with web technologies such as HTML5 and websockets. It was a very good experience to develop a project which required several skills. I also really appreciated my work on the USB. It was a totally new domain for me. It was very interesting to discover the USB protocol. It was satisfying and motivating to observe days after days technical results on the USB device stack knowing that it was a totally new subject. At the end, I was very happy to provide to mbed users a USB device stack to emulate a lot of USB classes. \\
+Thanks to these projects, I learned a great deal about web programming, in particular Javascript. I am now more familiar with web technologies such as HTML5 and websockets. It was very good experience, I found, to develop a project which required several skills. I also really appreciated working on the USB. It was a new domain for me, and it was very interesting to discover all about the USB protocol. It was satisfying and motivating to observe technical results day after day on the USB device stack, knowing that it was a totally new subject for me. In the end, I was happy to be able to provide to mbed users a USB device stack able to emulate many USB classes. \\
 
 
-This internship was a great experience. It was a real pleasure to work in the mbed team in a very good atmosphere. Fyrthermore, carrying out this
-internship in a foreign country allows me to be immersed in a different culture and faced the problem of living and working entirely in a non-native language (English). I met several
-interesting people in and out of the lab such as engineers, students, but also people not connected with computer science.
+This internship has been a great experience. It was a real pleasure to work with the mbed team in a very good atmosphere. Furthermore, carrying out this
+internship in a foreign country allowed me to be immersed in a different culture and face the problems asscoiated with living and working entirely with a non-native language (English). I met several
+interesting people both in and out of the lab, such as engineers, students, and also people not connected with computer science.
 
 
 

@@ -71,7 +71,7 @@ Firstly, I wish to express my deep sense of gratitude to my manager, Mr Simon Fo
 
 I also want to thank two teachers of T\'{e}l\'{e}com Paristech: Mr Alexis Polti and Mr Samuel Tardieu who gave me working method and taught me many things. I will never forget my two month project during which I worked with them on an octocopter. It was a unique experience. \\
 
-Special thanks to the summer intern Nathan Hutton. We worked on the Internet Of Things project together, and it was a great pleasure to work with him. \\
+Special thanks to the summer intern Nathan Hutton. We worked on the realtime data streaming from sensors project together, and it was a great pleasure to work with him. \\
 
 Finally, I would like to express my heartfelt thanks to my parents. They are always by my side. I owe them everything. 
 
@@ -80,7 +80,7 @@ Finally, I would like to express my heartfelt thanks to my parents. They are alw
 \chapter{ARM and Mbed}
 \section{ARM}
 \subsection{History}
-ARM Holdings plc is a British multinational semiconductor and software company. The headquarters are based in Cambridge, where it was established. ARM is well known in the processor field, although it also designs, licenses and sells software development tools under the RealView and KEIL brands, systems and platforms, system-on-a-chip infrastructure and software. 
+ARM Holdings plc is a British multinational semiconductor and software company. The headquarters are based in Cambridge, where it was established. ARM is well known in the processor field, although it also designs, licenses and sells software development tools under the RealView and KEIL brands, systems and platforms, system-on-chip infrastructure and software. 
 \\
 
 Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It is the result of a joint venture between Acorn Computers, Apple Computer (now Apple Inc.) and VLSI Technology (now NXP semiconductor). The purpose of this joint venture was to develop a RISC chip originally developed by Acorn Computer involved in an Apple project. ARM became bigger throughout the years by acquiring companies like Micrologic Solutions, a software consulting company based in Cambridge 1999. In 2000, ARM acquired Allant Software, Infinite Designs in Sheffield (UK) and EuroMips in Sophia Antipolis (France). Then, in 2001, it acquired a team specialized in hardware and software debugging based in Blackburn (UK). In 2005, ARM acquired Keil Software, a leader in software development tools for microcontrollers. More recently, ARM joined with Texas Instruments, Samsung, IBM, ST-Ericsson and Freescale Semiconductor in forming an open source engineering company named Linaro. Linaro produces for example ARM tools or linux kernels for ARM based system-on-chips. Today, ARM has offices and design centres all over the world, including the UK, Germany, France, Israel, Sweden, Norway, Slovenia, USA, China, South Korea, Japan, Taiwan and India. 
@@ -88,8 +88,8 @@ Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It is the
 
 Nowadays, ARM processors are widely used in mobile phones, tablets, personal digital assistants, GPS, digital cameras and digital televions. The main reason for this success is their low electric power consumption, making them suitable for embedded systems. Even if ARM products are widely used, the company itself doesn't manufacture its own CPUs. ARM licenses its technology as Intellectual Property (IP). Companies like Intel, Texas Intrument or Nvidia are making processors based on ARM's IP.
 
-\subsection{ARM Processors}
-The ARM architecture is described as a Reduced Instruction Set Computer (RISC) architecture. Main RISC features are:
+\subsection{ARM Processor Architecture}
+The ARM architecture forms the basis around which every ARM processor is built. The ARM architecture is generally described as a Reduced Instruction Set Computer (RISC) architecture. Main RISC features are:
 \begin{packed_item}
 	\item Load/store architecture: data-processing operates only on register contents
 	\item Uniform and fixed-length instruction fields, to simplify instruction decode and pipelining
@@ -97,12 +97,11 @@ The ARM architecture is described as a Reduced Instruction Set Computer (RISC) a
 \end{packed_item}
 
 Over time the ARM architecture has evolved in order to improve performance, provide new functionalities or meet the demand for new needs.
-
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.7\textwidth]{./arm_arch.jpg}
-\caption{ARM Processor Architecture Versionning}
-\label{ARM Processor Architecture Versionning}
+\caption{Evolution of the ARM architecture}
+\label{Evolution of the ARM architecture}
 \end{figure}
 
 \begin{packed_item}
@@ -114,7 +113,7 @@ Over time the ARM architecture has evolved in order to improve performance, prov
 		\item \textbf{Cortex R}: Realtime profile implementing a protected memory system architecture based on an MPU (memory protection unit)
 		\item \textbf{Cortex M}: Microcontroller profile designed for fast interrupt processing and ideal for cost-sensitive devices requiring highly deterministic behaviour
 	\end{packed_item}
-	\item \textbf{ARMv8}: ARMv8 will introduce a 64-bit architecture support. There will also be be instruction level support for cryptography. This new architecture is in development
+	\item \textbf{ARMv8}: ARMv8 will introduce a 64-bit architecture support. There will also be an instruction level support for cryptography. This new architecture is in development
 \end{packed_item}
 
 
@@ -132,25 +131,25 @@ Aiming to pursue new areas of expertise, ARM founded Mbed in 2009. Mbed's core a
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.5\textwidth]{./mbed_4elements.png}
+\includegraphics[width=0.5\textwidth]{./mbed_4elements.jpg}
 \caption{Four main elements of Mbed}
 \label{Four main elements of Mbed}
 \end{figure}
 
 \subsection{Mbed boards: LPC1768 and LPC11U24}
-For the moment, two boards have been developed. The first is based on the LPC1768 microcontroller from NXP which uses a Cortex M3:
+For the moment, two boards have been designed. The first is based on the LPC1768 microcontroller from NXP which uses a Cortex M3:
 \begin{packed_item}
 	\item 96 MHz, 32 Kb of RAM, 512 Kb of flash
 	\item 3 UART, 2 SPI, 2 I2C, 6 PWM, 6 ADC, GPIO, Ethernet, USB Host/Device
 \end{packed_item}
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=0.5\textwidth]{./lpc1768.png}
-\caption{mbed board: lpc1768 (Cortex M3)}
-\label{mbed_board: lpc1768 (Cortex M3)}
+\begin{figure}[htp]
+  \centering
+  \subfigure[mbed lpc1768 (Cortex M3)]{\label{fig:edge-a}\includegraphics[scale=2.7]{./lpc1768.jpg}}                
+  \subfigure[mbed lpc11U24 (Cortex M0)]{\label{fig:contour-b}\includegraphics[scale=0.3]{./lpc11U24.jpg}} \\
+  \caption{Mbed boards}
+  \label{fig:contour}
 \end{figure}
-
 
 More recently, a new board based on a LPC11U24 (Cortex M0) was introduced. This mbed has been designed to prototype USB devices or battery powered applications:
 \begin{packed_item}
@@ -158,19 +157,17 @@ More recently, a new board based on a LPC11U24 (Cortex M0) was introduced. This 
 	\item UART, I2C, 2 SPI, 6 ADC, GPIO, USB Device
 \end{packed_item}
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=0.5\textwidth]{./lpc11U24.png}
-\caption{mbed board: lpc11U24 (Cortex M0)}
-\label{mbed_board: lpc11U24 (Cortex M0)}
-\end{figure}
 
-
-Both mbed boards have a built-in USB drag and drop FLASH programmer. This feature allows mbed users to drag and drop a binary into the mbed, recognized as a USB mass storage device by a computer.
+Both mbed boards have a built-in USB drag and drop FLASH programmer. This feature allows mbed users to drag and drop a binary into the mbed, recognized as a USB mass storage device by a computer. It is very convenient and simple to flash a new program into the mbed:
+\begin{packed_item}
+	\item create a program (online IDE or offline toolchains)
+	\item copy the binary generated into the mbed disk
+	\item press the reset button
+\end{packed_item}
 
 
 \subsection{The online compiler}
-The two main keywords of Mbed are "simple" and "cloud computing". Users uniquely use an online compiler to develop their programs in C++. They compile online and transfer the binary received into the mbed, which is connected to a computer over a USB cable. They just have to press the reset button to see their program running.
+The two main keywords of Mbed are "simple" and "cloud computing". Users can use an online compiler to develop their programs in C++. They compile online and transfer the binary received into the mbed, which is connected to a computer over a USB cable. They just have to press the reset button to see their program running.
 \\
 
 The online IDE is totally independent from the underlying operating system. It contains a lot of interesting features:
@@ -195,7 +192,7 @@ In addition to the online compiler, almost all drivers have been implemented. Us
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.8\textwidth]{./libraries.png}
+\includegraphics[width=0.8\textwidth]{./libraries.jpg}
 \caption{mbed libraries}
 \label{mbed libraries}
 \end{figure}
@@ -207,7 +204,7 @@ Finally, users can access the mbed \textbf{forum} to troubleshoot their programs
 \begin{comment}
 \begin{figure}[h!]
 \centering
-\includegraphics[width=1.0\textwidth]{./cookbook.png}
+\includegraphics[width=1.0\textwidth]{./cookbook.jpg}
 \caption{mbed cookbook}
 \label{mbed cookbook}
 \end{figure}
@@ -226,7 +223,7 @@ Thus, the development and progress of technologies connecting different sensors 
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.6\textwidth]{./logo_ws.jpg}
+		\includegraphics[width=0.5\textwidth]{./logo_ws.jpg}
 		\caption{HTML5 on embedded systems}
 		\label{HTML5 on embedded systems}
 \end{figure}
@@ -249,7 +246,7 @@ This architecture was designed primarily for document retrieval, where web brows
 \begin{packed_item}
 	\item \textbf{polling}: the browser sends HTTP requests at regular intervals and immediately receives a response. This is an intuitive solution but it's often inefficient because in the case that the server does not have data to send, unnecessary requests will be sent. As a result there is a waste of bandwidth and CPU time on both the client and the server
 	\item \textbf{long polling}: a basic example is a XMLHttpRequest object with long polling: The client sends requests through a XMLHttpRequest Javascript object. After each response, the client "rearms" the polling by sending a new request. The server holds client requests open until it has data to send, thus reducing unnecessary requests. However, the request/response mechanism is not avoided. In situations where there is a large volume of messages, long polling results in a continuous loop of immediate polls. Another problem with this technique is that during the reconnection process the data on the page could be out of date and inaccurate
-	\item \textbf{streaming}: The browser sends a request and the server sends and maintains an open response that is continuously updated and kept open. This is much more efficient than polling or long polling as no HTTP headers are sent during the streaming period. As a result, the network traffic is reduced. The downside of streaming is that it is still encapsulated in HTTP, so intervening HTTP proxies may choose to buffer the response, increasing the latency of the message delivery
+	\item \textbf{streaming}: The browser sends a request and the server sends and maintains an open response that is continuously updated and kept open. This is much more efficient than polling or long polling as no HTTP headers are sent during the streaming period. As a result, the network traffic is reduced. The downside of streaming is that it is still encapsulated in HTTP, so intervening HTTP proxies may choose to buffer the response, increasing the latency of the message delivery. Alternatively, the proxy server may be configured to disconnect HTTP connections that are kept open for a certain amount of time.
 \end{packed_item}
 
 
@@ -260,19 +257,22 @@ This architecture was designed primarily for document retrieval, where web brows
 		\label{Reduction of polling and overhead by Websocket}
 \end{figure}
 
-Ultimately, to provide full duplex communication on top of the HTTP half duplex architecture, many of today's solutions use two connections: one for the downstream and one for the upstream. The maintenance and coordination of these two connections introduces significant overhead in terms of resource consumption and increased complexity. WebSocket was developed to solve these issues and provides:
+Ultimately, to provide full duplex communication on top of the HTTP half duplex architecture, many of today's solutions use two connections: one for the downstream and one for the upstream. The maintenance and coordination of these two connections introduces significant overhead in terms of resource consumption and increased complexity. WebSocket was developed to solve these issues. The new HTML5 feature provides interesting properties such as:
 \begin{packed_item}
-	\item full duplex communication over a single TCP socket
-	\item overhead reduction
+	\item a full duplex communication over a single TCP socket
+	\item an overhead reduction
 	\item less traffic: no need for polling
-	\item standard and secure connections over ws:// and wss:// prefixes: A standard websocket URL can be: \textbf{ws://example.com}
+	\item standard and secure connections over ws:// and wss:// prefixes: A standard websocket URL can be: 
+	\begin{center}
+		\textbf{ws://example.com}
+	\end{center}
 \end{packed_item}
 
 The figure~\ref{Reduction of polling and overhead by Websocket} shows the reduction in latency. Once the connection is established, messages can flow between server and client. As the connection remains open, there is no need to send another request to the server.
 
 \subsection{Websocket protocol}
 
-To establish a WebSocket connection, the client and server upgrade from the HTTP protocol to the WebSocket protocol during their initial handshake. Another attrative aspect is their HTTP-compatible handshake. This means HTTP servers can share their default HTTP (80) and HTTPS (443) ports with a Websocket server. Because ordinary TCP connections to port numbers other than 80 are frequently blocked, it can be used as a way to circumvent these restrictions and provide similar functionality with some additional protocol overhead.
+To establish a WebSocket connection, the client and server upgrade from the HTTP protocol to the WebSocket protocol during their initial handshake. Another attractive aspect is their HTTP-compatible handshake. This means HTTP servers can share their default HTTP (80) and HTTPS (443) ports with a WebSocket server. After the handshake, a full tcp socket communication with some overhead is available.
 To establish a Websocket connection, the client initiates a connection to the server as with HTTP, but then requests the server “upgrade” from the HTTP protocol to the Websocket protocol. \\
 
 The handshake from the client is as follows: \\
@@ -410,6 +410,7 @@ The idea behind this project is that the sensor data has to be available everywh
 \begin{packed_item}
 	\item Place the objects (mbed, sensors, QR code associated to this board) where desired
 	\item Scan the QR code with a smartphone to see its data displayed
+	\item the graph can then be added to a central \textbf{dashboard}
 \end{packed_item}
 
 
@@ -420,7 +421,7 @@ We can distinguish three different parts:
 	\item mbed boards which are connected to this websocket server
 	\item browsers which are connected to the same server:
 	\begin{packed_item}
-		\item \textbf{smartphone webpages}: displays a unique graph containing sensor data of a specific board. This webpage is accessed by reading the QR code associated to the board. A user can then decide to \textbf{add} or "remove" this graph to or from a central dashboard
+		\item \textbf{smartphone webpages}: displays a unique graph containing sensor data of a specific board. This webpage is accessed by reading the QR code associated to the board. A user can then decide to \textbf{add} or \textbf{remove} this graph to or from a central dashboard
 		\item \textbf{dashboard}: central webpage showing graphs of different boards added by users
 	\end{packed_item}
 \end{packed_item}
@@ -429,7 +430,7 @@ All mbed boards send messages in JSON format to the websocket server containing 
  
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\textwidth]{./ws_arch.png}
+		\includegraphics[width=0.8\textwidth]{./ws_arch.jpg}
 		\caption{Realtime data streaming project architecture}
 		\label{Realtime data streaming project architecture}
 \end{figure}
@@ -469,7 +470,7 @@ There are 3 connection modes:
 	\item \textbf{read-write (rw)}: the client can read and write messages over a channel
 \end{packed_item}
 
-When the server receives a message from a client in a certain channel which is not in \textbf{ro} mode, it will broadcast the message to all clients connected to this channel which are in \textbf{rw} or \textbf{ro} mode. This mechanism is done in WShandler which inherits from tornado.websocket.WebSocketHandler. The websocket protocol is implemented in the base class. You can override in WShandler three different methods corresponding to different events: 
+When the server receives a message from a client in a certain channel which is not in \textbf{ro} mode, it will broadcast the message to all clients connected to this channel which are in \textbf{rw} or \textbf{ro} mode. This mechanism is done in WShandler which inherits from tornado.websocket.WebSocketHandler. The websocket protocol is implemented in the base class. Different methods can be overrided in WShandler, called on different events: 
 
 \begin{packed_item}
 	\item a connection has been opened
@@ -512,7 +513,7 @@ Concerning sensors, all are also very easy to use and to connect. The 3-axis acc
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.4\textwidth]{./env_board.png}
+		\includegraphics[width=0.6\textwidth]{./env_board.jpg}
 		\caption{Environmental board}
 		\label{Environmental board}
 \end{figure}
@@ -598,7 +599,7 @@ A smartphone has to scan a QR code to access sensor data of a specific board. Th
 	\item \textbf{environmental board}: sensors.php?id=wifly\_env
 \end{packed_item}
 
-According to the parameter, the webpage will then listen only messages from a specific board.
+According to the parameter, a smartphone webpage will then listen only messages from a specific board.
 
 \subsubsection{Websocket and JSON messages}
 Several messages are exchanged between clients and server. 
@@ -627,6 +628,8 @@ will be sent. The dashboard will then display the corresponding graph. \\
 
 \subsubsection{Architecture of webpages}
 The architecture of smartphone webpages is quite simple:
+
+\fbox{\begin{minipage}{1.0\textwidth}
 \begin{packed_item}
 	\item Connection to the websocket server
 	\item When a message is received:
@@ -643,8 +646,12 @@ The architecture of smartphone webpages is quite simple:
 					\end{packed_item}
 		\end{packed_item}
 \end{packed_item}
+\end{minipage} 
+} \\
 
 The architecture of the dashboard is a little more complicated because it has to take into account messages from boards and from smartphones:
+
+\fbox{\begin{minipage}{1.0\textwidth}
 \begin{packed_item}
 	\item Connection to the websocket server
 	\item When a message is received:
@@ -663,6 +670,8 @@ The architecture of the dashboard is a little more complicated because it has to
 			\end{packed_item}
 		\end{packed_item}
 \end{packed_item}
+\end{minipage} 
+} \\
 
 
 \begin{center}
@@ -730,7 +739,7 @@ On the smartphone webpage, we can observe the live graph containing sensor data.
 \newpage
 
 \section{Remote Procedure Call over Websockets}
-After the Internet of Things project demonstrated the power of HTML5 in embedded systems, mbed wanted to use websockets to design an RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbeds are connected to the Internet.
+After the realtime data streaming from sensors project demonstrated the power of HTML5 in embedded systems, mbed wanted to use websockets to design an RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbeds are connected to the Internet.
 
 \subsection{Architecture: mbed boards, websocket server}
 
@@ -749,7 +758,7 @@ On the previous diagram, two main elements can be distinguished:
 \end{packed_item}
 
 
-As with the Internet of Things project, each mbed will belong to a specific subnetwork and will be identified by a specific name. This identification is made over the URL used to connect the websocket server:
+As with the realtime data streaming from sensors project, each mbed will belong to a specific subnetwork and will be identified by a specific name. This identification is made over the URL used to connect the websocket server as shown in the figure~\ref{RPC: mbed identification on a subnetwork}. \\
 
 \begin{figure}[h!]
 		\centering
@@ -1046,7 +1055,7 @@ The main data structure in order to represent the state of the whole network is 
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.6\textwidth]{./rpc_server_data_struct.png}
+		\includegraphics[width=0.6\textwidth]{./rpc_server_data_struct.jpg}
 		\caption{Data structure for the RPC websocket server}
 		\label{Data structure for the RPC websocket server}
 \end{figure}
@@ -1134,7 +1143,7 @@ The physical bus topology defines how USB devices are connected to the host. The
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.4\textwidth]{./usb_topology.png}
+		\includegraphics[width=0.4\textwidth]{./usb_topology.jpg}
 		\caption{USB physical topology \footnotemark}
 		\label{USB physical topology}
 \end{figure}
@@ -1281,7 +1290,7 @@ A transfer consists of 1 or more transactions. Each transaction contains a token
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.4\textwidth]{./transfer.png}
+		\includegraphics[width=0.4\textwidth]{./transfer.jpg}
 		\caption{USB 2.0 transaction}
 		\label{USB 2.0 transaction}
 \end{figure}
@@ -1340,7 +1349,7 @@ A USB device stack has been developed to allow mbed users to design their own US
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.7\textwidth]{./usb_capa1.png}
+		\includegraphics[width=0.7\textwidth]{./usb_capa1.jpg}
 		\caption{USB device stack capabilities}
 		\label{USB device stack capabilities}
 \end{figure}
@@ -1351,7 +1360,7 @@ I will describe in this section the USB stack architecture and some USB classes 
 \subsection{USB Device stack architecture}
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.7\textwidth]{./usb_arch3.png}
+		\includegraphics[width=0.7\textwidth]{./usb_arch3.jpg}
 		\caption{USB device stack architecture}
 		\label{USB device stack architecture}
 \end{figure}
@@ -1539,7 +1548,7 @@ typedef struct {
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.9\textwidth]{./setup_packets.png}
+		\includegraphics[width=0.9\textwidth]{./setup_packets.jpg}
 		\caption{Setup packets processing}
 		\label{Setup packets processing}
 \end{figure}
@@ -1957,7 +1966,7 @@ This state machine contains 5 states:
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./msd_state_machine.png}
+		\includegraphics[width=0.5\textwidth]{./msd_state_machine.jpg}
 		\caption{MSD state machine}
 		\label{MSD state machine}
 \end{figure}
@@ -2117,7 +2126,7 @@ Three interfaces are defined in the configuration descriptor:
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\textwidth]{./audio_archi.png}
+		\includegraphics[width=0.8\textwidth]{./audio_archi.jpg}
 		\caption{Audio device interfaces}
 		\label{Audio device interfaces}
 \end{figure}
@@ -2142,14 +2151,14 @@ Audio packets have to be interpreted differently, according to the number of cha
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.7\textwidth]{./pcm.png}
+		\includegraphics[width=0.7\textwidth]{./pcm.jpg}
 		\caption{PCM packet: mono}
 		\label{PCM packet: mono}
 \end{figure}
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.7\textwidth]{./pcm_stereo.png}
+		\includegraphics[width=0.7\textwidth]{./pcm_stereo.jpg}
 		\caption{PCM packet: stereo}
 		\label{PCM packet: stereo}
 \end{figure}

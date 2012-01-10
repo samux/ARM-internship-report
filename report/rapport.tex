@@ -253,14 +253,6 @@ This architecture was designed primarily for document retrieval, where web brows
 \end{packed_item}
 
 
-Ultimately, to provide full duplex communication on top of the HTTP half duplex architecture, many of today's solutions use two connections: one for the downstream and one for the upstream. The maintenance and coordination of these two connections introduces significant overhead in terms of resource consumption and increased complexity. WebSocket was developed to solve these issues. Websocket provides:
-\begin{packed_item}
-	\item full duplex communication
-	\item over a single TCP socket
-	\item overhead reduction
-	\item less traffic: no need for polling
-\end{packed_item}
-
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.7\textwidth]{./ws_poll.jpg}
@@ -268,11 +260,20 @@ Ultimately, to provide full duplex communication on top of the HTTP half duplex 
 		\label{Reduction of polling and overhead by Websocket}
 \end{figure}
 
+Ultimately, to provide full duplex communication on top of the HTTP half duplex architecture, many of today's solutions use two connections: one for the downstream and one for the upstream. The maintenance and coordination of these two connections introduces significant overhead in terms of resource consumption and increased complexity. WebSocket was developed to solve these issues and provides:
+\begin{packed_item}
+	\item full duplex communication over a single TCP socket
+	\item overhead reduction
+	\item less traffic: no need for polling
+	\item standard and secure connections over ws:// and wss:// prefixes: A standard websocket URL can be: \textbf{ws://example.com}
+\end{packed_item}
+
 The figure~\ref{Reduction of polling and overhead by Websocket} shows the reduction in latency. Once the connection is established, messages can flow between server and client. As the connection remains open, there is no need to send another request to the server.
 
 \subsection{Websocket protocol}
 
-To establish a WebSocket connection, the client and server upgrade from the HTTP protocol to the WebSocket protocol during their initial handshake. \\
+To establish a WebSocket connection, the client and server upgrade from the HTTP protocol to the WebSocket protocol during their initial handshake. Another attrative aspect is their HTTP-compatible handshake. This means HTTP servers can share their default HTTP (80) and HTTPS (443) ports with a Websocket server. Because ordinary TCP connections to port numbers other than 80 are frequently blocked, it can be used as a way to circumvent these restrictions and provide similar functionality with some additional protocol overhead.
+To establish a Websocket connection, the client initiates a connection to the server as with HTTP, but then requests the server “upgrade” from the HTTP protocol to the Websocket protocol. \\
 
 The handshake from the client is as follows: \\
 

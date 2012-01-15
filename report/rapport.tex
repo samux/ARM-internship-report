@@ -123,8 +123,8 @@ Over time the ARM architecture has evolved in order to improve performance, prov
 	\item \textbf{ARMv6}: introduction of the SIMD (Single Instruction Multiple Data) technology. This extension is particularly used in audio and video processing. In addition a security extension has been introduced known as TrustZone. The Thumb-2 mode has also been introduced to improve code density and performance
 	\item \textbf{ARMv7}: this architecture delivers a set of profiles customized to target applications. All Cortex processors implement the ARMv7 architecture, (except Cortex M0 and Cortex M1 series which implement ARMv6M):
 	\begin{packed_item}
-		\item \textbf{Cortex A}: Application profile implementing a virtual memory system architecture based on an MMU (memory management unit). An optional NEON processing unit for multimedia applications and advanced hardware Floating Point unit can be added
-		\item \textbf{Cortex R}: Realtime profile implementing a protected memory system architecture based on an MPU (memory protection unit)
+		\item \textbf{Cortex A}: Application profile implementing a virtual memory system architecture based on an MMU (Memory Management Unit). An optional NEON processing unit for multimedia applications and advanced hardware Floating Point unit can be added
+		\item \textbf{Cortex R}: Realtime profile implementing a protected memory system architecture based on an MPU (Memory Protection Unit)
 		\item \textbf{Cortex M}: Microcontroller profile designed for fast interrupt processing and ideal for cost-sensitive devices requiring highly deterministic behaviour
 	\end{packed_item}
 	\item \textbf{ARMv8}: ARMv8 introduces a 64-bit architecture support. The main feature addded is the instruction level support for cryptography
@@ -151,7 +151,7 @@ Aiming to pursue new areas of expertise, ARM founded Mbed in 2009. Mbed's core a
 \end{figure}
 
 \subsection{Mbed boards: LPC1768 and LPC11U24}
-For the moment, two boards have been designed. The first is based on the LPC1768 microcontroller from NXP which uses a Cortex M3:
+For the moment, two boards have been designed. The first is based on the LPC1768 microcontroller from NXP which uses a Cortex-M3:
 \begin{packed_item}
 	\item 96 MHz, 32 Kb of RAM, 512 Kb of flash
 	\item 3 UART, 2 SPI, 2 I2C, 6 PWM, 6 ADC, GPIO, Ethernet, USB Host/Device
@@ -159,13 +159,13 @@ For the moment, two boards have been designed. The first is based on the LPC1768
 
 \begin{figure}[htp]
   \centering
-  \subfigure[mbed lpc1768 (Cortex M3)]{\label{fig:edge-a}\includegraphics[scale=2.7]{./lpc1768.jpg}}                
-  \subfigure[mbed lpc11U24 (Cortex M0)]{\label{fig:contour-b}\includegraphics[scale=0.3]{./lpc11U24.jpg}} \\
+  \subfigure[mbed lpc1768 (Cortex-M3)]{\label{fig:edge-a}\includegraphics[scale=2.7]{./lpc1768.jpg}}                
+  \subfigure[mbed lpc11U24 (Cortex-M0)]{\label{fig:contour-b}\includegraphics[scale=0.3]{./lpc11U24.jpg}} \\
   \caption{Mbed boards}
   \label{fig:contour}
 \end{figure}
 
-More recently, a new board based on a LPC11U24 (Cortex M0) was introduced. This mbed has been designed to prototype USB devices or battery powered applications:
+More recently, a new board based on a LPC11U24 (Cortex-M0) was introduced. This mbed has been designed to prototype USB devices or battery powered applications:
 \begin{packed_item}
 	\item 48 MHz, 8 Kb of RAM, 32 Kb of flash
 	\item UART, I2C, 2 SPI, 6 ADC, GPIO, USB Device
@@ -314,7 +314,7 @@ The handshake from the server is as follows: \\
         } \\
 
 
-Once the Websocket connection is established, data can be exchanged between client and server. Data can either be text frame encoded as UTF-8 or binary data. Main fields of the data framing represented on the figure~\ref{Websocket data framing} are:
+Once the Websocket connection is established, data can be exchanged between client and server. Data can either be text frame encoded as UTF-8 or binary data. Main fields of the data framing represented on the figure~\ref{WebSocket data framing} are:
 
 \begin{figure}[h!]
 		\centering
@@ -428,6 +428,7 @@ Mbed wanted to demonstrate that it was possible to access sensor data all over t
 		\begin{packed_item}
 			\item light sensor
 			\item pressure sensor
+			\item temperature sensor
 			\item microphone
 		\end{packed_item}
 \end {packed_item}
@@ -764,13 +765,13 @@ As expected, when a WebSocket message is received the corresponding graph is upd
 
 \subsubsection{Results}
 
-On the dashboard, we can see that the environmental board and the accelerometer have been added:
+On the dashboard represented by the figure~\ref{Dashboard webpage}, we can see that the environmental board and the accelerometer have been added:
 \begin{packed_item}
-	\item realtime graph available (10 Hz): light, pressure, temperature, microphone and accelrometer data
+	\item realtime graph available (10 Hz): light, pressure, temperature, microphone and accelerometer data
 	\item more information are available on the right: other representations of sensor data
 \end{packed_item}
 
-On the smartphone webpage, we can observe the live graph containing sensor data only from the accelerometer board. On this webpage, we can manage the dashboard with the "add" and "clear" buttons.
+On the smartphone webpage figure~\ref{Smartphone webpage containing accelerometer data}, we can observe the live graph containing sensor data only from the accelerometer board. On this webpage, we can manage the dashboard with the "add" and "clear" buttons.
 \newpage
 
 \begin{figure}[h!]
@@ -792,7 +793,7 @@ On the smartphone webpage, we can observe the live graph containing sensor data 
 \newpage
 
 \section{Remote Procedure Call over WebSockets}
-After having connected sensors to the Internet and demonstrated the power of HTML5 in embedded systems, mbed wanted to use WebSockets to design an RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. All mbeds are connected to the Internet.
+After having connected sensors to the Internet and demonstrated the power of HTML5 in embedded systems, Mbed wanted to use WebSockets to design an RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. All mbeds are connected to the Internet.
 
 \subsection{Architecture: mbed boards, WebSocket server}
 
@@ -844,7 +845,7 @@ The RPC mechanism relies on JSON messages exchanged. On these messages, we need 
 	\item the \textbf{message ID}: random number used to identify a transaction. For a valid RPC transaction, the request and the answer have to have the same message ID.
 \end{packed_item}
 
-The previous fields are common to all messages exchanged. After each message, other possible fields are:
+The previous fields are common to all messages exchanged. However, each type of message can have specific fields:
 
 
 \begin{packed_item}
@@ -955,7 +956,7 @@ RPC_TYPE MbedJSONRpc::call(const char * fn, const char * dest, MbedJSONValue& in
 
 This method, in order to call a distant method, requires several steps:
 \begin{packed_item}
-	\item Serialize the in MbedJSONValue object in order to be sent over WebSocket
+	\item Serialize the "in" MbedJSONValue object in order to be sent over WebSocket
 	\item Send a WebSocket message to the server containing a MSG\_CALL request
 	\begin{packed_item}
 		\item from: mbed\_id
@@ -984,7 +985,7 @@ This method does the following steps:
 		\begin{packed_item}
 			\item Check the validity of the message
 			\item Convert the "params" field in a MbedJSONValue object
-			\item Execute the registered method with the previous in argument. At the same time, the method will fill the "out" parameter containing the result
+			\item Execute the registered method with the previous object as argument. At the same time, the method will fill the "out" parameter containing the result
 			\item Serialize the result of the method executed
 			\item Send a MSG\_RESULT WebSocket message to the server;
 			\begin{packed_item}
@@ -999,12 +1000,12 @@ This method does the following steps:
 
 \subsection{Mbed boards}
 \subsubsection{Hardware}
-The only requirement for the hardware is to have access to the internet so a wifi module or ethernet jack is required.
+The only requirement for the hardware is to have access to the internet so a wifi module or an ethernet jack is required.
 
 TODO: photo
 
 \subsubsection{Software: mbed which registers a method}
-I will demonstrate the program running on an mbed which has an accelerometer connected. The idea is to remotely access the accelerometer's values from another mbed.
+The following programis running on an mbed which has an accelerometer connected. The idea is to remotely access the accelerometer's values from another mbed.
 
 \begin{lstlisting}[label=Client which registers a method,caption=Client which registers a method]
 
@@ -1148,7 +1149,7 @@ For Mbed the Internet of Things is a very important field. We feel that in the f
 	\item factories
 \end{packed_item}
 
-The first project showed that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provides a mean to execute a method on a distant mbed. This can be useful, for instance, in critical places where the environment is inhospitable for humans. The common point of these two projects is the use of a WebSocket communication. This new way of communication enables realtime capabilities with a bidirectionnal communication between a client and server. It was quite interesting to develop projects using a protocol that was still in development. For instance, when I first started, the WebSocket data framing was not at all the same as now. It was much more simple: data frames started with 0x00 and ended with 0xff. The overhead was reduced but the final protocol defined in RFC 6455 provides more capabilities such as: raw binary can be sent, a ping/pong mechanism, a packet can be segmented. This change in the protocol led to tricky situations where the browser had been updated with the new protocol and the WebSocket server had not been. This resulted in the browser and the server being incompatible. For the moment, not all browsers are natively supporting WebSockets. Only Chrome 16 is supporting the last version of the protocol but we can hope that browsers will integrate this powerful feature soon.\\
+The first project showed that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provides a mean to execute a method on a distant mbed. This can be useful, for instance, in critical places where the environment is inhospitable for humans. The common point of these two projects is the use of a WebSocket communication. This new way of communication enables realtime capabilities with a bidirectionnal communication between a client and server. It was quite interesting to develop projects using a protocol that was still in development. For instance, when I first started, the WebSocket data framing was not at all the same as now. It was much more simple: data frames started with 0x00 and ended with 0xff. The overhead was reduced but the final protocol defined in RFC 6455 provides more capabilities such as: raw binary can be sent, a ping/pong mechanism, a packet can be segmented. This change in the protocol led to tricky situations where the browser had been updated with the new protocol and the WebSocket server had not been. This resulted in the browser and the server being incompatible. For the moment, not all browsers are natively supporting WebSockets. Only Chrome 16 is supporting the last version of the specification but we can hope that browsers will integrate this powerful feature soon.\\
 
 
 

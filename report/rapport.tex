@@ -67,26 +67,40 @@
 \chapter*{Acknowledgment}
 I took immense pleasure in this internship and would like to begin this report by thanking several people. \\
 
-Firstly, I wish to express my deep sense of gratitude to my manager, Mr Simon Ford. This internship would not have been possible without him. I also will never forget the excellent atmosphere in the mbed team thanks to: Mr Simon Ford, Mr Chris Style, Mr Dan Ros, Mr Emilio Monti and Mr Amit Naran. \\
+Firstly, I wish to express my deep sense of gratitude to my manager, Mr Simon Ford. This internship would not have been possible without him. I will also never forget the excellent atmosphere in the mbed team thanks to: Mr Simon Ford, Mr Chris Style, Mr Dan Ros, Mr Emilio Monti and Mr Amit Naran. \\
 
-I also want to thank two teachers of T\'{e}l\'{e}com Paristech: Mr Alexis Polti and Mr Samuel Tardieu who gave me working method and taught me many things. I will never forget my two month project during which I worked with them on an octocopter. It was a unique experience. \\
+I also want to thank two teachers of T\'{e}l\'{e}com Paristech: Mr Alexis Polti and Mr Samuel Tardieu who gave me working method and taught me many things. I will never forget my three month project during which I worked with them on an octocopter. It was a unique experience. \\
 
 Special thanks to the summer intern Nathan Hutton. We worked on the connection of sensors to the Internet together, and it was a great pleasure to work with him. \\
 
-Finally, I would like to express my heartfelt thanks to my parents. They are always by my side. I owe them everything. 
+Finally, I would like to express my heartfelt thanks to my parents. They are always by my side. I owe them everything.
+
+\chapter*{Embedded systems: from a local connectivity to the cloud}
+Microcontrollers and more generally embedded systems can locally be connected to a computer over many ways such as a serial port or a USB communication. USB communications are widely used in today's computers to plug peripherals such as mass storage devices, mice, keyboards or printers. But these last years, a new trend of connectivity has been developed where microcontrollers are accessing the Internet. In this case, microcontrollers are not exchanging data locally but share them all over the Internet. This phenomenon is called the Internet of Things. It is a term generally used to refer to a world where a large number physical objects are addressable via the Internet. We can easily imagine different applications of the Internet of Things including smart buildings or medical devices.\\
+
+This report deals with these two different types of connectivity involving microcontrollers:
+\begin{packed_item}
+	\item First I will explain how to use microcontrollers to prototype two Internet Of Things projects:
+	\begin{packed_item}
+		\item Connection of sensors to the cloud. The data sensors can be accessible all over the world
+		\item Remote Procedure Call mechanism where several microcontrollers are connected to the Internet and each micrcontroller can execute a function on a distant one
+	\end{packed_item}
+	The objective across these two projects is to explore a new HTML5 feature called WebSocket
+	\item Then, I will discuss on a USB device stack which has been implemented allowing microcontrollers to be recognized by a computer as a USB peripheral.
+\end{packed_item}
 
 \tableofcontents
 
 \chapter{ARM and Mbed}
 \section{ARM}
 \subsection{History}
-ARM Holdings plc is a British multinational semiconductor and software company. The headquarters are based in Cambridge, where it was established. ARM is well known in the processor field, although it also designs, licenses and sells software development tools under the RealView and KEIL brands, systems and platforms, system-on-chip infrastructure and software. 
+ARM Holdings plc is a British multinational Intellectual Property (IP) company. The headquarters are based in Cambridge, where it was established. ARM is well known in the semiconductor industry, although it also designs, licenses and sells software development tools under the RealView and KEIL brands, systems and platforms, system-on-chip infrastructure and software. 
 \\
 
-Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It is the result of a joint venture between Acorn Computers, Apple Computer (now Apple Inc.) and VLSI Technology (now NXP semiconductor). The purpose of this joint venture was to develop a RISC chip originally developed by Acorn Computer involved in an Apple project. ARM became bigger throughout the years by acquiring companies like Micrologic Solutions, a software consulting company based in Cambridge 1999. In 2000, ARM acquired Allant Software, Infinite Designs in Sheffield (UK) and EuroMips in Sophia Antipolis (France). Then, in 2001, it acquired a team specialized in hardware and software debugging based in Blackburn (UK). In 2005, ARM acquired Keil Software, a leader in software development tools for microcontrollers. More recently, ARM joined with Texas Instruments, Samsung, IBM, ST-Ericsson and Freescale Semiconductor in forming an open source engineering company named Linaro. Linaro produces for example ARM tools or linux kernels for ARM based system-on-chips. Today, ARM has offices and design centres all over the world, including the UK, Germany, France, Israel, Sweden, Norway, Slovenia, USA, China, South Korea, Japan, Taiwan and India. 
+Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It was the result of a joint venture between Acorn Computers, Apple Computer (now Apple Inc.) and VLSI Technology (now NXP semiconductor). The purpose of this joint venture was to develop a RISC chip originally developed by Acorn Computer involved in an Apple project. ARM became bigger throughout the years by acquiring companies like Micrologic Solutions, a software consulting company based in Cambridge 1999. In 2000, ARM acquired Allant Software, Infinite Designs in Sheffield (UK) and EuroMips in Sophia Antipolis (France). Then, in 2001, it acquired a team specialized in hardware and software debugging based in Blackburn (UK). In 2005, ARM acquired Keil Software, a leader in software development tools for microcontrollers. More recently, ARM joined with Texas Instruments, Samsung, IBM, ST-Ericsson and Freescale Semiconductor in forming an open source non-profitable organization named Linaro. Linaro enables for example tools or linux kernels for ARM based system-on-chips. Today, ARM has offices and design centres all over the world, including the UK, Germany, France, Israel, Sweden, Norway, Slovenia, USA, China, South Korea, Japan, Taiwan and India. 
 \\
 
-Nowadays, ARM processors are widely used in mobile phones, tablets, personal digital assistants, GPS, digital cameras and digital televions. The main reason for this success is their low electric power consumption, making them suitable for embedded systems. Even if ARM products are widely used, the company itself doesn't manufacture its own CPUs. ARM licenses its technology as Intellectual Property (IP). Companies like Samsung, Texas Intrument or Nvidia are making processors based on ARM's IP.
+Nowadays, ARM processors are widely used in mobile phones, tablets, personal digital assistants, GPS, digital cameras and digital televions. The main reason for this success is their low power consumption, making them suitable for embedded systems. Even if ARM products are widely used, the company itself does not manufacture its own CPUs. ARM licenses its technology as Intellectual Property. Companies like Samsung, Texas Intrument or Nvidia are making processors based on ARM's IP.
 
 \subsection{ARM Processor Architecture}
 The ARM architecture forms the basis around which every ARM processor is built. The ARM architecture is generally described as a Reduced Instruction Set Computer (RISC) architecture. Main RISC features are:
@@ -113,7 +127,7 @@ Over time the ARM architecture has evolved in order to improve performance, prov
 		\item \textbf{Cortex R}: Realtime profile implementing a protected memory system architecture based on an MPU (memory protection unit)
 		\item \textbf{Cortex M}: Microcontroller profile designed for fast interrupt processing and ideal for cost-sensitive devices requiring highly deterministic behaviour
 	\end{packed_item}
-	\item \textbf{ARMv8}: ARMv8 introduces a 64-bit architecture support. There is also be an instruction level support for cryptography.
+	\item \textbf{ARMv8}: ARMv8 introduces a 64-bit architecture support. The main feature addded is the instruction level support for cryptography
 \end{packed_item}
 
 
@@ -167,12 +181,12 @@ Both mbed boards have a built-in USB drag and drop FLASH programmer. This featur
 
 
 \subsection{The online compiler}
-The two main keywords of Mbed are "simple" and "cloud computing". Users can use an online compiler to develop their programs in C++. They compile online and transfer the binary received into the mbed, which is connected to a computer over a USB cable. They just have to press the reset button to see their program running.
+The two main keywords of Mbed are "simple" and "cloud computing". Users can use an online compiler to develop their programs in C++. They compile online and transfer the generated binary into the mbed, which is connected to a computer over a USB cable. They just have to press the reset button to see their program running.
 \\
 
 The online IDE is totally independent from the underlying operating system. It contains a lot of interesting features:
 \begin{packed_item}
-	\item Code editing with syntax highlighting and auto indentation
+	\item Code editing with syntax highlighting and automatic indentation
 	\item Multiple programs
 	\item Import programs from online catalogue of published programs
 	\item Import programs from zip file
@@ -186,7 +200,7 @@ The online IDE is totally independent from the underlying operating system. It c
 \end{packed_item}
 
 \subsection{Mbed libraries}
-In addition to the online compiler, almost all drivers have been implemented. Users just have to instantiate an object such as SPI or I2C to have access to an API which abstracts all the low-level layers. The figure~\ref{mbed libraries} shows on the left hand side all the drivers which has been implemented and are accessible over a C++ class. On the right hand side, a description, some basic examples and the API of a specific class can be found. Users can code using meaningful abstract objects and API calls, so there is no need to learn the microcontroller hardware details to get going.\\
+In addition to the online compiler, almost all drivers have been implemented. Users just have to instantiate an object such as SPI or I2C to have access to an API which abstracts all the low-level layers. The figure~\ref{mbed libraries} shows on the left hand side all drivers implemented which are accessible over a C++ class. On the right hand side, a description, some basic examples and the API of a specific class can be found. Users can code using meaningful abstract objects and API calls, so there is no need to learn the microcontroller hardware details to get going.\\
 
 
 \begin{figure}[h!]
@@ -211,13 +225,13 @@ Finally, users can access the mbed \textbf{forum} to troubleshoot their programs
 
 
 \chapter{Internet Of Things: HTML5 on embedded systems}
-Nowadays, an increasing number of devices are connected to the Internet. These devices include not only personal computers, but also mobile phones and digital televisions, etc.
+Nowadays, an increasing number of devices is connected to the Internet. These devices include not only personal computers, but also mobile phones and digital televisions, etc.
 Cisco predicted in an interview with the BBC that the number of internet connected devices is set to explode in the next four years to over 15 billion, twice the world's population, by 2015. Cisco is not the only company to predict a such boom; VMware's CEO Paul Maritz said during a speech at the 2011 VMworld conference in Las Vegas that:
 
 \begin{quote} "Three years ago over 95 percent of the devices connected to the Internet were personal computers. Three years from now that number will probably be less than 20 percent. More than 80 percent of the devices connected to the Internet will not be Windows-based personal computers." \\
 \end{quote}
 
-Thus, the development and progress of technologies connecting different sensors and devices to the Internet is becoming ever more important. I will describe in this chapter two projects concerning the Internet of Things: realtime data streaming from sensors and Remote Procedure Call mechanism. Both of these projects use a new feature of HTML5: a Websocket communication.
+Thus, the development and progress of technologies connecting different sensors and devices to the Internet is becoming ever more important. I will describe in this chapter two projects I took part in concerning the Internet of Things: connecting sensors to the cloud and Remote Procedure Call mechanism. Both of these projects use a new feature of HTML5: a WebSocket communication.
 
 
 \begin{figure}[h!]
@@ -227,9 +241,9 @@ Thus, the development and progress of technologies connecting different sensors 
 		\label{HTML5 on embedded systems}
 \end{figure}
 
-\section{Websockets}
+\section{WebSockets}
 \subsection{Introduction}
-The WebSocket specification is a new feature of HTML5. It defines a full-duplex single socket connection over which messages can be sent between client and server. The WebSocket standard simplifies much of the complexity around bi-directional web communication and connection management. Furthermore, it reduces polling and unnecessary network throughput overhead.
+The HTML5 WebSocket specification defines a full-duplex single socket connection over which messages can be sent between client and server. The WebSocket standard simplifies much of the complexity around bi-directional web communication and connection management. Furthermore, it reduces polling and unnecessary network throughput overhead.
 
 \subsection{Why the need for Websockets?}
 Traditionally, when a web browser loads a webpage, it follows these basic steps:
@@ -252,8 +266,8 @@ This architecture was designed primarily for document retrieval, where web brows
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.7\textwidth]{./ws_poll.jpg}
-		\caption{Reduction of polling and overhead by Websocket \textit(Image courtesy of Kaazing)}
-		\label{Reduction of polling and overhead by Websocket}
+		\caption{Latency and overhead comparison between polling and WebSocket applications \textit(Image courtesy of Kaazing)}
+		\label{Latency and overhead comparison between polling and WebSocket applications}
 \end{figure}
 
 Ultimately, to provide full duplex communication on top of the HTTP half duplex architecture, many of today's solutions use two connections: one for the downstream and one for the upstream. The maintenance and coordination of these two connections introduces significant overhead in terms of resource consumption and increased complexity. WebSocket was developed to solve these issues. The new HTML5 feature provides interesting properties such as:
@@ -268,12 +282,11 @@ Ultimately, to provide full duplex communication on top of the HTTP half duplex 
 	\end{center}
 \end{packed_item}
 
-The figure~\ref{Reduction of polling and overhead by Websocket} shows the reduction in latency. Once the connection is established, messages can flow between server and client. As the connection remains open, there is no need to send another request to the server.
+The figure~\ref{Latency and overhead comparison between polling and WebSocket applications} shows the reduction in latency. Once the connection is established, messages can flow between server and client. As the connection remains open, there is no need to send another request to the server.
 
 \subsection{Websocket protocol}
 
-To establish a WebSocket connection, the client and server upgrade from the HTTP protocol to the WebSocket protocol during their initial handshake. Another attractive aspect is their HTTP-compatible handshake. This means HTTP servers can share their default HTTP (80) and HTTPS (443) ports with a WebSocket server. After the handshake, a full tcp socket communication with a specific data framing is available.
-To establish a Websocket connection, the client initiates a connection to the server as with HTTP, but then requests the server “upgrade” from the HTTP protocol to the Websocket protocol. \\
+To establish a WebSocket connection, the client and server upgrade from the HTTP protocol to the WebSocket protocol during their initial handshake. Another attractive aspect is their HTTP-compatible handshake. This means HTTP servers can share their default HTTP (80) and HTTPS (443) ports with a WebSocket server. After the handshake, a full TCP socket communication with a specific data framing is available. \\
 
 The handshake from the client is as follows: \\
 
@@ -306,8 +319,8 @@ Once the Websocket connection is established, data can be exchanged between clie
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.7\textwidth]{./frame_ws.jpg}
-		\caption{Websocket data framing}
-		\label{Websocket data framing}
+		\caption{WebSocket data framing}
+		\label{WebSocket data framing}
 \end{figure}
 
 \begin{packed_item}
@@ -334,18 +347,18 @@ Once the Websocket connection is established, data can be exchanged between clie
 \end{packed_item}
 
 
-\subsection{Architecture of a Websocket communication}
-Websocket communication involves several clients connected to the same websocket server. All messages from browsers are sent to the server, where the server manages them. It can, for instance, decide to send a message received from one client to another, or to broadcast all messages received to all clients connected.
+\subsection{Architecture of a WebSocket communication}
+WebSocket communications may involve several clients connected to the same WebSocket server. All messages from browsers are sent to the server, where the server manages them. It can, for instance, decide to send a message received from one client to another, or to broadcast all messages received to all clients connected.
 
 
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.6\textwidth]{./ws.jpg}
-		\caption{Example of websocket communication}
-		\label{Example of websocket communication}
+		\caption{Example of WebSocket communication}
+		\label{Example of WebSocket communication}
 \end{figure}
 
-For example, let's say that there is an existing websocket server: \textbf{example.com} which is listening on port 80. A client can open a connection, receive and send messages to this server with these few lines of javascript:
+For example, let's say that there is an existing WebSocket server: \textbf{example.com} which is listening on port 80. A client can open a connection, receive and send messages to this server with these few lines of javascript:
 
 \begin{center}
 \begin{lstlisting}[label=Javascript Websocket Hello World,caption=Javascript Websocket Hello World]
@@ -364,22 +377,22 @@ ws.onclose = function(evt) {
 \end{center}
 
 
-\subsection{The mbed websocket library}
-A websocket client library has been developed in order to exchange data between an mbed and a server over a websocket communication. The library can be used over an ethernet connection, or a wifi connection using a Roving Networks wifly module. The library uses existing libraries such as the wifi module library or the TCP socket library, part of the TCP/IP stack (port of lwIP for mbed). For instance, the method which connects an mbed to a websocket server over wifi is:
+\subsection{The mbed WebSocket library}
+A WebSocket client library has been developed in order to exchange data between an mbed and a server over a WebSocket communication. The library can be used over an ethernet connection, or a wifi connection using a Roving Networks wifly module. The library uses existing libraries such as the wifi module library or the TCP socket library, part of the TCP/IP stack (port of lwIP for mbed). For instance, the method which connects an mbed to a WebSocket server over wifi is:
 
 
 \begin{center}
-\begin{lstlisting}[label=Connection to a websocket server,caption=Connection to a websocket server]
+\begin{lstlisting}[label=Connection to a WebSocket server,caption=Connection to a WebSocket server]
 // open a socket on a specific port
 sprintf(cmd, "open %s %s\r\n", ip_domain.c_str(), port.c_str());
 wifi->send(cmd, "OPEN");
 
-//send websocket HTTP header
+//send WebSocket HTTP header
 sprintf(cmd, "GET /%s HTTP/1.1\r\n", path.c_str());
 wifi->send(cmd);
 sprintf(cmd, "Host: %s:%s\r\n", ip_domain.c_str(), port.c_str());
 wifi->send(cmd);
-wifi->send("Upgrade: websocket\r\n");
+wifi->send("Upgrade: WebSocket\r\n");
 wifi->send("Connection: Upgrade\r\n");
 wifi->send("Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n");
 sprintf(cmd, "Origin: http:%s:%s\r\n", ip_domain.c_str(), port.c_str());
@@ -390,10 +403,24 @@ if (!wifi->send("Sec-WebSocket-Version: 13", "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="))
 \end{lstlisting}
 \end{center}
 
+
+
+
+
+
+
 \newpage
 
+
+
+
+
+
+
+
+
 \section{Connecting sensors to the cloud}
-Mbed wanted to demonstrate that it was possible to access sensor data all over the world using an mbed board and HTML5 websockets. For this, two prototype boards has been developed with different sensors:
+Mbed wanted to demonstrate that it was possible to access sensor data all over the world using an mbed board and HTML5 WebSockets. For this, two prototype boards have been developed with different sensors:
 
 \begin{packed_item}
 	\item \textbf{accelerometer board} with a three axis accelerometer
@@ -405,44 +432,72 @@ Mbed wanted to demonstrate that it was possible to access sensor data all over t
 		\end{packed_item}
 \end {packed_item}
 
-The idea behind this project is that the sensor data has to be available everywhere as quickly as possible. That's why we wanted to involve smartphones connected to the Internet over 3G. To achieve this, we used QR codes containing the URL of a webpage which receives the sensor data. Each board has a different QR code. The steps to access data for a user are:
+The idea behind this project is that the sensor data has to be available everywhere as quickly as possible. That's why we wanted to involve smartphones connected to the Internet over 3G. To achieve this, we used QR (Quick Response) codes. A QR code is a type of matrix-barcode and encodes information. For this project, all QR codes encode URL(s) of webpages which receive the sensor data. Each board has a different QR code. The steps to access data for a user are:
 
 \begin{packed_item}
 	\item Place the objects (mbed, sensors, QR code associated to this board) where desired
-	\item Scan the QR code with a smartphone to see its data displayed
-	\item the graph can then be added to a central \textbf{dashboard}
+	\item Scan the QR code with a smartphone, access the webpage associated and see the sensor data displayed
+	\item The graph can then be added to a central \textbf{dashboard}
 \end{packed_item}
 
-
-\subsection{Architecture: mbed boards, websocket server, browsers}
-We can distinguish three different parts:
-\begin{packed_item}
-	\item a websocket server
-	\item mbed boards which are connected to this websocket server
-	\item browsers which are connected to the same server:
-	\begin{packed_item}
-		\item \textbf{smartphone webpages}: displays a unique graph containing sensor data of a specific board. This webpage is accessed by reading the QR code associated to the board. A user can then decide to \textbf{add} or \textbf{remove} this graph to or from a central dashboard
-		\item \textbf{dashboard}: central webpage showing graphs of different boards added by users
-	\end{packed_item}
-\end{packed_item}
-
-All mbed boards send messages in JSON format to the websocket server containing sensor data. The websocket server broadcasts to all client connected all messages received, so all browsers connected to this server are able to receive data from sensors. Browsers can then ignore or not the messages received.
- 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\textwidth]{./ws_arch.jpg}
-		\caption{Realtime data streaming project architecture}
-		\label{Realtime data streaming project architecture}
+		\includegraphics[width=0.8\textwidth]{./env_board_qr.jpg}
+		\caption{Environmental board with its QR code}
+		\label{Environmental board with its QR code}
+\end{figure}
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.4\textwidth]{./acc_board.jpg}
+		\caption{Accelerometer board with its QR code}
+		\label{Accelerometer board with its QR code}
 \end{figure}
 
 
-\subsection{Websocket server: Tornado}
-The websocket server used for this project is based on the Tornado Framework. This framework is written in Python, and it's a non blocking web server. It uses \textbf{epoll} which permits the handling of thousands of connections and so provides realtime features. Some interesting features are, for instance:
+
+\subsection{Architecture: mbed boards, WebSocket server, browsers}
+We can distinguish two different parts:
+\begin{packed_item}
+	\item a WebSocket server
+	\item all clients connected to the server:
+	\begin{packed_item}
+		\item mbed boards
+		\item browsers:
+		\begin{packed_item}
+			\item \textbf{smartphone webpages}: displays a unique graph containing sensor data of a specific board. This webpage is accessed by reading the QR code associated to the board. A user can then decide to \textbf{add} or \textbf{remove} this graph to or from a central dashboard
+			\item \textbf{dashboard}: central webpage showing graphs of different boards added by users
+		\end{packed_item}
+	\end{packed_item}
+\end{packed_item}
+
+All mbed boards send messages in JSON (JavaScript Object Notation) format to the WebSocket server containing sensor data. A JSON object is an unordered collection of key:value pairs with the ':' character separating the key and the value. The following example shows a basic JSON message:
+\begin{lstlisting}[label=JSON message example,caption=JSON message example]
+{
+     "id"     : "acc_board",
+     "acc_x"  : 250,
+     "acc_y"  : 15,
+     "acc_z"  : 100
+}
+\end{lstlisting}
+
+The WebSocket server broadcasts all messages received to all clients connected. In particular, browsers are able to receive data from sensors. They can then ignore or not the messages received.
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.8\textwidth]{./ws_arch.jpg}
+		\caption{Connecting sensors to the cloud project architecture}
+		\label{Connecting sensors to the cloud project architecture}
+\end{figure}
+
+
+\subsection{WebSocket server: Tornado}
+The WebSocket server used for this project is based on the Tornado Framework. This framework is written in Python, and it's a non blocking web server. It uses \textbf{epoll} which permits  handling thousands of connections. Some interesting features are, for instance:
 \begin{packed_item}
 	\item http server
 	\item template language
 	\item mySQL client wrapper
-	\item websocket server
+	\item WebSocket server
 \end{packed_item}
 
 \begin{lstlisting}[label=Launching of an HTTP server with Tornado,caption=Launching of an HTTP server with Tornado]
@@ -456,13 +511,12 @@ if __name__ == "__main__":
     tornado.ioloop.IOLoop.instance().start()
 \end{lstlisting}
 
-These few lines launch a http server associated with a handler (WSHandler). All requests having a path matching the regular expression \textbf{/ws/*/*} will be processed by WSHandler. The first argument of the path represents a channel and the second one the connection mode. This means that to open a connection with this server, a client has to join the server at the address: 
+The previous lines launch a http server associated with a class (WSHandler). All requests having a path matching the regular expression \textbf{/ws/*/*} will be processed by WSHandler. The first argument of the path represents a channel and the second one the connection mode. This means that to open a connection with this server, a client has to join the server at the address: 
 \begin{center}
 \textbf{ws://sockets.mbed.org/ws/\textless{}channel\textgreater{}/\textless{}mode\textgreater{}}
 \end{center}
 
-The WebSocket server is divided into channels. All clients can send and receive messages over the same channel according their connection mode.
-There are 3 connection modes:
+The WebSocket server is divided into channels. All clients can send and receive messages over a same channel. However, each client can choose its connection mode:
 
 \begin{packed_item}
 	\item \textbf{write-only (wo)}: the client can write on a certain channel but cannot receive messages
@@ -470,7 +524,7 @@ There are 3 connection modes:
 	\item \textbf{read-write (rw)}: the client can read and write messages over a channel
 \end{packed_item}
 
-When the server receives a message from a client in a certain channel which is not in \textbf{ro} mode, it will broadcast the message to all clients connected to this channel which are in \textbf{rw} or \textbf{ro} mode. This mechanism is done in WShandler which inherits from tornado.websocket.WebSocketHandler. The websocket protocol is implemented in the base class. Different methods can be overrided in WShandler, called on different events: 
+When the server receives a message from a client in a certain channel, it will broadcast it to all clients connected to this channel which are in \textbf{rw} or \textbf{ro} mode. This mechanism is done in WSHandler which inherits from tornado.websocket.WebSocketHandler. The WebSocket protocol is implemented in the base class. Different methods can be overriden in WSHandler, called on different events:
 
 \begin{packed_item}
 	\item a connection has been opened
@@ -499,6 +553,14 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 \subsection{Mbed boards}
 \subsubsection{Hardware}
+
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.5\textwidth]{./env_board.jpg}
+		\caption{Environmental board}
+		\label{Environmental board}
+\end{figure}
+
 The hardware is very simple to setup as mbed has been designed with quick prototyping in mind. The main parts are:
 \begin{packed_item}
 	\item one mbed
@@ -506,28 +568,20 @@ The hardware is very simple to setup as mbed has been designed with quick protot
 	\item sensors
 \end{packed_item}
 
-A wifi module has been chosen to connect the mbed to the internet and access the websocket server. I wanted a wifi module easy to use and easy to connect to the mbed. I chose a wifi module from Roving Networks which integrates a full TCP/IP stack. The communication between the mbed and the wifi module is established over a serial port. This module is integrated on a breakout board so that we just need wires to connect with the mbed. 
+A wifi module has been chosen to connect the mbed to the internet and access the WebSocket server. I wanted a wifi module easy to use and easy to connect to the mbed. I chose a wifi module from Roving Networks which integrates a full TCP/IP stack. The communication between the mbed and the wifi module is established over a serial communication.
 
 Concerning sensors, all are also very easy to use and to connect. The 3-axis accelerometer and the pressure sensor are connected to the mbed over SPI. Libraries for these sensors have already been developed by the mbed community. The light sensor is connected over a GPIO, as is the microphone. 
-
-
-\begin{figure}[h!]
-		\centering
-		\includegraphics[width=0.6\textwidth]{./env_board.jpg}
-		\caption{Environmental board}
-		\label{Environmental board}
-\end{figure}
 
 
 \subsubsection{Software}
 The program running on the mbed has to:
 \begin{packed_item}
 	\item connect to a network
-	\item connect to the websocket server
+	\item connect to the WebSocket server
 	\item in a loop:
 		\begin{packed_item}
 			\item read sensor data
-			\item send them over websocket to the server
+			\item send them over WebSocket to the server
 		\end{packed_item}
 \end{packed_item}
 
@@ -537,7 +591,7 @@ The program running on the mbed has to:
 // wifly instance to connect the wireless network
 Wifly wifly(p9, p10, p30, "network", "password", true);
 
-// Websocket instance to send sensor data to the websocket server: we use the channel "sensors" in write-only mode
+// WebSocket instance to send sensor data to the WebSocket server: we use the channel "sensors" in write-only mode
 Websocket ws("ws://sockets.mbed.org/ws/sensors/wo", &wifly);
 
 int main() {
@@ -550,11 +604,11 @@ int main() {
     // join the wireless network
     wifly.join();
     		
-    // connection to the websocket server
+    // connection to the WebSocket server
     ws.connect();
     		
     while (1) {
-    	wait(0.1);
+      wait(0.1);
 
       //pressure
       press = scp1000.readPressure();
@@ -569,7 +623,7 @@ int main() {
       mic = readMicrophone();
 
       //format data in a JSON string and sent it
-      sprintf(json_str, "{\"id\":\"wifly_env\",\"p\":\"%d\",\"t\":\"%d\",\"l\":\"%d\",\"m\":\"%d\"}", (int)press, (int)temp, (int)(140 - light), mic);
+      sprintf(json_str, "{\"id\":\"wifly_env\",\"p\":%d,\"t\":%d,\"l\":%d,\"m\":%d}", (int)press, (int)temp, (int)(light), mic);
       ws.send(json_str);
    }
 }
@@ -601,13 +655,13 @@ A smartphone has to scan a QR code to access sensor data of a specific board. Th
 
 According to the parameter, a smartphone webpage will then listen only messages from a specific board.
 
-\subsubsection{Websocket and JSON messages}
+\subsubsection{WebSocket and JSON messages exchanged}
 Several messages are exchanged between clients and server. 
 \begin{packed_item}
 	\item from mbed boards: 
 		\begin{center}
-				\{"id"="wifly\_acc", "ax"="x\_axis\_value", "ay"="y\_axis\_value", "az"="z\_axis\_value"\} \\
-				\{"id"="wifly\_env", "l"="light\_value", "t"="temperature\_value", "p"="pressure\_value", "m"="microphone\_value"\}
+				\{"id"="wifly\_acc", "ax"=x\_axis\_value, "ay"=y\_axis\_value, "az"=z\_axis\_value\} \\
+				\{"id"="wifly\_env", "l"=light\_value, "t"=temperature\_value, "p"=pressure\_value, "m"=microphone\_value\}
 		\end{center}
 	\item from smartphones:
 		\begin{center}
@@ -619,19 +673,20 @@ Several messages are exchanged between clients and server.
 		
 \end{packed_item}
 
-Messages sent by mbed boards contain sensor data. When a client receives such a message, it can refresh a realtime graph showing the sensor data against time. \\
-Messages sent by smartphones control graphs on the dashboard webpage. For instance, if a user scans the QR code of the accelerometer board and presses the add button, the message 
+Messages sent by mbed boards to the server contain sensor data. When a client receives such a message broadcasted by the server, it can refresh a realtime graph showing the sensor data against time. \\
+
+Messages sent by smartphones to the server control graphs on the dashboard webpage. For instance, if a user scans the QR code of the accelerometer board and presses the add button, the message 
 		\begin{center}
 				\{"id"="acc\_add"\}
 		\end{center}
-will be sent. The dashboard will then display the corresponding graph. \\
+is sent to the server. The server broadcasts it. In particular, the dashboard receives it and displays the corresponding graph. \\
 
 \subsubsection{Architecture of webpages}
 The architecture of smartphone webpages is quite simple:
 
 \fbox{\begin{minipage}{1.0\textwidth}
 \begin{packed_item}
-	\item Connection to the websocket server
+	\item Connection to the WebSocket server
 	\item When a message is received:
 		\begin{packed_item}
 			\item check the validity of the message
@@ -653,7 +708,7 @@ The architecture of the dashboard is a little more complicated because it has to
 
 \fbox{\begin{minipage}{1.0\textwidth}
 \begin{packed_item}
-	\item Connection to the websocket server
+	\item Connection to the WebSocket server
 	\item When a message is received:
 		\begin{packed_item}
 			\item check the validity of the message
@@ -675,26 +730,27 @@ The architecture of the dashboard is a little more complicated because it has to
 
 
 \begin{center}
-\begin{lstlisting}[label=Manipulation of websocket messages by the dashboard,caption=Manipulation of websocket messages by the dashboard]
-		//Websocket instance connected on the same subnetwork as the mbed boards
+\begin{lstlisting}[label=Manipulation of WebSocket messages by the dashboard,caption=Manipulation of WebSocket messages by the dashboard]
+    //WebSocket instance connected on the same subnetwork as the mbed boards
     websocket = new WebSocket('ws://sockets.mbed.org/ws/sensors/rw');
 
     websocket.onmessage = function (evt) {
 			var json_sensor = jQuery.parseJSON(evt.data.toString());
+			date = new Date().getTime();
 			if(json_sensor.id == "wifly_acc") 
 			{
-				acc_x.append(new Date().getTime(), json_sensor.ax);
-				acc_y.append(new Date().getTime(), json_sensor.ay);
-				acc_z.append(new Date().getTime(), json_sensor.az);
+				acc_x.append(date, json_sensor.ax);
+				acc_y.append(date, json_sensor.ay);
+				acc_z.append(date, json_sensor.az);
 
 				refreshBall();
 			}
 			else if(json_sensor.id == "wifly_env") 
 			{
-				light.append(new Date().getTime(), json_sensor.l);
-				temp.append(new Date().getTime(), json_sensor.t);
-				press.append(new Date().getTime(), json_sensor.p / 1000);
-				mic.append(new Date().getTime(), json_sensor.m);
+				light.append(date, json_sensor.l);
+				temp.append(date, json_sensor.t);
+				press.append(date, json_sensor.p / 1000);
+				mic.append(date, json_sensor.m);
 
 				refreshEnv();
 			}
@@ -704,44 +760,41 @@ The architecture of the dashboard is a little more complicated because it has to
 	\end{lstlisting}
 \end{center}
 
-As expected, when a websocket message is received the corresponding graph is updated. If the "id" field on the message is different from wifly\_acc or wifly\_env, it's probably a message coming from a smartphone indicating to the dashboard to display or not a specific graph. 
+As expected, when a WebSocket message is received the corresponding graph is updated. If the \textbf{"id"} field on the message is different from \textbf{wifly\_acc} or \textbf{wifly\_env}, it's probably a message coming from a smartphone indicating to the dashboard to display or not a specific graph. 
 
 \subsubsection{Results}
 
-\begin{figure}[htp]
-  \centering
-  \subfigure[Dashboard webpage]{\label{fig:edge-a}\includegraphics[scale=0.9]{./dashboard.jpg}}                
-  \subfigure[Smartphone webpage]{\label{fig:contour-b}\includegraphics[scale=0.9]{./dashboard.jpg}} \\
-  \caption{Webpages which access sensor data}
-  \label{fig:contour}
-\end{figure}
-
-On the dashboard, we can see that the environmental board has been added:
+On the dashboard, we can see that the environmental board and the accelerometer have been added:
 \begin{packed_item}
-	\item realtime graph available (10 Hz): light, pressure, temperature and microphone data
+	\item realtime graph available (10 Hz): light, pressure, temperature, microphone and accelrometer data
 	\item more information are available on the right: other representations of sensor data
 \end{packed_item}
 
-On the smartphone webpage, we can observe the live graph containing sensor data. On this webpage, we can manage the dashboard with the "add" and "clear" buttons.
+On the smartphone webpage, we can observe the live graph containing sensor data only from the accelerometer board. On this webpage, we can manage the dashboard with the "add" and "clear" buttons.
+\newpage
 
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.6\textwidth]{./dashboard.jpg}
+		\caption{Dashboard webpage}
+		\label{Dashboard webpage}
+\end{figure}
 
-
-
-
-
-
-
-
-
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.6\textwidth]{./dashboard.jpg}
+		\caption{Smartphone webpage containing accelerometer data}
+		\label{Smartphone webpage containing accelerometer data}
+\end{figure}
 
 
 
 \newpage
 
-\section{Remote Procedure Call over Websockets}
-After the realtime data streaming from the sensors project demonstrated the power of HTML5 in embedded systems, mbed wanted to use websockets to design an RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. Both of these mbeds are connected to the Internet.
+\section{Remote Procedure Call over WebSockets}
+After having connected sensors to the Internet and demonstrated the power of HTML5 in embedded systems, mbed wanted to use WebSockets to design an RPC (Remote Procedure Call) mechanism. The idea is to enable users to call a specific method on a specific mbed. All mbeds are connected to the Internet.
 
-\subsection{Architecture: mbed boards, websocket server}
+\subsection{Architecture: mbed boards, WebSocket server}
 
 \begin{figure}[h!]
 		\centering
@@ -750,15 +803,14 @@ After the realtime data streaming from the sensors project demonstrated the powe
 		\label{RPC architecture}
 \end{figure}
 
-
-On the previous diagram, two main elements can be distinguished:
+The figure~\ref{RPC architecture} distinguishes two main elements:
 \begin{packed_item}
-	\item Two different sub-networks. On each sub-network, all mbeds can share methods or execute a non-local one
-	\item An RPC Websocket server which is responsible for managing all sub-networks and all messages exchanged. This server is written in Python and uses Tornado
+	\item \textbf{Two different subnetworks}. On each subnetwork, all mbeds can share methods or execute a non-local one
+	\item \textbf{An RPC WebSocket server} which is responsible for managing all subnetworks and all messages exchanged. This server is written in Python and uses Tornado
 \end{packed_item}
 
 
-Each mbed will belong to a specific subnetwork and will be identified by a specific name. This identification is made over the URL used to connect to the websocket server as shown in the figure~\ref{RPC: mbed identification on a subnetwork}. \\
+Each mbed belongs to a specific subnetwork and is identified by a specific name. This identification is made over the URL used to connect to the WebSocket server as shown in the figure~\ref{RPC: mbed identification on a subnetwork}. \\
 
 \begin{figure}[h!]
 		\centering
@@ -769,27 +821,27 @@ Each mbed will belong to a specific subnetwork and will be identified by a speci
 
 Different steps are required to execute a distant method:
 \begin{packed_item}
-	\item connect several mbeds to the same subnetwork over a websocket communication
-	\item all mbeds can register methods: an mbed has to register on or more methods on the server before others can call them
+	\item connect several mbeds to the same subnetwork over a WebSocket communication
+	\item all mbeds can register methods: an mbed has to register one or more methods to the server before others can call them
 	\item an mbed connected over the same subnetwork as the previous mbed can call the registered method
-	\item the distant mbed will execute the method and return the results
+	\item the distant mbed executes the method and return the results
 	\item the local mbed can then handle the result of the distant method
 \end{packed_item}
 
 \subsection{Protocol}
 The RPC mechanism relies on JSON messages exchanged. On these messages, we need to specify:
 \begin{packed_item}
-	\item the source of the message
-	\item the destination of the message
-	\item message name:
+	\item the \textbf{source} of the message
+	\item the \textbf{destination} of the message
+	\item the \textbf{message name}:
 		\begin{packed_item}
 			\item CALL: to call a distant function
 			\item RESULT: this message contains the result of a previous CALL
-			\item REGISTER: used to register a specific method to the websocket server
+			\item REGISTER: used to register a specific method to the WebSocket server
 			\item INFO\_METHODS: a client can have access to all methods registered from a specific client
 			\item ERROR: an error has been detected
 		\end{packed_item}
-	\item message ID: random number used to identify a transaction. For a valid RPC transaction, the request and the answer have to have the same message ID.
+	\item the \textbf{message ID}: random number used to identify a transaction. For a valid RPC transaction, the request and the answer have to have the same message ID.
 \end{packed_item}
 
 The previous fields are common to all messages exchanged. After each message, other possible fields are:
@@ -798,20 +850,20 @@ The previous fields are common to all messages exchanged. After each message, ot
 \begin{packed_item}
 	\item CALL:
 		\begin{packed_item}
-			\item method name: distant method which will be called
-			\item params: parameters for this method
+			\item \textbf{method}: distant method name which will be called
+			\item \textbf{params}: parameters for this method
 		\end{packed_item}
 	\item RESULT:
 		\begin{packed_item}
-			\item result: result of the function called remotely
+			\item \textbf{result}: result of the function called remotely
 		\end{packed_item}
 	\item REGISTER:
 		\begin{packed_item}
-			\item fn: on the network, a distant method will be identified by this field
+			\item \textbf{fn}: on the network, a distant method will be identified by this field
 		\end{packed_item}
 	\item ERROR:
 		\begin{packed_item}
-			\item cause: cause of the error:
+			\item \textbf{cause}: cause of the error:
 			\begin{packed_item}
 				\item JSON\_PARSE\_ERROR: error in the json format
 				\item JSON\_RPC\_ERROR: error in the rpc message format
@@ -875,9 +927,9 @@ template<typename T> RPC_TYPE registerMethod(const char * public_name, T * obj_p
 \end{lstlisting}
 
 
-This method is responsible for registering the specified method on the rpc websocket server:
+This method is responsible for registering the specified method on the rpc WebSocket server and needs several steps:
 \begin{packed_item}
-	\item Send a websocket message to the server containing a MSG\_REGISTER request:
+	\item Send a WebSocket message to the server containing a MSG\_REGISTER request:
 	\begin{packed_item}
 		\item from: mbed\_id
 		\item to: server
@@ -903,8 +955,8 @@ RPC_TYPE MbedJSONRpc::call(const char * fn, const char * dest, MbedJSONValue& in
 
 This method, in order to call a distant method, requires several steps:
 \begin{packed_item}
-	\item Serialize the in MbedJSONValue object in order to be sent over websocket
-	\item Send a websocket message to the server containing a MSG\_CALL request
+	\item Serialize the in MbedJSONValue object in order to be sent over WebSocket
+	\item Send a WebSocket message to the server containing a MSG\_CALL request
 	\begin{packed_item}
 		\item from: mbed\_id
 		\item to: dest
@@ -927,14 +979,14 @@ void MbedJSONRpc::work()
 
 This method does the following steps:
 \begin{packed_item}
-	\item Tries to read a websocket message
+	\item Tries to read a WebSocket message
 	\item If a message is available:
 		\begin{packed_item}
 			\item Check the validity of the message
 			\item Convert the "params" field in a MbedJSONValue object
 			\item Execute the registered method with the previous in argument. At the same time, the method will fill the "out" parameter containing the result
 			\item Serialize the result of the method executed
-			\item Send a MSG\_RESULT websocket message to the server;
+			\item Send a MSG\_RESULT WebSocket message to the server;
 			\begin{packed_item}
 				\item from: mbed\_id
 				\item to: msg["from"]
@@ -954,7 +1006,6 @@ TODO: photo
 \subsubsection{Software: mbed which registers a method}
 I will demonstrate the program running on an mbed which has an accelerometer connected. The idea is to remotely access the accelerometer's values from another mbed.
 
-
 \begin{lstlisting}[label=Client which registers a method,caption=Client which registers a method]
 
 // accelerometer
@@ -963,10 +1014,10 @@ ADXL345 accelerometer(p5, p6, p7, p8);
 //wifi module
 Wifly wifly(p9, p10, p17, "network", "password", true);
 
-//websocket: configuration with sub-network = sensor and mbed_id = mbed_acc 
+//WebSocket: configuration with subnetwork = sensor and mbed_id = mbed_acc 
 Websocket webs("ws://sockets.mbed.org/rpc/sensor/mbed_acc",&wifly);
 
-//RPC object attached to the websocket server
+//RPC object attached to the WebSocket server
 MbedJSONRpc rpc(&webs);
 
 //Acc class. 
@@ -994,7 +1045,7 @@ int main() {
     //join the network
     wifly.join();
     
-    //connect the websocket server
+    //connect the WebSocket server
     webs.connect();
 
     //register the acc method and wait for incoming methods
@@ -1009,10 +1060,10 @@ int main() {
 \subsubsection{Software: mbed calling a distant method}
 
 \begin{lstlisting}[label=Client which calls a distant method,caption=Client which calls a distant method]
-//websocket over ethernet: configuration with sub-network = samux and mbed_id = mbed_acc
+//WebSocket over ethernet: configuration with subnetwork = sensor and mbed_id = mbed_acc
 Websocket webs("ws://sockets.mbed.org/rpc/sensor/mbed_client");
 
-//RPC object attached to the websocket server
+//RPC object attached to the WebSocket server
 MbedJSONRpc rpc(&webs);
 
 int main() {
@@ -1022,7 +1073,7 @@ int main() {
     //out results of the distant method (accelerometers values)
     MbedJSONValue in, out;
 
-		//connect the websocket server
+		//connect the WebSocket server
     webs.connect();
 
     //CALL getAcc on mbed_acc
@@ -1034,8 +1085,8 @@ int main() {
 }
 \end{lstlisting}
 
-\subsection{Websocket server: Tornado}
-The server uses the same framework used for the realtime streaming data project. The server is responsible for managing all subnetworks and messages exchanged over a subnetwork. \\
+\subsection{WebSocket server: Tornado}
+The server uses the same framework used for the realtime streaming data project. It is responsible for managing all subnetworks and messages exchanged over a subnetwork. \\
 
 
 The main data structure in order to represent the state of the whole network is a dictionary:
@@ -1056,16 +1107,16 @@ The main data structure in order to represent the state of the whole network is 
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.6\textwidth]{./rpc_server_data_struct.jpg}
-		\caption{Data structure for the RPC websocket server}
-		\label{Data structure for the RPC websocket server}
+		\caption{Data structure for the RPC WebSocket server}
+		\label{Data structure for the RPC WebSocket server}
 \end{figure}
 
 
-The websocket server does the following:
+The WebSocket server does the following:
 \begin{packed_item}
 	\item If a new mbed connects a specific subnetwork:
 	\begin{packed_item}
-		\item Update the dictionary containing the network information by adding an entry on the subnetwork dictionary
+		\item Update the dictionary containing the network information by adding an entry to the subnetwork dictionary
 	\end{packed_item}
 	
 	\item If the server receives a MSG\_REGISTER request:
@@ -1097,7 +1148,7 @@ For Mbed the Internet of Things is a very important field. We feel that in the f
 	\item factories
 \end{packed_item}
 
-The first project showed that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provides a means to execute a method on a distant mbed. This can be useful, for instance, in critical places where the environment is inhospitable for humans. The common point of these two projects is the use of a websocket communication, a new feature of HTML5. This new way of communication enables realtime capabilities with a bidirectionnal communication between a client and server. It was quite interesting to develop projects using a protocol that was still in development. For instance, when I first started, the WebSocket data framing was not at all the same as now. It was much more simple: data frames started with 0x00 and ended with 0xff. The overhead was reduced but the final protocol defined in RFC 6455 provides more capabilities such as: raw binary can be sent, a ping/pong mechanism, a packet can be segmented. This change in the protocol led to tricky situations where the browser had been updated with the new protocol and the websocket server hadn't. This resulted in the browser and the server being incompatible. For the moment, not all browsers are natively supporting WebSockets. Only Chrome 16 is supporting the last version of the protocol but we can hope that browsers will integrate this powerful feature soon.\\
+The first project showed that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provides a mean to execute a method on a distant mbed. This can be useful, for instance, in critical places where the environment is inhospitable for humans. The common point of these two projects is the use of a WebSocket communication. This new way of communication enables realtime capabilities with a bidirectionnal communication between a client and server. It was quite interesting to develop projects using a protocol that was still in development. For instance, when I first started, the WebSocket data framing was not at all the same as now. It was much more simple: data frames started with 0x00 and ended with 0xff. The overhead was reduced but the final protocol defined in RFC 6455 provides more capabilities such as: raw binary can be sent, a ping/pong mechanism, a packet can be segmented. This change in the protocol led to tricky situations where the browser had been updated with the new protocol and the WebSocket server had not been. This resulted in the browser and the server being incompatible. For the moment, not all browsers are natively supporting WebSockets. Only Chrome 16 is supporting the last version of the protocol but we can hope that browsers will integrate this powerful feature soon.\\
 
 
 
@@ -1155,7 +1206,7 @@ Devices have a series of buffers to communicate with the host. Each buffer will 
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.8\textwidth]{./endpoint.jpg}
+		\includegraphics[width=0.8\textwidth]{./endpoints.jpg}
 		\caption{Different types of endpoints}
 		\label{Different types of endpoints}
 \end{figure}
@@ -1338,7 +1389,7 @@ Isochronous transfers are the same as bulk or interrupt transfers without the ha
 
 \newpage
 \section{USB Device stack}
-A USB device stack has been developed to allow mbed users to design their own USB device or to use their mbed to emulate a USB peripheral such as a keyboard or a mouse. USB defines class code information that is used to identify a deviceï¿½'s functionality. This class code is parsed by the USB host stack to load an appropriate device driver. Several classes have been implemented:
+A USB device stack has been developed to allow mbed users to design their own USB device or to use their mbed to emulate a USB peripheral such as a keyboard or a mouse. I did not implemented the USB device stack from scratch but I had low level layers developed in a previous project. I added some functionnalities to these low layers to support for instance all kinds of endpoints and implemented several USB classes:
 \begin{packed_item}
 	\item HID (Human Interface Device)
 	\item MSD (Mass Storage Device)
@@ -1346,6 +1397,8 @@ A USB device stack has been developed to allow mbed users to design their own US
 	\item MIDI
 	\item a subset of CDC (Communication Device Class) to provide a virtual serial port
 \end{packed_item}
+
+USB defines class code information that is used to identify a deviceï¿½'s functionality. This class code is parsed by the USB host stack to load an appropriate device driver.
 
 \begin{figure}[h!]
 		\centering
@@ -1994,83 +2047,79 @@ Request Sense to get more information about the problem
 
 The main method to decode a CBW and a SCSI command is:
 \begin{lstlisting}[label=MSD CBW decoding,caption=MSD CBW decoding]
-void USBMSD::CBWDecode(uint8_t * buf, uint16_t size) {
-    if (size == sizeof(cbw)) {
-        memcpy((uint8_t *)&cbw, buf, size);
-        if (cbw.Signature == CBW_Signature) {
-            csw.Tag = cbw.Tag;
-            csw.DataResidue = cbw.DataLength;
-            if ((cbw.CBLength <  1) || (cbw.CBLength > 16) ) {
-                fail();
+void USBMSD::CBWDecode(CBW cbw) {
+	if (cbw.Signature == CBW_Signature) {
+		csw.Tag = cbw.Tag;
+		csw.DataResidue = cbw.DataLength;
+		if ((cbw.CBLength <  1) || (cbw.CBLength > 16) ) {
+			fail();
+		} else {
+			switch (cbw.CB[0]) {
+				case TEST_UNIT_READY:
+					testUnitReady();
+					break;
+        case REQUEST_SENSE:
+          requestSense();
+          break;
+        case INQUIRY:
+          inquiryRequest();
+          break;
+        case MODE_SENSE6:
+          modeSense6();
+          break;
+        case READ_FORMAT_CAPACITIES:
+          readFormatCapacity();
+          break;
+        case READ_CAPACITY:
+          readCapacity();
+          break;
+        case READ10:
+          case READ12:
+          if (infoTransfer()) {
+            if ((cbw.Flags & 0x80)) {
+               stage = PROCESS_CBW;
+               memoryRead();
             } else {
-                switch (cbw.CB[0]) {
-                    case TEST_UNIT_READY:
-                        testUnitReady();
-                        break;
-                    case REQUEST_SENSE:
-                        requestSense();
-                        break;
-                    case INQUIRY:
-                        inquiryRequest();
-                        break;
-                    case MODE_SENSE6:
-                        modeSense6();
-                        break;
-                    case READ_FORMAT_CAPACITIES:
-                        readFormatCapacity();
-                        break;
-                    case READ_CAPACITY:
-                        readCapacity();
-                        break;
-                    case READ10:
-                    case READ12:
-                        if (infoTransfer()) {
-                            if ((cbw.Flags & 0x80)) {
-                                stage = PROCESS_CBW;
-                                memoryRead();
-                            } else {
-                                stallEndpoint(EPBULK_OUT);
-                                csw.Status = CSW_ERROR;
-                                sendCSW();
-                            }
-                        }
-                        break;
-                    case WRITE10:
-                    case WRITE12:
-                        if (infoTransfer()) {
-                            if (!(cbw.Flags & 0x80)) {
-                                stage = PROCESS_CBW;
-                            } else {
-                                stallEndpoint(EPBULK_IN);
-                                csw.Status = CSW_ERROR;
-                                sendCSW();
-                            }
-                        }
-                        break;
-                    case VERIFY10:
-                        if (!(cbw.CB[1] & 0x02)) {
-                            csw.Status = CSW_PASSED;
-                            sendCSW();
-                            break;
-                        }
-                        if (infoTransfer()) {
-                            if (!(cbw.Flags & 0x80)) {
-                                stage = PROCESS_CBW;
-                                memOK = true;
-                            } else {
-                                stallEndpoint(EPBULK_IN);
-                                csw.Status = CSW_ERROR;
-                                sendCSW();
-                            }
-                        }
-                        break;
-                    default:
-                        fail();
-                        break;
-                }
+               stallEndpoint(EPBULK_OUT);
+               csw.Status = CSW_ERROR;
+               sendCSW();
             }
-        }
-    }
+          }
+          break;
+        case WRITE10:
+        case WRITE12:
+          if (infoTransfer()) {
+            if (!(cbw.Flags & 0x80)) {
+              stage = PROCESS_CBW;
+            } else {
+              stallEndpoint(EPBULK_IN);
+              csw.Status = CSW_ERROR;
+              sendCSW();
+            }
+          }
+          break;
+        case VERIFY10:
+          if (!(cbw.CB[1] & 0x02)) {
+            csw.Status = CSW_PASSED;
+            sendCSW();
+            break;
+          }
+          if (infoTransfer()) {
+            if (!(cbw.Flags & 0x80)) {
+              stage = PROCESS_CBW;
+              memOK = true;
+            } else {
+              stallEndpoint(EPBULK_IN);
+              csw.Status = CSW_ERROR;
+              sendCSW();
+            }
+          }
+          break;
+        default:
+          fail();
+          break;
+      }
+   }
 }
 \end{lstlisting}
 
@@ -2203,8 +2252,8 @@ Mbed users can now use their mbed to emulate a USB device. I really wanted explo
 \chapter*{Conclusion}
 By way of conclusion, I again want to thank my manager Simon Ford. He permitted me to explore new domains involved in my projects:
 \begin{packed_item}
-	\item the Internet of Things project where I had to connect sensors to the Internet over a websocket communication. 
-	\item the Remote Procedure Call Mechanism over websocket which permitted to call methods on a distant mbed
+	\item the Internet of Things project where I had to connect sensors to the Internet over a WebSocket communication. 
+	\item the Remote Procedure Call Mechanism over WebSocket which permitted to call methods on a distant mbed
 	\item the USB device stack to emulate USB devices with an mbed
 \end{packed_item}
 
@@ -2216,7 +2265,7 @@ The Internet of Things and RPC projects were very interesting because they neede
 \end{packed_item}
 
 
-Thanks to these projects, I learned a great deal about web programming, in particular Javascript. I am now more familiar with web technologies such as HTML5 and websockets. It was very good experience, I found, to develop a project which required several skills. I also really appreciated working on the USB. It was a new domain for me, and it was very interesting to discover all about the USB protocol. It was satisfying and motivating to observe technical results day after day on the USB device stack, knowing that it was a totally new subject for me. In the end, I was happy to be able to provide to mbed users a USB device stack able to emulate many USB classes. \\
+Thanks to these projects, I learned a great deal about web programming, in particular Javascript. I am now more familiar with web technologies such as HTML5 and WebSockets. It was very good experience, I found, to develop a project which required several skills. I also really appreciated working on the USB. It was a new domain for me, and it was very interesting to discover all about the USB protocol. It was satisfying and motivating to observe technical results day after day on the USB device stack, knowing that it was a totally new subject for me. In the end, I was happy to be able to provide to mbed users a USB device stack able to emulate many USB classes. \\
 
 
 This internship has been a great experience. It was a real pleasure to work with the mbed team in a very good atmosphere. Furthermore, carrying out this

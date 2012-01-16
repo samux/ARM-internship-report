@@ -1408,7 +1408,7 @@ USB defines class code information that is used to identify a device�'s functi
 		\label{USB device stack capabilities}
 \end{figure}
 
-I will describe in this section the USB stack architecture and some USB classes such as HID, MSD, Audio and CDC.
+I will describe and comment in this section the USB stack architecture and some USB classes such as HID, Audio and CDC. Then, I will give some advice to USB developers mainly concerning the debug.
 
 
 \subsection{USB Device stack architecture}
@@ -1421,9 +1421,9 @@ I will describe in this section the USB stack architecture and some USB classes 
 
 \begin{packed_item}
 
-	\item \textbf{USBHAL}: The USB hardware layer for the LPC11U24 and for the LPC1768. In this class, all low level methods are defined. There are USBHAL\_LPC11U24.cpp and USBHAL\_LPC1768.cpp which define functions defined in USBHAL.h. The right .cpp file is chosen according to a macro defined by the compiler: if a user is compiling a program for the LPC1768, the macro TARGET\_LPC1768 is defined. If a user wants to compile a program for the LPC11U24, the macro TARGET\_LPC11U24 is defined. Virtual functions are called on specific events to be treated by subclasses
-	
-	\item \textbf{USBDevice}: This layer is in charge of abstracting the hardware. At this level, no differences are made between the LPC11U24 and the LPC1768 concerning the target. USBDevice is in charge of performing the setup packet treatment (enumeration step is performed in this class) and provide an abstraction to handle the USB interface
+	\item \textbf{USBHAL}: The USB hardware layer for the LPC11U24 and for the LPC1768. In this class, all low level methods are defined. Virtual methods are called from the USB IRQ handler on specific events to be treated by subclasses
+
+	\item \textbf{USBDevice}: This layer is in charge of abstracting the hardware. It provides an abstraction to handle the USB interface. At this level, no differences are made between the LPC11U24 and the LPC1768. USBDevice is in charge of performing the setup packet treatment (enumeration step is performed in this class)
 
 	\item \textbf{USB class layer}:
 		\begin{packed_item}
@@ -1440,7 +1440,7 @@ I will describe in this section the USB stack architecture and some USB classes 
 			\item USBKeyboard: used to emulate a keyboard
 			\item USBMouseKeyboard: used to emulate a mouse and a keyboard at the same time
 			\item USBSerial: used to emulate a virtual serial port
-			\item USBMSD\_??: All users can implement their own class which inherits from USBMSD in order to access their storage chip
+			\item USBMSD\_??: All users can implement their own class which inherits from USBMSD in order to access their own storage chip
 		\end{packed_item}
 	
 \end{packed_item}
@@ -1464,8 +1464,7 @@ To describe the state of each endpoints available, we need to allocate space in 
 \end{packed_item}
 
 
-
-Main methods for USBHAL class ARE:
+Main methods for USBHAL class are:
 
 \begin{packed_item}
 	\item Memory allocation for endpoints status list and endpoint 0 buffers. These initializations are done in the constructor of USBHAL::USBHAL
@@ -1483,13 +1482,15 @@ Main methods for USBHAL class ARE:
 \end{packed_item}
 
 
-When a specific event occurs, USBHAL calls virtual functions which can be overrided in a subclass to perform a custom treatment. Main callback functions are:
+In my opinion, the most important mechanism that need to be mentionned concerns all virtual methods called from USBHAL. When a specific event occurs, USBHAL calls specific methods which are virtuals. They can then be overrided in a subclass to perform a custom treatment. Main callback functions are:
 \begin{packed_item}
 	\item SOF(int frameNumber): called on each Start Of Frame event (each millisecond)
 	\item EP0setupCallback(): called when a setup packet is received
 	\item EPx\_OUT\_callback(): called a data has been received on a specific endpoint
 	\item EPx\_IN\_callback(): called when a data has been sent on a specific endpoint
 \end{packed_item}
+
+I decided to use virtual methods because it's very easy for a user to it provides an easy wayI had in mind that developers may take my USB stack as a starting point
 
 These callback methods are called from the USB interrupt handler:
 

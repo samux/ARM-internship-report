@@ -1203,7 +1203,7 @@ The physical bus topology defines how USB devices are connected to the host. The
 		\label{USB physical topology}
 \end{figure}
 \subsection{Endpoints and type of transfers}
-Devices have a series of buffers to communicate with the host. Each buffer will belong to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on the NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. One logical endpoint represents two physical endpoints. Each physical endpoint has a specific direction: either OUT to receive data from the host or IN to send data to the host. 
+Devices have a series of buffers to communicate with the host. Each buffer belongs to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on the NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. One logical endpoint represents two physical endpoints. Each physical endpoint has a specific direction: either OUT to receive data from the host or IN to send data to the host. 
 
 
 \footnotetext{reference: http://www.usblyzer.com}
@@ -1506,7 +1506,7 @@ One of the purposes of this class is to provide an API in order to handle the US
 \end{packed_item}
 
 \subsubsection{Setup packet processing}
-Two data structures has been defined in order to perform the control endpoint processing. The enumeration step is part of this treatment:
+Two data structures have been defined in order to perform the control endpoint processing. The enumeration step is part of this treatment:
 \begin{packed_item}
 	\item SETUP\_PACKET: to describe a setup packet
 	\item CONTROL\_TRANSFER: to describe a transfer on the control endpoint
@@ -2024,7 +2024,7 @@ With this example, I just have tested the host-mbed communication. In order to t
  
 
 \section{Conclusion}
-Mbed users can now use their mbed to emulate a USB device. I really wanted explore all the capabilities of USB and pushed by the mbed community, I developed several USB classes:
+Mbed users can now use their mbed to emulate a USB device. I really wanted to explore all the capabilities of USB and pushed by the mbed community, I developed several USB classes:
 \begin{packed_item}
 	\item Human Interface Device (HID), in my opinion the best way to develop a custom USB device as it permits the exchange of raw data without the need for a specific driver on the host side
 	\item Communication Device Class (CDC) to provide a virtual serial port
@@ -2048,19 +2048,29 @@ The Internet of Things was very interesting because it required several skills s
 \end{packed_item}
 
 
-Thanks to this project, I learned a great deal about web programming, in particular Javascript. I am now more familiar with web technologies such as HTML5 and WebSockets. It was a very good experience, I found, to develop a project which required several skills. I also really appreciated working on the USB. It was a new domain for me, and it was very interesting to discover all about the USB protocol. It was satisfying and motivating to observe technical results day after day on the USB device stack, knowing that it was a totally new subject for me. In the end, I was happy to be able to provide to mbed users a USB device stack able to emulate many USB classes. \\
+Thanks to this project, I learned a great deal about web programming, in particular Javascript. I am now more familiar with web technologies such as HTML5 and WebSockets. I found that it was a very good experience to develop a project which required several skills from embedded systems to web programming. I have also really appreciated working on the USB. It was a new domain for me, and it was very interesting to discover all about the USB protocol. It was satisfying and motivating to observe technical results day after day on the USB device stack, knowing that it was a totally new subject for me. In the end, I was happy to be able to provide to mbed users a USB device stack able to emulate many USB classes. \\
 
 
 This internship has been a great experience. It was a real pleasure to work with the mbed team in a very good atmosphere. Furthermore, carrying out this
-internship in a foreign country allowed me to be immersed in a different culture and face the problems asscoiated with living and working entirely with a non-native language (English). I met several interesting people both in and out of the lab, such as engineers, students, and also people not connected with computer science.
+internship in a foreign country allowed me to be immersed in a different culture and face the problems associated with living and working entirely with a non-native language (English). I met several interesting people both in and out of the lab, such as engineers, students, and also people not connected with computer science.
 
 
 
 
 \chapter*{References}
-http://www.bbc.co.uk/news/technology-13613536
+\section{Bibliography}
+\begin{packed_item}
+	\item Joseph Yiu. The Definitive Guide to the ARM Cortex-M3. Newnes; second edition: December 23, 2009. 479 pages. ISBN 978-1856179638
+	\item Jan Axelson. USB Complete : The Developer's Guide. Lakeview Research; Fourth edition: June 1, 2009. 506 pages. ISBN 978-1931448086
+\end{packed_item}
 
-TODO
+
+\section{Online resources}
+\begin{packed_item}
+	\item \textbf{http://infocenter.arm.com/help}: contains all ARM non-confidential Technical Publications. This website has been useful to find information on Cortex series reference manual
+	\item \textbf{http://www.usb.org}: contains all documents related to the USB. Particularly, it provides all USB classes specification
+	\item \textbf{http://mbed.org}: contains all information about mbed. This website has been particularly useful to find existing libraries developed by the mbed community
+\end{packed_item}
 
 
 

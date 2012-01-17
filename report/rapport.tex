@@ -67,7 +67,7 @@
 \chapter*{Acknowledgment}
 I took immense pleasure in this internship and would like to begin this report by thanking several people. \\
 
-Firstly, I wish to express my deep sense of gratitude to my manager, Mr Simon Ford. This internship would not have been possible without him. I will also never forget the excellent atmosphere in the mbed team thanks to: Mr Simon Ford, Mr Chris Style, Mr Dan Ros, Mr Emilio Monti and Mr Amit Naran. \\
+Firstly, I wish to express my deep sense of gratitude to my manager, Mr Simon Ford. This internship would not have been possible without him. I will also never forget the excellent atmosphere in the mbed team thanks to: Mr Simon Ford, Mr Chris Styles, Mr Dan Ros, Mr Emilio Monti and Mr Amit Naran. \\
 
 I also want to thank two teachers of T\'{e}l\'{e}com Paristech: Mr Alexis Polti and Mr Samuel Tardieu who gave me working method and taught me many things. I will never forget my three month project during which I worked with them on an octocopter. It was a unique experience. \\
 
@@ -80,12 +80,7 @@ Microcontrollers and more generally embedded systems can locally be connected to
 
 This report deals with these two different types of connectivity involving microcontrollers:
 \begin{packed_item}
-	\item First I will explain how to use microcontrollers to prototype two Internet Of Things projects:
-	\begin{packed_item}
-		\item Connection of sensors to the cloud. The data sensors can be accessible all over the world
-		\item Remote Procedure Call mechanism where several microcontrollers are connected to the Internet and each micrcontroller can execute a function on a distant one
-	\end{packed_item}
-	The objective across these two projects is to explore a new HTML5 feature called WebSocket
+	\item First I will explain how to use microcontrollers to prototype an Internet Of Things projects where will be connected to the Internet. The objective of this project is to access sensor data all over the world introducing a new HTML5 feature named WebSocket
 	\item Then, I will discuss on a USB device stack which has been implemented allowing microcontrollers to be recognized by a computer as a USB peripheral.
 \end{packed_item}
 
@@ -179,6 +174,8 @@ Both mbed boards have a built-in USB drag and drop FLASH programmer. This featur
 	\item press the reset button
 \end{packed_item}
 
+Furthermore, the mbed is not only recognized as a USB mass storage device but also as a virtual serial port. This allows a very easy way to debug. If a user calls "printf", the message is automatically sent over this serial port.
+
 
 \subsection{The online compiler}
 The two main keywords of Mbed are "simple" and "cloud computing". Users can use an online compiler to develop their programs in C++. They compile online and transfer the generated binary into the mbed, which is connected to a computer over a USB cable. They just have to press the reset button to see their program running.
@@ -231,7 +228,7 @@ Cisco predicted in an interview with the BBC that the number of internet connect
 \begin{quote} "Three years ago over 95 percent of the devices connected to the Internet were personal computers. Three years from now that number will probably be less than 20 percent. More than 80 percent of the devices connected to the Internet will not be Windows-based personal computers." \\
 \end{quote}
 
-Thus, the development and progress of technologies connecting different sensors and devices to the Internet is becoming ever more important. I will describe in this chapter two projects I took part in concerning the Internet of Things: connecting sensors to the cloud and Remote Procedure Call mechanism. Both of these projects use a new feature of HTML5: a WebSocket communication.
+Thus, the development and progress of technologies connecting different sensors and devices to the Internet is becoming ever more important. I will describe in this chapter a project I took part in concerning the Internet of Things: connecting sensors to the cloud. It uses a new feature of HTML5: a WebSocket communication.
 
 
 \begin{figure}[h!]
@@ -378,8 +375,20 @@ ws.onclose = function(evt) {
 
 
 \subsection{The mbed WebSocket library}
-A WebSocket client library has been developed in order to exchange data between an mbed and a server over a WebSocket communication. The library can be used over an ethernet connection, or a wifi connection using a Roving Networks wifly module. The library uses existing libraries such as the wifi module library or the TCP socket library, part of the TCP/IP stack (port of lwIP for mbed). For instance, the method which connects an mbed to a WebSocket server over wifi is:
+I really wanted to test a WebSocket communication with an mbed allowing it to be a client. With this library, an mbed is able to send and receive messages to a WebSocket server. To achieve this I just need a TCP socket:
+\begin{packed_item}
+	\item After having opened the socket, HTTP headers for the WebSocket handshake are sent to the server
+	\item If the server accepts the handshake, it sends back the response confirming the upgrade to the WebSocket protocol 
+	\item Then WebSocket messages can flow between server and client
+\end{packed_item}
 
+As a TCP/IP stack (lwIP) has been ported to the mbed, the first solution to implement a WebSocket library could be to use it. But Mbed wanted to involve wireless communications in this project. A wifi module from Roving Networks has been chosen for several reasons:
+\begin{packed_item}
+	\item it integrates a full TCP/IP stack
+	\item it is easy to interface with an mbed as the communication is made over a serial port
+\end{packed_item}
+
+Eventually, the mbed library abstracts the type of connection and can be used either with an Ethernet or a wireless connection. For instance, the method which connects an mbed to a WebSocket server over wifi is:
 
 \begin{center}
 \begin{lstlisting}[label=Connection to a WebSocket server,caption=Connection to a WebSocket server]
@@ -403,8 +412,14 @@ if (!wifi->send("Sec-WebSocket-Version: 13", "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="))
 \end{lstlisting}
 \end{center}
 
+For this library, I wanted to provide a simple but consistent API for mbed users. This API is as follows:
 
-
+\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.6\textwidth]{./ws_api.jpg}
+		\caption{WebSocket library API}
+		\label{WebSocket library API}
+\end{figure}
 
 
 
@@ -450,12 +465,12 @@ The idea behind this project is that the sensor data has to be available everywh
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.4\textwidth]{./acc_board.jpg}
+		\includegraphics[width=0.4\textwidth]{./acc_board_component.jpg}
 		\caption{Accelerometer board with its QR code}
 		\label{Accelerometer board with its QR code}
 \end{figure}
 
-
+\newpage
 
 \subsection{Architecture: mbed boards, WebSocket server, browsers}
 We can distinguish two different parts:
@@ -550,6 +565,7 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 	              client.write_message(message)
 \end{lstlisting}
 
+The channel architecture of the WebSocket server is very useful and convenient even if it was not necessary for this project. I could have indeed chosen a basic WebSocket URL for the server without parameters on it. But I had in mind that it would be interesting to expose the server to all mbed users. If there was a basic URL to connect the server, as it broadcasts the messages received, a device receives messages from all others devices connected to the server. To prevent this situation, each user chooses a channel and can only send and receive messages over his own channel. At this time, the server is used by approximatively 20 mbed users.
 
 
 \subsection{Mbed boards}
@@ -569,9 +585,7 @@ The hardware is very simple to setup as mbed has been designed with quick protot
 	\item sensors
 \end{packed_item}
 
-A wifi module has been chosen to connect the mbed to the internet and access the WebSocket server. I wanted a wifi module easy to use and easy to connect to the mbed. I chose a wifi module from Roving Networks which integrates a full TCP/IP stack. The communication between the mbed and the wifi module is established over a serial communication.
-
-Concerning sensors, all are also very easy to use and to connect. The 3-axis accelerometer and the pressure sensor are connected to the mbed over SPI. Libraries for these sensors have already been developed by the mbed community. The light sensor is connected over a GPIO, as is the microphone. 
+Concerning the sensors, all are very easy to use and to connect. The 3-axis accelerometer and the pressure sensor are connected to the mbed over SPI. Libraries for these sensors have already been developed by the mbed community. The light sensor is connected over a GPIO, as is the microphone. 
 
 
 \subsubsection{Software}
@@ -772,7 +786,6 @@ On the dashboard represented by the figure~\ref{Dashboard webpage}, we can see t
 \end{packed_item}
 
 On the smartphone webpage figure~\ref{Smartphone webpage containing accelerometer data}, we can observe the live graph containing sensor data only from the accelerometer board. On this webpage, we can manage the dashboard with the "add" and "clear" buttons.
-\newpage
 
 \begin{figure}[h!]
 		\centering
@@ -789,7 +802,7 @@ On the smartphone webpage figure~\ref{Smartphone webpage containing acceleromete
 \end{figure}
 
 
-
+\begin{comment}
 \newpage
 
 \section{Remote Procedure Call over WebSockets}
@@ -799,7 +812,7 @@ After having connected sensors to the Internet and demonstrated the power of HTM
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.7\textwidth]{./rpc-1.jpg}
+		\includegraphics[width=0.7\textwidth]{./rpc.jpg}
 		\caption{RPC architecture}
 		\label{RPC architecture}
 \end{figure}
@@ -819,6 +832,9 @@ Each mbed belongs to a specific subnetwork and is identified by a specific name.
 		\caption{RPC: mbed identification on a subnetwork}
 		\label{RPC: mbed identification on a subnetwork}
 \end{figure}
+
+I did all these choices to provide to mbed users a way to develop their own subnetwork where mbeds can "share" their methods. We can then imagine having "public" subnetworks exposing some functionnalities to all users.\\
+
 
 Different steps are required to execute a distant method:
 \begin{packed_item}
@@ -873,6 +889,8 @@ The previous fields are common to all messages exchanged. However, each type of 
 			\end{packed_item}
 		\end{packed_item}
 \end{packed_item}
+
+This protocol has been inspired by the JSON-RPC protocol. I used this existing protocol as a starting point and then I have added some functionnalitites. For instance, I kept the "method", "id", "result", "error" fields but I have added messages in order to register or retrieve methods registered by a specific mbed.
 
 \subsection{Signature of methods handled}
 A user wants to be able to register and then call a function of his choice. So a function can take all kinds of input arguments and return whatever type. The solution is to convert several types of argument into a more generic object called MbedJSONValue. This class can handle parameters such as:
@@ -1002,10 +1020,8 @@ This method does the following steps:
 \subsubsection{Hardware}
 The only requirement for the hardware is to have access to the internet so a wifi module or an ethernet jack is required.
 
-TODO: photo
-
 \subsubsection{Software: mbed which registers a method}
-The following programis running on an mbed which has an accelerometer connected. The idea is to remotely access the accelerometer's values from another mbed.
+The following program is running on an mbed which has an accelerometer connected. The idea is to remotely access the accelerometer's values from another mbed.
 
 \begin{lstlisting}[label=Client which registers a method,caption=Client which registers a method]
 
@@ -1140,6 +1156,7 @@ The WebSocket server does the following:
 	
 \end{packed_item}
 	
+\end{comment}
 
 \section{Conclusion}
 For Mbed the Internet of Things is a very important field. We feel that in the future more and more devices will be connected to the cloud. Examples of applications could include:
@@ -1149,9 +1166,9 @@ For Mbed the Internet of Things is a very important field. We feel that in the f
 	\item factories
 \end{packed_item}
 
-The first project showed that it was possible to stream data sensor on realtime graphs accessible all over the world. The Remote Procedure Call project provides a mean to execute a method on a distant mbed. This can be useful, for instance, in critical places where the environment is inhospitable for humans. The common point of these two projects is the use of a WebSocket communication. This new way of communication enables realtime capabilities with a bidirectionnal communication between a client and server. It was quite interesting to develop projects using a protocol that was still in development. For instance, when I first started, the WebSocket data framing was not at all the same as now. It was much more simple: data frames started with 0x00 and ended with 0xff. The overhead was reduced but the final protocol defined in RFC 6455 provides more capabilities such as: raw binary can be sent, a ping/pong mechanism, a packet can be segmented. This change in the protocol led to tricky situations where the browser had been updated with the new protocol and the WebSocket server had not been. This resulted in the browser and the server being incompatible. For the moment, not all browsers are natively supporting WebSockets. Only Chrome 16 is supporting the last version of the specification but we can hope that browsers will integrate this powerful feature soon.\\
+The project which consisted to connect sensor to the Internet showed that it was possible to stream data sensor on realtime graphs accessible all over the world. This two month project permitted to discover and introduce the WebSocket feature on embedded systems. This new way of communication enables realtime capabilities with a bidirectionnal communication between a client and server. \\
 
-
+It was quite interesting to use a protocol that was still in development. For instance, when I first started, the WebSocket data framing was not at all the same as now. It was much more simple: data frames started with 0x00 and ended with 0xff. The overhead was reduced but the final protocol defined in RFC 6455 provides more capabilities such as: raw binary can be sent, a ping/pong mechanism, a packet can be segmented. This change in the protocol led to tricky situations where the browser had been updated with the new protocol and the WebSocket server had not been. This resulted in the browser and the server being incompatible. For the moment, not all browsers are natively supporting WebSockets. Only Chrome 16 is supporting the last version of the specification but we can hope that browsers will integrate this powerful feature soon.\\
 
 After having worked on the Internet of Things, Mbed wanted to explore USB capabilities on the two mbed boards.
 	
@@ -1168,6 +1185,8 @@ After having worked on the Internet of Things, Mbed wanted to explore USB capabi
 \chapter{Universal Serial Bus}
 
 \section{Inside the USB bus}
+This first section is an introduction to the USB bus in order to provide the necessary bases to understand next sections.
+
 \subsection{USB overview}
 The Universal Serial Bus (USB) is the most widely used bus in today's computers. USB has particularly been designed to standardize connections between the computer and peripherals. For instance, keyboards, printers, scanners, disk drives or cameras can use the same bus to exchange data with a computer. USB has effectively replaced a variety of earlier interfaces, such as serial or parallel ports. The USB bus provides several benefits such as the same interface for many devices, the hot pluggable capability which allows a user to connect and disconnect a USB device whenever he wants, or the automatic configuration which is the capacity of the operating system to load a specific driver according to the device connected. Another useful benefit is that the USB interface provides power supply (5V) that can be used by a device so long as it doesn't require more than 500 mA.\\
 
@@ -1190,7 +1209,7 @@ USB 3.0 & super-speed & 5Gbits/s \\ \hline
 The Universal Serial Bus is host controlled. However, there can only be one host per bus and the host is responsible for undertaking all transactions. Considering this restriction, two devices cannot exchange information without one being the host. Nevertheless, the On-The-Go specification, which is part of the USB 2.0 standard, has introduced a Host Negotiation Protocol, allowing two devices to negotiate for the role of host. With this specification, we can imagine a camera exchanging data with a printer without the need for a computer. 
 
 \subsection{Topology}
-The physical bus topology defines how USB devices are connected to the host. The USB network is implemented as a tiered star network with one host (master) and several devices (slaves). The topology looks like a tree. In order to increase the number of devices connected, a hub needs to be connected to the root port. This special hub and the root port are the first tier of the network. Furthermore, the USB network can support up to 127 external nodes but the number of tiers cannot exceed 7. The following diagram represents a possible connection architecture on a USB bus.
+The physical bus topology defines how USB devices are connected to the host. The USB network is implemented as a tiered star network with one host (master) and several devices (slaves). The topology looks like a tree. In order to increase the number of devices connected, a hub needs to be connected to the root port. This special hub and the root port are the first tier of the network. Furthermore, the USB network can support up to 127 external nodes but the number of tiers cannot exceed 7. The figure~\ref{USB physical topology} following diagram represents a possible connection architecture on a USB bus.
 
 
 \begin{figure}[h!]
@@ -1390,7 +1409,7 @@ Isochronous transfers are the same as bulk or interrupt transfers without the ha
 
 \newpage
 \section{USB Device stack}
-A USB device stack has been developed to allow mbed users to design their own USB device or to use their mbed to emulate a USB peripheral such as a keyboard or a mouse. I did not implemented the USB device stack from scratch but I had low level layers developed in a previous project. I added some functionnalities to these low layers to support for instance all kinds of endpoints and implemented several USB classes:
+A USB device stack has been developed to allow mbed users to design their own USB device or to use their mbed to emulate a USB peripheral such as a keyboard or a mouse. I did not implemented the USB device stack from scratch but I had sources of a previous project. I reused these C low level layers of this project and adapted them in a more C++ structured architecture. I have added new functionnalities to these low layers to support for instance all kinds of endpoints and implemented several USB classes:
 \begin{packed_item}
 	\item HID (Human Interface Device)
 	\item MSD (Mass Storage Device)
@@ -1408,7 +1427,7 @@ USB defines class code information that is used to identify a device�'s functi
 		\label{USB device stack capabilities}
 \end{figure}
 
-I will describe and comment in this section the USB stack architecture and some USB classes such as HID, Audio and CDC. Then, I will give some advice to USB developers mainly concerning the debug.
+I will describe and comment in this section the USB stack architecture and some USB classes such as HID, CDC, MSD and Audio.
 
 
 \subsection{USB Device stack architecture}
@@ -1482,7 +1501,7 @@ Main methods for USBHAL class are:
 \end{packed_item}
 
 
-In my opinion, the most important mechanism that need to be mentionned concerns all virtual methods called from USBHAL. When a specific event occurs, USBHAL calls specific methods which are virtuals. They can then be overrided in a subclass to perform a custom treatment. Main callback functions are:
+In my opinion, the most important mechanism that need to be mentionned concerns all virtual methods called from USBHAL. When a specific event occurs, USBHAL calls specific methods which are virtuals. They can then be overriden in a subclass to perform a custom treatment. Main callback functions are:
 \begin{packed_item}
 	\item SOF(int frameNumber): called on each Start Of Frame event (each millisecond)
 	\item EP0setupCallback(): called when a setup packet is received
@@ -1490,7 +1509,7 @@ In my opinion, the most important mechanism that need to be mentionned concerns 
 	\item EPx\_IN\_callback(): called when a data has been sent on a specific endpoint
 \end{packed_item}
 
-I decided to use virtual methods because it's very easy for a user to it provides an easy wayI had in mind that developers may take my USB stack as a starting point
+I decided to use virtual methods because it's very easy for a user to inherit from this class and define his own treatment on specific events. 
 
 These callback methods are called from the USB interrupt handler:
 
@@ -1622,49 +1641,19 @@ For instance, a GET\_DEVICE\_DESCRIPTOR request is processed according to this s
 	\end{packed_item}
 \end{packed_item}
 
+This mechanism is very important because the enumeration step is primordial. If there is a mistake on the treatment of a request, the host stops the enumeration process and notify that there is a USB device connected but not recognized. I often was in this situation. That is why I really needed a good debug solution. It has been quite difficult at the beginning of my work on the USB to find the best way to debug my programs. But after some research, the best way was to use a software which traces all USB packets exchanged between host and devices. It has been a really efficient solution and the problems was easily fixed.
 
-A basic device descriptor is quite common for USB devices. Importants fields are:
-\begin{packed_item}	
-	\item bcdUSB which is the USB specification release number
-	\item bDeviceClass specifies the device class
-	\item bMaxPacketSize0 specifies the maximum packet size for endpoint 0
-\end{packed_item}
-
-\begin{lstlisting}[label=Device Descriptor,caption=Device Descriptor]
-uint8_t * USBDevice::deviceDesc() {
-    static uint8_t deviceDescriptor[] = {
-        DEVICE_DESCRIPTOR_LENGTH,       // bLength 
-        DEVICE_DESCRIPTOR,              // bDescriptorType 
-        LSB(USB_VERSION_2_0),           // bcdUSB (LSB) 
-        MSB(USB_VERSION_2_0),           // bcdUSB (MSB) 
-        0x00,                           // bDeviceClass 
-        0x00,                           // bDeviceSubClass 
-        0x00,                           // bDeviceprotocol 
-        MAX_PACKET_SIZE_EP0,            // bMaxPacketSize0 
-        LSB(VENDOR_ID),                 // idVendor (LSB) 
-        MSB(VENDOR_ID),                 // idVendor (MSB) 
-        LSB(PRODUCT_ID),                // idProduct (LSB) 
-        MSB(PRODUCT_ID),                // idProduct (MSB) 
-        LSB(PRODUCT_RELEASE),           // bcdDevice (LSB) 
-        MSB(PRODUCT_RELEASE),           // bcdDevice (MSB) 
-        STRING_OFFSET_IMANUFACTURER,    // iManufacturer 
-        STRING_OFFSET_IPRODUCT,         // iProduct 
-        STRING_OFFSET_ISERIAL,          // iSerialNumber 
-        0x01                            // bNumConfigurations 
-    };
-    return deviceDescriptor;
-}
-\end{lstlisting}
 
 \subsection{USBHID class}
 \subsubsection{Introduction}
-HID is one of the most frequently used USB classes. The HID class was primarily defined for devices that are used by humans to control the operation of computer systems. Typical examples of HID devices include keyboards, mice, trackballs, and joysticks. HID devices may have knobs, switches, buttons, sliders, etc. The HID class is also frequently used for devices that may not require human interaction but provide data in a similar format to HID class devices. Since all operating systems have a built-in HID driver, it's easy to design a USB HID device which doesn't require any specific driver.
+HID (Human Interface Device) is one of the most frequently used USB classes. The HID class was primarily defined for devices that are used by humans to control the operation of computer systems. Typical examples of HID devices include keyboards, mice, trackballs, and joysticks. HID devices may have knobs, switches, buttons, sliders, etc. The HID class is also frequently used for devices that may not require human interaction but provide data in a similar format to HID class devices. Since all operating systems have a built-in HID driver, it's easy to design a USB HID device which doesn't require any specific driver. \\
 
-Data exchanged between the host and device resides in a structure called reports. The report format is flexible and can handle any format of data, but each report has a fixed size. This size is specified in a HID descriptor which is transmitted as part of the configuration descriptor.
+
+Data exchanged between the host and device resides in a structure called \textbf{reports}. The report format is flexible and can handle any format of data, but each report has a fixed size. This size is specified in a HID descriptor which is transmitted as part of the configuration descriptor.
 HID devices are required to provide a Report Descriptor which enumerates all data fields of a report. A HID device can have at most one interrupt IN endpoint and one interrupt OUT endpoint (and the control endpoint to perform the enumeration step).
-
-For each field in the report, the Report Descriptor defines how many bits the field consumes, how often this data is repeated, and which is the type of the data field. Thus, report descriptors are specific to a device.
 \\
+
+The following code contains an example of configuration descriptor for a USB HID device. As descriptors can be very long, I only provide this example. I will not explicit all other USB descriptors. But they can be easily found in the specification document of a USB class.
 
 \begin{lstlisting}[label=HID Configuration Descriptor,caption=HID Configuration Descriptor]
 uint8_t * USBHID::configurationDesc() {
@@ -1723,57 +1712,14 @@ uint8_t * USBHID::configurationDesc() {
 }
 \end{lstlisting}
 
-In the configuration descriptor, we find the interface descriptor which defines the class used by this device (HID\_CLASS) and the number of endpoints that will be used (2). The HID descriptor gives information on the length of the report descriptor. Finally, there are endpoint descriptors. The communication uses two interrupt endpoints: one IN to send data to the host and one OUT to receive data from the host. Interrupts endpoint are polled by the host, that is why there is a bInterval field in endpoint descriptors.
+In this configuration descriptor, we find the interface descriptor which defines the class used by this device (HID\_CLASS) and the number of endpoints that will be used (2). The HID descriptor gives information on the length of the report descriptor. Finally, there are endpoint descriptors. The communication uses two interrupt endpoints: one IN to send data to the host and one OUT to receive data from the host. Interrupts endpoint are polled by the host, that is why there is a bInterval field in endpoint descriptors.
 \\
 
 
-\subsubsection{HID: Class specific requests}
-The HID specification defines several class specific requests. All these requests are processed in the USBCallback\_request() virtual method. The main specific requests are:
-\begin{packed_item}
-	\item GET\_REPORT: allows the host to receive a report via the Control pipe. This request is useful at initialization time for absolute items and for 
-determining the state of feature items
-	\item SET\_REPORT: allows the host to send a report to the device, possibly setting the state of input, output, or feature controls.
-	\item GET\_DESCRIPTOR: to request the HID descriptor and the report descriptor
-\end{packed_item}
-
 \subsubsection{Generic HID device}
-If a USBHID is instantiated, the device created is a generic HID device. This means that it is not a specific device such as a mouse or a keyboard but a device which can send and receive raw data. The report descriptor for this device is:
- 
-\begin{lstlisting}[label=Generic HID Report Descriptor,caption=Generic HID Report Descriptor]
-uint8_t * USBHID::reportDesc() {
-    static uint8_t reportDescriptor[] = {
-        0x06, LSB(0xFFAB), MSB(0xFFAB),
-        0x0A, LSB(0x0200), MSB(0x0200),
-        0xA1, 0x01,         // Collection 0x01
-        
-        //data are sent in packets containing input_length bytes
-        0x75, 0x08,         // report size = 8 bits
-        0x15, 0x00,         // logical minimum = 0
-        0x26, 0xFF, 0x00,   // logical maximum = 255
-        0x95, input_length, // report count
-        0x09, 0x01,         // usage
-        0x81, 0x02,         // Input (array)
-        
-        //data are received in packets containing output_length bytes
-        0x95, output_length,// report count
-        0x09, 0x02,         // usage
-        0x91, 0x02,         // Output (array)
-        
-        0xC0                // end collection
+In my opinion, HID is the best class to design a custom USB device. I mean that it is possible to send and receive raw data packets to and from the host without any protocol. But the most important thing is that no driver is needed on the host side as all operating systems have a built-in HID driver. I really wanted to provide to mbed users a way to exchange raw data with a custom program in Python, C/C++, Java,... They can create a generic HID device by instantiating a USBHID object. \\
 
-    };
-    return reportDescriptor;
-}
-\end{lstlisting}
-
-There are two main parts:
-\begin{packed_item}
-	\item Bytes are sent to the host by packets of length \textbf{input\_length}
-	\item Bytes are received by packets of length \textbf{output\_length}
-\end{packed_item}
-
-
-Additionnally, this class defines methods to send and receive reports:
+As all HID devices, a report descriptor as to be provided in order to describe data exchanged. To summarize the descriptor, the device can send and receive byte packets of a certain length. Additionnally, this class defines methods to send and receive reports. Data are sent or read by writing or reading the endpoints specified in the confiiguration descriptor:
 
 \begin{lstlisting}[label=Send and receive HID reports,caption=Send and receive HID reports]
 bool USBHID::send(HID_REPORT *report)
@@ -1794,61 +1740,18 @@ bool USBHID::read(HID_REPORT *report)
 }
 \end{lstlisting}
 
+TODO: put screenshot of windows device recognized and python detecting the device
+
 \subsubsection{USBMOUSE}
-USBMOUSE class is a subclass of USBHID. The important descriptor of this class is the report descriptor which defines data structures which will be exchanged.
-
-
-\begin{lstlisting}[label=Mouse Report Descriptor,caption=Mouse Report Descriptor]
-uint8_t * USBMouse::reportDesc() {
-    static uint8_t reportDescriptor[] = {
-        USAGE_PAGE(1),      0x01,       // Generic Desktop
-        USAGE(1),           0x02,       // Mouse
-        COLLECTION(1),      0x01,       // Application
-        USAGE(1),           0x01,       // Pointer
-        COLLECTION(1),      0x00,       // Physical
-
-        // Buttons
-        REPORT_COUNT(1),    0x03,       // 3 buttons
-        REPORT_SIZE(1),     0x01,       // 1 bit for each button
-        USAGE_PAGE(1),      0x09,       // Buttons
-        USAGE_MINIMUM(1),   0x1,    
-        USAGE_MAXIMUM(1),   0x3,
-        LOGICAL_MINIMUM(1), 0x00,       // Button not pressed
-        LOGICAL_MAXIMUM(1), 0x01,       // Button pressed
-        INPUT(1),           0x02,       // Input, absolute data
-        REPORT_COUNT(1),    0x01,       // Padding to fill 1 byte (5 + 3)
-        REPORT_SIZE(1),     0x05,
-        INPUT(1),           0x01,
-        
-        // X, Y and scroll
-        REPORT_COUNT(1),    0x03,       // 3 features: X, Y, scroll
-        REPORT_SIZE(1),     0x08,       // 1 byte for X, 1 byte for Y and 1 byte for scroll
-        USAGE_PAGE(1),      0x01,
-        USAGE(1),           0x30,       // X
-        USAGE(1),           0x31,       // Y
-        USAGE(1),           0x38,       // scroll
-        LOGICAL_MINIMUM(1), 0x81,       // Minimum: -127
-        LOGICAL_MAXIMUM(1), 0x7f,       // Maximum: 127
-        INPUT(1),           0x06,       // Input, Relative data
-
-        END_COLLECTION(0),
-        END_COLLECTION(0),
-    };
-    return reportDescriptor;
-}
-\end{lstlisting}
-
-On this report descriptor, we can distinguish three different parts:
+USBMOUSE class is a subclass of USBHID. The only difference with a generic HID device is the report descriptor. A mouse report descriptor has to expose all its capabilities:
 \begin{packed_item}
-	\item At the beginning, there is the indication that a mouse report descriptor will be described
-	\item Mouse buttons: There are 3 buttons represented by 1 bit. Values for these buttons are 0 or 1 (pressed or not). They are input values which means that the device will send information to the host
-	\item X, Y and scroll: 3 different features, each represented by 1 byte. Values can vary between -127 and 127. They are also input values
+	\item Mouse buttons: There are 3 buttons represented by 1 bit. Values for these buttons are 0 or 1 (pressed or not).
+	\item X, Y and scroll: 3 different features, each represented by 1 byte. Values can vary between -127 and 127.
 \end{packed_item}
 
 The main method to send a mouse state to the host is:
-
-\begin{lstlisting}[label=Mouse Report Descriptor,caption=Mouse Report Descriptor]
-bool USBMouse::mouseSend(int8_t x, int8_t y, uint8_t buttons, int8_t z) {
+\begin{lstlisting}[label=,caption=Mouse Report Descriptor]
+bool USBMouse::mouseUpdate(int8_t x, int8_t y, uint8_t buttons, int8_t z) {
     HID_REPORT report;
     report.data[0] = buttons & 0x07;
     report.data[1] = x;
@@ -1861,8 +1764,9 @@ bool USBMouse::mouseSend(int8_t x, int8_t y, uint8_t buttons, int8_t z) {
 }
 \end{lstlisting}
 
-Concerning USBKeyboard and USBMouseKeyboard classes, the important part is the definition of the report descriptor which defines the format of data sent to the host. 
+TODO: screenshot and slingshot
 
+USBKeyboard and USBMouseKeyboard classes are quite similar to USBMouse, the only difference is the definition of the report descriptor. 
 
 
 \subsection{CDC class to emulate a virtual serial port}
@@ -1878,33 +1782,16 @@ on the host side. For mbed a subset of the CDC class has been implemented in ord
 a virtual serial port over USB.
 
 \subsubsection{Descriptors}
-Concerning the device descriptor, bDeviceClass has to be 02h to specify a CDC device.\\
-
-
-Two interfaces are used in the configuration descriptor:
+Concerning the configuration descriptor, two interfaces are used:
 \begin{packed_item}
-	\item \textbf{Communication Class Interface}: used to request and manage the device state. This interface is also used by the host to request capabilities and parameters of the communication. To provide information about the communication, four descriptors are used:
-	\begin{packed_item}
-		\item CDCHeaderDescriptor: marks the beginning of the concatenated set of functional descriptors for the interface
-		\item CDCCallManagementDescriptor: describes the processing of calls for the Communication Class interface
- 		\item CDCAbstractControlManagementDescriptor: describes the commands supported by the Communication Class interface. This device supports for instance the request GET\_LINE\_CODING which allows the host to know parameters of the communication (number of stop bits, parity, number of data bits)
-		\item CDCUnionDescriptor: describes the relationship between a group of interfaces that can be considered to form
-a functional unit. Here, the master interface is the Communication Class Interface and the slave one is the data Class Interface
-	\end{packed_item}
+	\item \textbf{Communication Class Interface}: used to request and manage the device state. This interface is also used by the host to request capabilities and parameters of the communication. 
 	\item \textbf{Data Class Interface}: this interface is used for data transfers. For the communication, either bulk or interrupt endpoints are required. For a serial port,  reliability
 of the transmission is very important and the data transfers are not time-critical. That is why, two bulk endpoints (one IN and one OUT) are used
 \end{packed_item}
 
 
-\subsubsection{CDC: Class specific requests}
-The CDC specification defines several class specific requests. All these requests are processed in the USBCallback\_request() virtual method. The main specific requests are:
-\begin{packed_item}
-	\item GET\_LINE\_CODING: allows the host to know parameters of the communication (number of stop bits, parity, number of data bits)
-	\item SET\_LINE\_CODING: allows the host to specify typical line-character formatting properties
-\end{packed_item}
-
 \subsubsection{USBSerial class}
-Once the device is enumerated, data can be exchanged over the two bulk endpoints. To send a character, we just write the character on the bulk IN endpoint. Characters received are pushed on a circular buffer called buf. This step is done in the EPx\_OUT\_callback() virtual function called when a packet is received. We can then define two methods to send and receive data:
+Once the device is enumerated, data can be exchanged over the two bulk endpoints. To send a character, we just write the character on the bulk IN endpoint. Characters received are pushed on a circular buffer. This step is done in the EPx\_OUT\_callback() virtual function called when a packet is received. We can then define two methods to send and receive data:
 
 \begin{lstlisting}[label=USBSerial: putc and getc,caption=USBSerial: putc and getc]
 int USBSerial::_putc(int c) {
@@ -1938,7 +1825,7 @@ bool USBSerial::EP2_OUT_callback() {
 }
 \end{lstlisting}
 
-
+//screenshot
 
 
 \subsection{MSD class}
@@ -1948,14 +1835,8 @@ how mass storage devices, such as a hard-disk, SD card or flash chip should oper
 Many devices use the MSD class to simplify data transfer. More common devices which use this class are hard-drives, USB-stick, MP3 or video player.
 
 \subsubsection{MSD descriptors}
-The MSD configuration descriptor defines one interface with bInterfaceClass = 08h specifying the mass storage class. Two bulk endpoints are then defined to transfer data. Bulk endpoints are used because large amount of data can be transferred.
+The configuration descriptor defines two bulk endpoints to transfer data. Bulk endpoints are used because large amount of data can be transferred.
 
-\subsubsection{MSD class specific requests}
-The MSD specification defines several class specific requests. All these requests are processed in the USBCallback\_request() virtual method. The main specific requests are:
-\begin{packed_item}
-	\item RESET: used to reset the device by the host
-	\item GET\_MAX\_LUN: allows the host to determine the maximum Logical Unit Number (LUN) supported by the device. This is not equivalent to the number of logical unit on the device, since units are numbered starting from 0. In the mbed library, only 1 logical unit is supported.
-\end{packed_item}
 
 \subsubsection{MSD transaction}
 The communication between the device and the host is divided into three steps:
@@ -2009,19 +1890,18 @@ Offset & Field & Length (bytes) & Meaning \\ \hline
 \end{table}
 
 \subsubsection{MSD State machine}
-To implement the three previous step of a transaction, a state machine is used.
-This state machine contains 5 states:
+To implement the three previous steps of a transaction, I decided to use a state machine represented by the figure~\ref{MSD state machine} with five states:
 \begin{packed_item}
-	\item WAIT\_CBW: waiting for the reception of a valid CBW. If a non valid CBW is received, send a CSW reporting an error.
+	\item WAIT\_CBW: waiting for the reception of a valid CBW. If a non valid CBW is received, send a CSW reporting an error
 	\item PROCESS\_CBW: decode and execute command from the CBW. If there is a processing error, go into the ERROR state
 	\item SEND\_CSW: a CSW is sent
 	\item WAIT\_CSW: waiting for CSW reception by the host
-	\item ERROR: to report an error.
+	\item ERROR: to report an error
 \end{packed_item}
 
 \begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./msd_state_machine.jpg}
+		\includegraphics[width=0.4\textwidth]{./msd_state_machine.jpg}
 		\caption{MSD state machine}
 		\label{MSD state machine}
 \end{figure}
@@ -2047,84 +1927,6 @@ Request Sense to get more information about the problem
 	\item SCSI\_TEST\_UNIT\_READY: This command provides a way to check if a logical unit is ready. If the logical unit is not ready, the device reports an error in the CSW. Then the host sends a SCSI\_REQUEST\_SENSE to have more information about the error
 \end{packed_item}
 
-The main method to decode a CBW and a SCSI command is:
-\begin{lstlisting}[label=MSD CBW decoding,caption=MSD CBW decoding]
-void USBMSD::CBWDecode(CBW cbw) {
-	if (cbw.Signature == CBW_Signature) {
-		csw.Tag = cbw.Tag;
-		csw.DataResidue = cbw.DataLength;
-		if ((cbw.CBLength <  1) || (cbw.CBLength > 16) ) {
-			fail();
-		} else {
-			switch (cbw.CB[0]) {
-				case TEST_UNIT_READY:
-					testUnitReady();
-					break;
-        case REQUEST_SENSE:
-          requestSense();
-          break;
-        case INQUIRY:
-          inquiryRequest();
-          break;
-        case MODE_SENSE6:
-          modeSense6();
-          break;
-        case READ_FORMAT_CAPACITIES:
-          readFormatCapacity();
-          break;
-        case READ_CAPACITY:
-          readCapacity();
-          break;
-        case READ10:
-          case READ12:
-          if (infoTransfer()) {
-            if ((cbw.Flags & 0x80)) {
-               stage = PROCESS_CBW;
-               memoryRead();
-            } else {
-               stallEndpoint(EPBULK_OUT);
-               csw.Status = CSW_ERROR;
-               sendCSW();
-            }
-          }
-          break;
-        case WRITE10:
-        case WRITE12:
-          if (infoTransfer()) {
-            if (!(cbw.Flags & 0x80)) {
-              stage = PROCESS_CBW;
-            } else {
-              stallEndpoint(EPBULK_IN);
-              csw.Status = CSW_ERROR;
-              sendCSW();
-            }
-          }
-          break;
-        case VERIFY10:
-          if (!(cbw.CB[1] & 0x02)) {
-            csw.Status = CSW_PASSED;
-            sendCSW();
-            break;
-          }
-          if (infoTransfer()) {
-            if (!(cbw.Flags & 0x80)) {
-              stage = PROCESS_CBW;
-              memOK = true;
-            } else {
-              stallEndpoint(EPBULK_IN);
-              csw.Status = CSW_ERROR;
-              sendCSW();
-            }
-          }
-          break;
-        default:
-          fail();
-          break;
-      }
-   }
-}
-\end{lstlisting}
-
 \subsubsection{Use of USBMSD with a specific storage chip}
 The USBMSD class implements the MSD protocol as defined previously. But this class doesn't work standalone, a subclass is needed to define pure virtual functions called in USBMSD in order to access a specific storage chip.\\
 
@@ -2138,6 +1940,9 @@ Six pure virtual functions have to be defined:
 	\item virtual \textbf{int disk\_size()}: return the memory size
 	\item virtual \textbf{int disk\_status()}: return the status of the storage chip (0: OK, 1: not initialized, 2: no medium in the drive, 4: write protection)
 \end{packed_item}
+
+\subsubsection{Example with an SD card}
+TODO
 
 
 \subsection{Audio class}
@@ -2254,12 +2059,11 @@ Mbed users can now use their mbed to emulate a USB device. I really wanted explo
 \chapter*{Conclusion}
 By way of conclusion, I again want to thank my manager Simon Ford. He permitted me to explore new domains involved in my projects:
 \begin{packed_item}
-	\item the Internet of Things project where I had to connect sensors to the Internet over a WebSocket communication. 
-	\item the Remote Procedure Call Mechanism over WebSocket which permitted to call methods on a distant mbed
+	\item the Internet of Things project where I had to connect sensors to the Internet over a WebSocket communication
 	\item the USB device stack to emulate USB devices with an mbed
 \end{packed_item}
 
-The Internet of Things and RPC projects were very interesting because they needed several skills such as:
+The Internet of Things was very interesting because it required several skills such as:
 \begin{packed_item}
 	\item software skills in embedded systems to program the mbed
 	\item software skills in web programming
@@ -2267,12 +2071,11 @@ The Internet of Things and RPC projects were very interesting because they neede
 \end{packed_item}
 
 
-Thanks to these projects, I learned a great deal about web programming, in particular Javascript. I am now more familiar with web technologies such as HTML5 and WebSockets. It was very good experience, I found, to develop a project which required several skills. I also really appreciated working on the USB. It was a new domain for me, and it was very interesting to discover all about the USB protocol. It was satisfying and motivating to observe technical results day after day on the USB device stack, knowing that it was a totally new subject for me. In the end, I was happy to be able to provide to mbed users a USB device stack able to emulate many USB classes. \\
+Thanks to this project, I learned a great deal about web programming, in particular Javascript. I am now more familiar with web technologies such as HTML5 and WebSockets. It was a very good experience, I found, to develop a project which required several skills. I also really appreciated working on the USB. It was a new domain for me, and it was very interesting to discover all about the USB protocol. It was satisfying and motivating to observe technical results day after day on the USB device stack, knowing that it was a totally new subject for me. In the end, I was happy to be able to provide to mbed users a USB device stack able to emulate many USB classes. \\
 
 
 This internship has been a great experience. It was a real pleasure to work with the mbed team in a very good atmosphere. Furthermore, carrying out this
-internship in a foreign country allowed me to be immersed in a different culture and face the problems asscoiated with living and working entirely with a non-native language (English). I met several
-interesting people both in and out of the lab, such as engineers, students, and also people not connected with computer science.
+internship in a foreign country allowed me to be immersed in a different culture and face the problems asscoiated with living and working entirely with a non-native language (English). I met several interesting people both in and out of the lab, such as engineers, students, and also people not connected with computer science.
 
 
 

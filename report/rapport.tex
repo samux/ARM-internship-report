@@ -440,7 +440,7 @@ To achieve this project, two prototype boards have been developed with different
 		\end{packed_item}
 \end {packed_item}
 
-The idea behind this project is that the sensor data has to be available everywhere as quickly as possible. That's why we wanted to involve smartphones connected to the Internet over 3G. To achieve this, we used QR (Quick Response) codes. A QR code is a type of matrix-barcode which encodes information. For this project, all QR codes encode URL(s) of webpages which receive the sensor data. Each board has a different QR code. The steps to access data for a user are:
+The idea behind this project is that the sensor data has to be available everywhere as quickly as possible. That is why we wanted to involve smartphones connected to the Internet over 3G. To achieve this, we used QR (Quick Response) codes. A QR code is a type of matrix-barcode which encodes information. For this project, all QR codes encode URL(s) of webpages which receive the sensor data. Each board has a different QR code. The steps to access data for a user are:
 
 \begin{packed_item}
 	\item Place the objects (mbed, sensors, QR code associated to this board) where desired
@@ -711,8 +711,7 @@ The architecture of the dashboard is a little more complicated because it has to
 			\item check the validity of the message
 			\item if the message is a request to add a graph on a dashboard:
 			\begin{packed_item}
-				\item update the Document Object Model (DOM) using the jQuery javascript library
-				\item display the graph associated to this request
+				\item update the Document Object Model (DOM) in order to display the graph associated to this request
 			\end{packed_item}
 			\item if the message comes from a board:
 			\begin{packed_item} 
@@ -1065,13 +1064,13 @@ I will describe and comment in this section the USB stack architecture and some 
 
 \begin{packed_item}
 
-	\item \textbf{USBHAL}: The USB hardware layer for the LPC11U24 and for the LPC1768. In this class, all low level methods are defined. Virtual methods are called from the USB IRQ handler on specific events to be treated by subclasses
+	\item \textbf{USBHAL}: The USB hardware layer for the mbed LPC11U24 and for the mbed LPC1768. As the USB controllers are different, for each target there is a .cpp file implementing the methods defined in a unique .h. The compiler defines a macro in order to select the right target
 
-	\item \textbf{USBDevice}: This layer is in charge of abstracting the hardware. It provides an abstraction to handle the USB interface. At this level, no differences are made between the LPC11U24 and the LPC1768. USBDevice is in charge of performing the setup packet treatment (enumeration step is performed in this class)
+	\item \textbf{USBDevice}: It provides an abstraction to handle the USB interface without any difference between the LPC11U24 and the LPC1768. USBDevice is in charge of performing the setup packet treatment (enumeration step is performed in this class)
 
 	\item \textbf{USB class layer}: It implements specific requests of the corresponding USB device class. It is in this layer that descriptors are defined
 		
-	\item \textbf{USB device layer}: Extension of the USB class layer in order to distinguish several different devices of the same class
+	\item \textbf{USB device layer}: Extension of the USB class layer in order to distinguish several different devices of the same USB class
 	
 \end{packed_item}
 
@@ -1179,12 +1178,12 @@ For instance, a GET\_DEVICE\_DESCRIPTOR request is processed according to this s
 	\begin{packed_item}
 		\item Fill the CONTROL\_TRANSFER structure containing in particular a pointer to the device descriptor
 		\item This request needs DATA IN stages (the device needs to send the descriptor)
-		\item Send data until CONTROL\_TRANSFER.remaining == 0
+		\item Send the data
 		\item Read the control endpoint for the status transaction
 	\end{packed_item}
 \end{packed_item}
 
-This mechanism is very important because the enumeration step is primordial. If there is a mistake on the treatment of a request, the host stops the enumeration process and notify that there is a USB device connected but not recognized. I often was in this situation. That is why I really needed a good debug solution. It has been quite difficult at the beginning of my work on the USB to find the best way to debug my programs. But after some research, the best way was to use a software which traces all USB packets exchanged between host and devices. It has been a really efficient solution and the problems was easily fixed.
+This mechanism is very important because the enumeration step is primordial. If there is a mistake on the treatment of a request, the host stops the enumeration process and notify that there is a USB device connected but not recognized. I often was in this situation. That is why I really needed a good debug solution. It has been quite difficult at the beginning of my work on the USB to find the best way to debug my programs. But after some research, the best way was to use a software running on the host which traces all USB packets exchanged between host and devices. It has been a really efficient solution and the problems was easily fixed.
 
 
 \subsection{USBHID class}
@@ -1622,7 +1621,7 @@ void USBAudio::SOF(int frameNumber) {
 \end{lstlisting}
 
 \subsubsection{Example with an I2S/I2C device}
-For this device, the enumeration has not be a problem, a speaker and a microphone was recognized by the computer as shown on the figure~\ref{USB speaker recognized}.
+For this device, the enumeration has not been a problem, a speaker and a microphone was recognized by the computer as shown on the figure~\ref{USB speaker recognized}.
 
 \begin{figure}[h!]
 		\centering
@@ -1653,6 +1652,7 @@ Mbed users can now use their mbed to emulate a USB device. I really wanted to ex
 	\item Audio to receive and send audio packets
 	\item MIDI to send and receive MIDI messages
 \end{packed_item}
+
 
 \chapter{Conclusion}
 By way of conclusion, I again want to thank my manager Simon Ford. He permitted me to explore new domains involved in my projects:

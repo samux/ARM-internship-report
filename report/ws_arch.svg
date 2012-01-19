@@ -100,7 +100,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -295,12 +295,12 @@
          x="388.44113"
          y="497.67398"
          style="font-size:20px"
-         id="tspan3031">   - display data related to the QR code scanned</tspan><tspan
+         id="tspan3031">   - display data related to the scanned QR code</tspan><tspan
          sodipodi:role="line"
          x="388.44113"
          y="522.67395"
          id="tspan5516"
-         style="font-size:20px">   - can &quot;add&quot; a graph on the dashboard</tspan></text>
+         style="font-size:20px">   - can &quot;add&quot; a graph to the dashboard</tspan></text>
     <image
        y="475.57187"
        x="110.46076"
@@ -339,7 +339,7 @@
          x="23.615915"
          y="421.69559"
          style="font-size:20px"
-         id="tspan3033">   - display data of boards &quot;added&quot;</tspan></text>
+         id="tspan3033">   - display data of &quot;added&quot; boards</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"

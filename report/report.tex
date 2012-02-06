@@ -82,10 +82,10 @@ I had worked during my internship with two boards developed by the mbed team bas
 \chapter{ARM and Mbed}
 \section{ARM}
 \subsection{History}
-ARM Holdings plc is a British multinational Intellectual Property (IP) company. The headquarters are based in Cambridge, where it was established. ARM is well known for its CPUs and GPUs in the semiconductor industry. It also designs, licenses and sells software development tools under the RealView and KEIL brands.
+ARM Holdings plc is a British multinational Intellectual Property (IP) company. The headquarters are based in Cambridge, where it was established. ARM is well known for its CPUs (Central Processing Unit) and GPUs (Graphics Processing Unit) in the semiconductor industry. It also designs, licenses and sells software development tools under the RealView and KEIL brands.
 \\
 
-Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It was the result of a joint venture between Acorn Computers, Apple Computer (now Apple Inc.) and VLSI Technology (now NXP semiconductor). The purpose of this joint venture was to develop a RISC chip originally developed by Acorn Computer involved in an Apple project. ARM became bigger throughout the years by acquiring companies like Micrologic Solutions, a software consulting company based in Cambridge 1999. In 2000, ARM acquired Allant Software, Infinite Designs in Sheffield (UK) and EuroMips in Sophia Antipolis (France). Then, in 2001, it acquired a team specialized in hardware and software debugging based in Blackburn (UK). In 2005, ARM acquired Keil Software, a leader in software development tools for microcontrollers. More recently, ARM joined with Texas Instruments, Samsung, IBM, ST-Ericsson and Freescale Semiconductor in forming an open source non-profitable organization named Linaro. Linaro enables for example tools or linux kernels for ARM based system-on-chips. Today, ARM has offices and design centres all over the world, including the UK, Germany, France, Israel, Sweden, Norway, Slovenia, USA, China, South Korea, Japan, Taiwan and India. 
+Advanced RISC Machines Ltd (now ARM Ltd) was founded in November 1990. It was the result of a joint venture between Acorn Computers, Apple Computer (now Apple Inc.) and VLSI Technology (now NXP semiconductor). The purpose of this joint venture was to develop a RISC chip originally developed by Acorn Computer involved in an Apple project. ARM became bigger throughout the years by acquiring companies like Micrologic Solutions in 1999, a software consulting company based in Cambridge. In 2000, ARM acquired Allant Software, Infinite Designs in Sheffield (United Kingdom) and EuroMips in Sophia Antipolis (France). Then, in 2001, it acquired a team specialized in hardware and software debugging based in Blackburn (UK). In 2005, ARM acquired Keil Software, a leader in software development tools for microcontrollers. More recently, ARM joined with Texas Instruments, Samsung, IBM, ST-Ericsson and Freescale Semiconductor in forming an open source non-profitable organization named Linaro. Linaro enables for example tools or linux kernels for ARM based system-on-chips. Today, ARM has offices and design centres all over the world, including the UK, Germany, France, Israel, Sweden, Norway, Slovenia, USA, China, South Korea, Japan, Taiwan and India. 
 \\
 
 Nowadays, ARM processors are widely used in mobile phones, tablets, personal digital assistants, GPS, digital cameras and digital televions. The main reason for this success is their low power consumption, making them suitable for embedded systems. Even if ARM products are widely used, the company itself does not manufacture its own CPUs. ARM licenses its technology as Intellectual Property. Companies like Samsung, Texas Intrument or Nvidia are making processors based on ARM's IP.
@@ -481,7 +481,7 @@ We can distinguish two different parts in the architecture of this project:
 All mbed boards send messages in JSON (JavaScript Object Notation) format to the WebSocket server containing sensor data. A JSON object is an unordered collection of key:value pairs. The following example shows a basic JSON message:
 \begin{lstlisting}[label=JSON message example,caption=JSON message example]
 {
-     "id"     : "acc_board",
+     "id"     : "wifl_acc",
      "acc_x"  : 250,
      "acc_y"  : 15,
      "acc_z"  : 100
@@ -655,17 +655,21 @@ Then a smartphone webpage listens only messages from a specific board according 
 \subsubsection{WebSocket and JSON messages exchanged}
 Several messages are exchanged between clients and server. 
 \begin{packed_item}
-	\item \textbf{from mbed boards}: 
+	\item \textbf{from mbed boards}:
 		\begin{center}
-				\{"id"="wifly\_acc", "ax"=x\_axis\_value, "ay"=y\_axis\_value, "az"=z\_axis\_value\} \\
-				\{"id"="wifly\_env", "l"=light\_value, "t"=temperature\_value, "p"=pressure\_value, "m"=microphone\_value\}
+		\begin{packed_item}
+				\item \{"id"="wifly\_acc", "ax"=x\_axis\_value, "ay"=y\_axis\_value, "az"=z\_axis\_value\} \\
+				\item \{"id"="wifly\_env", "l"=light\_value, "t"=temperature\_value, "p"=pressure\_value, "m"=microphone\_value\}
+		\end{packed_item}
 		\end{center}
 	\item \textbf{from smartphones}:
 		\begin{center}
-				\{"id"="acc\_add"\} \\
-				\{"id"="env\_add"\} \\
-				\{"id"="acc\_clean"\} \\
-				\{"id"="env\_clean"\}
+		\begin{packed_item}
+				\item \{"id"="wifly\_acc\_add"\} \\
+				\item \{"id"="wifly\_env\_add"\} \\
+				\item \{"id"="wifly\_acc\_clean"\} \\
+				\item \{"id"="wifly\_env\_clean"\}
+		\end{packed_item}
 		\end{center}
 		
 \end{packed_item}
@@ -674,9 +678,11 @@ Messages sent by mbed boards to the server contain sensor data. When a client re
 
 Messages sent by smartphones to the server control graphs on the dashboard webpage. For instance, if a user scans the QR code of the accelerometer board and presses the add button, the message 
 		\begin{center}
-				\{"id"="acc\_add"\}
+				\{"id"="wifly\_acc\_add"\}
 		\end{center}
-is sent to the server. The server broadcasts it. In particular, the dashboard receives it and displays the corresponding graph. \\
+is sent to the server. The server broadcasts it. In particular, the dashboard receives it and displays the corresponding graph.
+
+\newpage
 
 \subsubsection{Architecture of webpages}
 The architecture of smartphone webpages is quite simple:
@@ -736,17 +742,13 @@ The architecture of the dashboard is a little more complicated because it has to
 				acc_x.append(date, json_sensor.ax);
 				acc_y.append(date, json_sensor.ay);
 				acc_z.append(date, json_sensor.az);
-
-				refreshBall();
 			}
 			else if(json_sensor.id == "wifly_env") 
 			{
 				light.append(date, json_sensor.l);
 				temp.append(date, json_sensor.t);
-				press.append(date, json_sensor.p / 1000);
+				press.append(date, json_sensor.p);
 				mic.append(date, json_sensor.m);
-
-				refreshEnv();
 			}
 			else
 				manipulateDOM(json_sensor.id);
@@ -764,7 +766,7 @@ On the dashboard represented by the figure~\ref{Dashboard webpage}, we can see t
 	\item more information are available on the right: other representations of sensor data
 \end{packed_item}
 
-On the smartphone webpage figure~\ref{Smartphone webpage containing accelerometer data}, we can observe the live graph containing sensor data only from the accelerometer board. On this webpage, we can manage the dashboard with the "add" and "clear" buttons.
+On the smartphone webpage figure~\ref{Smartphone webpage containing accelerometer data}, we can observe the live graph containing sensor data only from the accelerometer board. On this webpage, we can manage the dashboard with the \textbf{add} and \textbf{clear} buttons.
 
 \begin{figure}[h!]
 		\centering
@@ -890,7 +892,7 @@ ENDP & 4bits & The endpoint number which the packet is designed for \\ \hline
 
 \subsubsection{Packets}
 \begin{packed_item}
-	\item \textbf{Token Packet}: To indicate the type of transaction to follow, USB uses token packets:
+	\item \textbf{Token Packet}: To indicate the type of transaction to follow, the host issues token packets:
 		\begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
   	\hline
@@ -995,7 +997,7 @@ I will illustrate a whole transfer with a control read transfer. This type of tr
 	\item \textbf{Setup transaction}:
 	\begin{packed_item}
 		\item SETUP token packet sent by the host
-		\item Data packet: the host sends a request concerning specific descriptor
+		\item Data packet: the host sends a request concerning a specific descriptor
 		\item Handshake packet: the device returns ACK
 	\end{packed_item}
 	
@@ -1125,7 +1127,7 @@ One of the purposes of this class is to provide an API in order to handle the US
 	\item init() to initialize the USB controller
 	\item connect() to connect a device
 	\item disconnect() to disconnect a device
-	\item addEndpoint(int endpoint) to add a specific endpoint
+	\item addEP(int endpoint) to add a specific endpoint
 	\item readEP(int endpoint) to read a specific endpoint
 	\item writeEP(int endpoint) to write a specific endpoint 
 \end{packed_item}
@@ -1235,7 +1237,7 @@ In this configuration descriptor, we find the interface descriptor which defines
 \subsubsection{Generic HID device}
 In my opinion, HID is the best class to design a custom USB device. By this, I mean that it is possible to send and receive raw data packets to and from the host without any protocol. But the most important thing is that no specific driver is needed on the host side as all operating systems have a built-in HID driver. I really wanted to provide to mbed users a way to exchange raw data with their custom program in Python, C/C++, Java or whatever. \\
 
-As all HID devices, a report descriptor as to be provided in order to describe data exchanged. In the case of a generic HID device, data are contained in packets of a certain length specifid in this descriptor. Additionnally, this class defines methods to send and receive reports. Data are sent or read by writing or reading the endpoints specified in the configuration descriptor:
+As all HID devices, a report descriptor has to be provided in order to describe data exchanged. In the case of a generic HID device, data are contained in packets of a certain length specifid in this descriptor. Additionnally, this class defines methods to send and receive reports. Data are sent or read by writing or reading the endpoints specified in the configuration descriptor:
 
 \begin{lstlisting}[label=Send and receive HID reports,caption=Send and receive HID reports]
 bool USBHID::send(HID_REPORT *report)
@@ -1565,7 +1567,7 @@ Audio packets have to be interpreted differently, according to the number of cha
 \end{figure}
 
 
-The main part for sending and receiving audio packets is in the virtual function called in USBHAL on each Start Of Frame event:
+The main part for sending and receiving audio packets is in the virtual function called from USBHAL on each Start Of Frame event:
 \begin{lstlisting}[label=Audio packets management in SOF events,caption=Audio packets management in SOF events]
 // Called in ISR context on each Start Of Frame
 void USBAudio::SOF(int frameNumber) {
@@ -1636,7 +1638,6 @@ The Internet of Things was very interesting because it required several skills s
 \begin{packed_item}
 	\item software skills in embedded systems to program the mbed
 	\item software skills in web programming
-	\item hardware skills
 \end{packed_item}
 
 

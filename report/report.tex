@@ -839,14 +839,11 @@ The physical bus topology defines how USB devices are connected to the host. The
 \begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.4\textwidth]{./usb_topology.jpg}
-		\caption{USB physical topology \footnotemark}
+		\caption{USB physical topology}
 		\label{USB physical topology}
 \end{figure}
 \subsection{Endpoints and type of transfers}
 Devices have a series of buffers to communicate with the host. Each buffer belongs to an endpoint. An endpoint is a uniquely identifiable entity on a USB device, which is the source or terminus of the data that flows from or to the device. For instance, the mbed based on the NXP LPC1768 microcontroller has 32 physical endpoints whereas the mbed based on the NXP LPC11U24, has 10 physical endpoints. One logical endpoint represents two physical endpoints. Each physical endpoint has a specific direction: either OUT to receive data from the host or IN to send data to the host. 
-
-
-\footnotetext{reference: http://www.usblyzer.com}
 
 \begin{figure}[h!]
 		\centering
@@ -1667,11 +1664,5 @@ internship in a foreign country allowed me to be immersed in a different culture
 	\item \textbf{http://www.usb.org}: contains all documents related to the USB. Particularly, it provides all USB classes specification
 	\item \textbf{http://mbed.org}: contains all information about mbed. This website has been particularly useful to find existing libraries developed by the mbed community
 \end{packed_item}
-
-
-
-
-
-
 
 \end{document}
